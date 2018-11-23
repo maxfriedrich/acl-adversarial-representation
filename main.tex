@@ -1,3 +1,5 @@
+% !TeX spellcheck=en_US
+
 % This is the ACL 2018 template as the 2019 template is not available yet
 % TODO: update to the 2019 template
 
@@ -13,7 +15,22 @@
 % Acronyms
 \usepackage[single, list-caps=true]{acro}
 \input{acronyms}
+
+% Math
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\usepackage{xspace}
+\newcommand{\fone}{\ensuremath{F_1}\xspace}
+\newcommand{\ltwo}{\ensuremath{L^2}\xspace}
+
+% Bib (mostly for autocompletion)
 \usepackage{natbib}
+
+% References
+\usepackage[capitalise]{cleveref}
 
 % TikZ
 \usepackage{tikz}
@@ -27,8 +44,6 @@
 % to show all the authors. Please do not make the titlebox
 % smaller than 5cm (the original size); we will check this
 % in the camera-ready version and ask you to change it back.
-
-\newcommand\BibTeX{B{\sc ib}\TeX}
 
 \title{Adversarial Learning of Text Representations for De-Identification of Medical Records}
 
@@ -47,29 +62,14 @@
 
 \begin{document}
 \maketitle
-\begin{abstract}
-    TODO
-\end{abstract}
 
-\section{Introduction}
-
-\section{Related Work}
-
-\subsection{De-Identification}
-%
-A citation to make it compile: \citet{dernoncourt2017identification}
-
-\subsection{Adversarial Representation Learning}
-
-\section{Automatic Pseudonymization}
-
-\section{Adversarial Representation}
-
-\section{Results}
-
-\section{Discussion}
-
-\section{Conclusions}
+\input{abstract}
+\input{introduction}
+\input{related-work}
+\input{automatic-pseudonymization}
+\input{adversarial-representation}
+\input{discussion}
+\input{conclusions}
 
 %\section*{Acknowledgments}
 %Deidentified clinical records used in this research were provided by the i2b2 National Center for Biomedical Computing funded by U54LM008748 and were originally prepared for the Shared Tasks for Challenges in NLP for Clinical Data organized by Dr.\ Özlem Uzuner, i2b2 and SUNY.
