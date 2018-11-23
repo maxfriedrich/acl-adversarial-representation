@@ -1,0 +1,47 @@
+\begin{tikzpicture}[node distance=2.5cm,font=\small, sibling distance=1.2cm, level distance=1.8cm, grow=up, edge from parent/.style = {->, >=latex, draw}]
+\tikzset{every node/.style={inner sep=1mm, outer sep=0mm, line width=0mm}}
+
+\tikzstyle{model}=[rounded rectangle,draw=black,fill=white, minimum width=1.2cm, minimum height=8mm, semithick]
+\tikzstyle{train}=[ultra thick]
+\tikzstyle{label}=[text height=0.75ex,text depth=0ex]
+\tikzstyle{dots} = []
+\tikzstyle{pre}=[<-,semithick, >=latex]
+\tikzstyle{post}=[->, semithick, >=latex]
+
+\node[model, train] (a) {}
+    child {node[model] (a adv) {}}
+    child {node[model, train] (a deid) {}};
+
+\node[label, below= 2mm of a] (a label) {1.}; 
+
+\node[model, right=of a] (b) {}
+    child {node[model, train] (b adv) {}}
+    child {node[model] (b deid) {}};
+
+\node[label, below=2mm of b] (b label) {2.}; 
+
+\node[model, right=of b] (c) {}
+    child {node[model, train] (c adv) {}}
+    child {node[model, train] (c deid) {}};
+    
+\node[label, below=2mm of c] (c label) {3.$\,$a)}; 
+
+\node[model, right= of c, train] (d) {}
+    child {node[model] (d adv) {}}
+    child {node[model] (d deid) {}};
+    
+\node[label, below=2mm of d] (d label) {3.$\,$b)}; 
+    
+\begin{scope}[on background layer]
+    \node (a box) [draw,fill=black!5,fit=(a) (a label) (a adv) (a deid), inner sep=2mm] {};
+    \node (b box) [draw,fill=black!5,fit=(b) (b label) (b adv) (b deid), inner sep=2mm] {};
+    \node (c box) [draw,fill=black!5,fit=(c) (c label) (c adv) (c deid), inner sep=2mm] {};
+    \node (d box) [draw,fill=black!5,fit=(d) (d label) (d adv) (d deid), inner sep=2mm] {};
+\end{scope}
+
+\path[post] (a box) edge (b box);
+\path[post] (b box) edge (c box);
+\path[post] (c box) edge[bend right=10] (d box);
+\path[post] (d box) edge[bend right=10] (c box);
+
+\end{tikzpicture}

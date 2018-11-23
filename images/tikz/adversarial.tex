@@ -1,0 +1,90 @@
+\begin{tikzpicture}[node distance=1.9cm,font=\small]
+\tikzset{every node/.style={inner sep=1mm, outer sep=0mm, line width=0mm}}
+
+\tikzstyle{token}=[rectangle,draw=black,fill=white,semithick,text width=1.4cm, minimum width=1.6cm, minimum height=6mm, text height=1.5ex,text depth=.25ex]
+\tikzstyle{model}=[rounded rectangle,draw=black,fill=white,semithick, minimum width=3cm, minimum height=10mm, text height=1.5ex,text depth=.25ex, inner sep=2mm]
+\tikzstyle{dots} = []
+\tikzstyle{vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=1.6cm, minimum height=4mm]
+\tikzstyle{half vector} = [shape=rectangle, semithick, minimum width=1.6cm, minimum height=4mm] % without drawn border
+\tikzstyle{two thirds vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=1.2cm, minimum height=4mm]
+\tikzstyle{quarter vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=4mm, minimum height=4mm]
+\tikzstyle{pre}=[<-,semithick, >=latex]
+\tikzstyle{post}=[->, semithick, >=latex]
+
+\node[token] (mr input){Mr.};
+\node[token, right of=mr input] (smith input) {Smith};
+\node[token, right of=smith input] (was input) {was};
+\node[dots, right=3mm of was input] (input dots) {$\cdots$};
+    
+\node[vector, above=10mm of mr input] (mr embedding) {};
+\node[vector, right of=mr embedding] (smith embedding) {};
+\node[vector, right of=smith embedding] (was embedding) {};
+\node[dots, right=3mm of was embedding] (embedding dots) {$\cdots$};
+
+\begin{scope}[on background layer]
+    \node (input box) [draw,fill=black!5,fit=(mr input) (input dots), inner sep=2.5mm] {};
+    \node (feature box) [draw,fill=black!5,fit=(mr embedding) (embedding dots), inner sep=2.5mm] {};
+\end{scope}
+
+\node[model,above=5mm of feature box] (representation model) {Representation Model};
+
+\node[vector, above=2.5cm of mr embedding] (mr representation) {};
+\node[vector, right of=mr representation] (smith representation) {};
+\node[vector, right of=smith representation] (was representation) {};
+\node[dots, right=3mm of was representation] (representation dots) {$\cdots$};
+
+\begin{scope}[on background layer]
+    \node (representation box) [draw,fill=black!5,fit=(mr representation) (representation dots), inner sep=2.5mm] {};
+\end{scope}
+
+\node[model,above left=1cm and -2cm of representation box] (deid model) {De-Identification Model};
+
+\node[two thirds vector, above left=3cm and 0.5cm of mr representation] (mr output) {};
+\node[two thirds vector, right=3mm of mr output] (smith output) {};
+\node[two thirds vector, right= 3mm of smith output] (was output) {};
+\node[dots, right=3mm of was output] (output dots) {$\cdots$};    
+
+\begin{scope}[on background layer]
+ \node (output box) [draw,fill=black!5,fit=(mr output) (output dots), inner sep=2.5mm] {};
+\end{scope}
+
+\node[model,above right=1cm and -1.5cm of representation box] (adversary model) {Adversary Model};
+
+\node[quarter vector, above right=3cm and 0cm of was representation] (adversary output) {};
+
+\begin{scope}[on background layer]
+    \node (adversary output box) [draw,fill=black!5,fit=(adversary output), inner sep=2.5mm] {};
+\end{scope}
+
+
+% vector squares
+\foreach \i in {mr embedding, smith embedding, was embedding, mr representation, smith representation, was representation} {
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (4mm, -4mm)$);
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (8mm, -4mm)$);
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (12mm, -4mm)$);    
+};
+
+\foreach \i in {mr output, smith output, was output} {
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (4mm, -4mm)$);
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (8mm, -4mm)$);
+};
+
+\path[post] (input box) edge (feature box);
+\path[post] (feature box) edge (representation model);
+\path[post] (representation model) edge (representation box);
+
+\path[post] (representation box) edge (deid model);
+\path[post] (deid model) edge (output box);
+
+\path[post] (representation box) edge (adversary model);
+\path[post,dotted] (feature box.east) edge[bend right=40] (adversary model);
+\path[post,dotted] (representation box.east) edge[bend right=20] (adversary model);
+\path[post] (adversary model) edge (adversary output box);
+
+\node[anchor=east, left=2mm of input box] {Token input};
+\node[anchor=east, left=2mm of feature box] {Embedding};
+\node[anchor=east, left=2mm of representation box] {Representation};
+\node[anchor=east, left=2mm of output box] {Output};
+\node[anchor=west, right=2mm of adversary output box] {Adversary output};
+
+\end{tikzpicture}
