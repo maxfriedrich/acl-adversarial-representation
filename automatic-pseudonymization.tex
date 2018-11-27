@@ -23,3 +23,10 @@ It is trained on the tasks of distinguishing pairs of:
 \end{itemize}
 %
 For the minimally modified original sequence, we keep the number of neighbors fixed at $N=5$ to avoid augmented sentences being too unrealistic.
+
+\begin{figure}
+    \centering
+    \input{images/plt/automatic-pseudonymization.pgf}
+    \caption[De-identification with automatic pseudonymization]{\fone scores of our models when trained on automatically pseudonymized data where \ac{phi} tokens are moved to one of different numbers of neighbors $N$.}\label{fig:auto-pseudo}
+    % TODO describe or delete the grey dashed lines
+\end{figure}
