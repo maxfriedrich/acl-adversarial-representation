@@ -4,44 +4,35 @@
 \section{Related Work}\label{sec:related}
 
 \subsection{De-Identification}
-De-identification is \iac{nlp} task that is related to \ac{ner}.
+De-identification is \iac{nlp} sequence tagging task.
 %
 In 2006, 2014 and 2016, three shared tasks on de-identification were organized by the American i2b2 group.
 %
-The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the shared tasks~\citep{stubbs2015annotating}.
+The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the shared tasks \citep{stubbs2015annotating}.
+%
+A binary \ac{hipaa} token \fone score of $95\%$ has been suggested as a target score for reasonable de-identification systems \citep{stubbs2015automated}.
 
 %
-In the first two shared tasks, submitted approaches are based on hand-crafted rules, gazetteers, and machine learning methods such as boosting, \acp{crf}, and support vector machines.
-%
-The machine learning models use features such as lexical cues, templates for phone numbers and addresses, part-of-speech tags, and dictionary information.
-%
-Similar approaches are also summarized in a survey~\citep{meystre2010automatic}.
-%
-In the 2016 shared task, a deep learning based system~\citep{liu2017identification} delivered the best results.
-
-%
-Up to the 2014 shared task, the organizers emphasized that it is unclear if a tool trained on the provided datasets will generalize to medical records from other sources~\citep{uzuner2007evaluating,stubbs2015automated}.
+Up to the 2014 shared task, the organizers emphasized that it is unclear if a tool trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
 %
 The 2016 shared task featured a sight-unseen track in which existing systems were evaluated on records from a new data source.
 %
-The best system achieved an \fone score of only $79\%$, proving that de-identification systems at the time were not able to deliver sufficient performance on completely new data~\citep{stubbs2017identification}.
+The best system achieved an \fone score of only $79\%$, proving that de-identification systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
 
 %
-\citet{dernoncourt2017identification} achieve state-of-the-art performance in de-identification with a deep learning model.
+\citet{dernoncourt2017identification} achieve state-of-the-art performance in de-identification with \iac{lstm} model.
 %
 Their model achieves \fone scores of $97.85\%$ on the i2b2 2014 dataset and $99.23\%$ on their own, larger dataset.
 %
-It uses pre-trained word embeddings and task-specific character embeddings.
+It uses pre-trained GloVe word embeddings and task-specific character embeddings.
 %
 The output sequence is optimized with \iac{crf} layer.
 %
 After experimenting with their architecture, they conclude that the character embedding layer is more important to the model performance than the pre-trained word embeddings.
 %
-However, the word embeddings show benefits when compared to rule-based models e.g.\ when recognizing profession names that are in the same embedding space region but might not occur in a hand-crafted dictionary.
+Using transfer learning from a model trained on a larger dataset, they were able to further improve their scores on the i2b2 2014 dataset \citep{lee2017transfer}.
 %
-Using transfer learning from a model trained on a larger dataset, they were able to further improve their scores on the i2b2 2014 dataset~\citep{lee2017transfer}.
-%
-It is possible to reach an $98\%$ \fone score on the i2b2 dataset by using document position information as an additional input~\citep{zhao2018leveraging}, which will, however, most likely deteriorate generalization performance to instances of medical text with different structures.
+It is possible to reach an $98\%$ \fone score on the i2b2 dataset by using document position information as an additional input \citep{zhao2018leveraging}, which will, however, most likely deteriorate generalization performance to instances of medical text with different structures.
 
 \subsection{Adversarial Representation Learning}
 \begin{itemize}
