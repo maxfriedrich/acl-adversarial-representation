@@ -3,15 +3,16 @@
 
 \section{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
 %
-As a further perturbation method, we evaluate a naive automatic approximation of pseudonymization by substitution.
+As state-of-the-art de-identification models do not rely on document coherency to identify \ac{phi}, we evaluate a naive word-level automatic pseudonymization approach to perturbing training data.
 %
-Before training, we randomly move all \ac{phi} tokens to the position of one of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
+Before training, we replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
 
 %
-In GloVe, only tokens that exist in the pre-computed embedding matrix are moved to their neighbors.
+When using GloVe embeddings, only tokens that exist in the pre-computed embedding matrix are moved to their neighbors.
 %
 The unknown token is not modified as it does not contain any information (except that the token in question is not part of the precomputed matrix).
 
+% TODO throw this adversary stuff away?
 %
 We evaluate the privacy properties of the approach using a bidirectional \ac{lstm} adversary with a single output unit.
 %
