@@ -158,4 +158,60 @@ We evaluate an adversarial learning based approach that automatically tunes the 
     The model provider would then update the existing de-identification model or train a new model using all available representation data.
     %
     Periodically, the pipeline of representation model (possibly in a version without additive noise) and de-identification model would be published so it can be used by medical institutions on their unlabeled data.
+
+    \item[Results]
+    %
+    In our adversarial learning experiment, we do not achieve satisfactory results with the conjoint \ac{dann} training procedure: in all cases, our models learn representations that are not sufficiently resistant to the adversary.
+    %
+    When training the adversary on the frozen representation for an additional $20$ epochs, it is able to distinguish real from fake input pairs on a test set with accuracies above $80\%$.
+    %
+    This confirms the findings by \citet{elazar2018adversarial}.
+    
+    %
+    With the training procedure by \citet{feutry2018learning}, we are able to train a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.
+    %
+    We select the \ac{lstm} representation model over the dense model because it allows $0.4$ percentage points higher de-identification \fone scores on average.
+    
+    %
+    \Cref{fig:adversarial-deid} shows our de-identification results when using adversarially learned representations.
+    %
+    A higher number of neighbors $N$ means a stronger invariance requirement for the representation.
+    %
+    For values of $N$ up to $1\,000$, our FastText and GloVe models are able to learn representations that allow training de-identification models that reach the target \fone score of $95\%$.
+    %
+    However, training becomes unstable for $N>50$ when using GloVe and $N>500$ when using FastText embeddings.
+    %
+    Then, training results in representations that are not robust to the adversary, which is shown in the diagram on the right side.
+    
+    %
+    Our choice of representation size $d \in \{50, 100, 300\}$ does not influence de-identifi\-ca\-tion or adversary performance, so we select $d=50$ for further evaluation.
+    %
+    For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ and the GloVe model reaches an \fone score of $96.89\%$.
+    
+    %
+    The adversarially trained FastText model beats the FastText model trained on raw data in the contact category. 
+    %
+    The GloVe model does not beat the corresponding raw data model in any category.
+    %
+    It is most significantly weaker in the profession category.
+    %
+    The detailed evaluation tables can be found in \cref{app:baseline-evaluation}.
 \end{description}
+
+\begin{figure*}
+    \centering
+    \input{images/plt/adversarial-deid-50.pgf}
+    \caption[De-identification with adversarially learned representations]{%
+        Left: de-identification \fone scores of our models using an adversarially trained representation with representation size $d=50$ and different numbers of neighbors $N$ for the representation invariance requirement.
+        %
+        Right: mean accuracy on the two adversary tasks.
+        %
+        The validation accuracy lines show the maximum accuracy around the best epoch according to the combined loss as an attempt to visualize representation stability.
+    }\label{fig:adversarial-deid}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \input{images/plt/adversarial-learning-curve-0.pgf}
+    \caption{This is a figure caption}
+\end{figure*}
