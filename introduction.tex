@@ -2,3 +2,38 @@
 % !TeX spellcheck=en_US
 
 \section{Introduction}\label{sec:introduction}
+%
+De-identification is the task of finding and labeling \ac{phi} in medical text.
+%
+\Ac{phi} includes potentially identifying information such as names, professions, geographic identifiers, dates, and account numbers.
+
+% TODO Why is it important (enable large-scale studies)
+
+%
+Trying to train a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified clinical records for research (including for training the tool itself).
+%
+The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes (replacing e.g.\ every person name with a different person name and every date with a different date) in a document-coherent way.
+
+% Why is manual pseudonymization not so great? (time-consuming, coherency)
+%
+Today, a pseudonymized dataset for de-identification from a single source is publicly available \citep{stubbs2015annotating}.
+%
+However, tools trained on the dataset are too specific for the concrete data and do not generalize well to data from other sources~\citep{stubbs2017identification}.
+%
+If a medical institution instead decides to train a de-identification tool on their raw text data, it is conceivable that the tool would contain traces of the \ac{phi} it was trained with, making it possible for an attacker to recover parts of the training data if the tool itself is shared.
+%
+To achieve a universal de-identification tool, many medical institutions would have to pool their data.
+%
+Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort.
+
+% Why is sharing training data the best solution for a de-identification model?
+%
+A representation of medical text that allows training a de-identification tool while not allowing inference of protected information would greatly simplify the collection of training data for a universal de-identification tool.
+%
+This representation would still require humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step would be performed by the transformation to the representation.
+%
+A tool trained on the representation could easily be made publicly available because its parameters cannot contain any protected data, as it is never trained on raw text.
+%
+Simplifying the de-identification procedure could enable large-scale medical studies that are otherwise too costly.
+
+% TODO present results
