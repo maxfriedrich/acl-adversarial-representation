@@ -3,9 +3,7 @@
 
 \section{Adversarial Representation}\label{sec:adversarial-representation}
 %
-The previously discussed approaches are highly dependent on manually tuned representation parameters like the amount of noise and neighbor space, that, if set incorrectly, may allow for easy re-identification.
-%
-In this experiment, we evaluate an adversarial learning based approach that automatically tunes the representation parameters to protect against adversary models.
+We evaluate an adversarial learning based approach that automatically tunes the representation parameters to protect against adversary models.
 
 \begin{description}
     \item[Architecture]
@@ -46,7 +44,7 @@ In this experiment, we evaluate an adversarial learning based approach that auto
     %
     We try different representation sizes to explore the trade-off between de-identification and adversary performances.
     %
-    In contrast to the approaches from \cref{sec:perturbing} that only perturb \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
+    In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
     
     \item[Adversaries]
     %
@@ -77,7 +75,7 @@ In this experiment, we evaluate an adversarial learning based approach that auto
     %
     We obtain the representation sequences for the second adversary from copies of the representation model with shared weights.
     %
-    We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:auto-pseudo}, limiting the number of replaced tokens to one per sentence.
+    We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:automatic-pseudonymization}, limiting the number of replaced tokens to one per sentence.
     
     %
     The adversaries are implemented as bidirectional \ac{lstm} models.

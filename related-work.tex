@@ -2,15 +2,15 @@
 % !TeX spellcheck=en_US
 
 \section{Related Work}\label{sec:related}
+%
+
 
 \subsection{De-Identification}
-De-identification is \iac{nlp} sequence tagging task.
-%
-In 2006, 2014 and 2016, three shared tasks on de-identification were organized by the American i2b2 group.
+In 2006, 2014 and 2016, three shared tasks on de-identification were organized by the i2b2 group.
 %
 The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the shared tasks \citep{stubbs2015annotating}.
 %
-A binary \ac{hipaa} token \fone score of $95\%$ has been suggested as a target score for reasonable de-identification systems \citep{stubbs2015automated}.
+An \fone score of $95\%$ has been suggested as a target for reasonable de-identification systems \citep{stubbs2015automated}.
 
 %
 Up to the 2014 shared task, the organizers emphasized that it is unclear if a tool trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
@@ -22,7 +22,7 @@ The best system achieved an \fone score of only $79\%$, proving that de-identifi
 %
 \citet{dernoncourt2017identification} achieve state-of-the-art performance in de-identification with \iac{lstm} model.
 %
-Their model achieves \fone scores of $97.85\%$ on the i2b2 2014 dataset and $99.23\%$ on their own, larger dataset.
+Their model achieves \fone scores of $97.85\%$ on the i2b2 2014 dataset.
 %
 It uses pre-trained GloVe word embeddings and task-specific character embeddings.
 %
@@ -32,11 +32,15 @@ After experimenting with their architecture, they conclude that the character em
 %
 Using transfer learning from a model trained on a larger dataset, they were able to further improve their scores on the i2b2 2014 dataset \citep{lee2017transfer}.
 %
-It is possible to reach an $98\%$ \fone score on the i2b2 dataset by using document position information as an additional input \citep{zhao2018leveraging}, which will, however, most likely deteriorate generalization performance to instances of medical text with different structures.
+It is possible to reach an $98\%$ \fone score on the i2b2 2014 dataset by using document position information as an additional input \citep{zhao2018leveraging}, which will, however, most likely deteriorate generalization performance to instances of medical text with different structures.
 
 \subsection{Adversarial Representation Learning}
+%
+Adversarial learning for deep learning models was popularized by \citet{goodfellow2014generative}.
+%
+
 \begin{itemize}
-    \item Adversarial learning in neural nets: \citet{goodfellow2014generative}
+    \item Learning fair representations \citep{zemel2013learning}
     \item \Ac{dann} architecture \citep{ganin2016domain}
     \item Uses in anonymization / demographics independent representation \citet{elazar2018adversarial,li2018towards}
     \item \citet{elazar2018adversarial} cautionary conclusion (continued adversary training beats the representation)
