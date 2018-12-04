@@ -12,18 +12,6 @@ When using GloVe embeddings, only tokens that exist in the pre-computed embeddin
 %
 The unknown token is not modified as it does not contain any information (except that the token in question is not part of the precomputed matrix).
 
-% TODO throw this adversary stuff away?
-%
-We evaluate the privacy properties of the approach using a bidirectional \ac{lstm} adversary with a single output unit.
-%
-It is trained on the tasks of distinguishing pairs of:
-\begin{itemize}
-    \item a pseudonymized sequence and the original sequence
-    \item a pseudonymized sequence and a minimally modified original sequence (with only one occurrence of \ac{phi} moved to one of its neighbors).
-\end{itemize}
-%
-For the minimally modified original sequence, we keep the number of neighbors fixed at $N=5$ to avoid augmented sentences being too unrealistic.
-
 \begin{figure}
     \centering
     \input{images/plt/automatic-pseudonymization.pgf}
