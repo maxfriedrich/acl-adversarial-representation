@@ -5,7 +5,7 @@
 %
 
 
-\subsection{De-Identification}
+\subsection{Automatic De-Identification}
 In 2006, 2014 and 2016, three shared tasks on de-identification were organized by the i2b2 group.
 %
 The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the shared tasks \citep{stubbs2015annotating}.
@@ -24,12 +24,6 @@ The best system achieved an \fone score of only $79\%$, proving that de-identifi
 %
 Their model achieves \fone scores of $97.85\%$ on the i2b2 2014 dataset.
 %
-It uses pre-trained GloVe word embeddings and task-specific character embeddings.
-%
-The output sequence is optimized with \iac{crf} layer.
-%
-After experimenting with their architecture, they conclude that the character embedding layer is more important to the model performance than the pre-trained word embeddings.
-%
 Using transfer learning from a model trained on a larger dataset, they were able to further improve their scores on the i2b2 2014 dataset \citep{lee2017transfer}.
 %
 It is possible to reach an $98\%$ \fone score on the i2b2 2014 dataset by using document position information as an additional input \citep{zhao2018leveraging}, which will, however, most likely deteriorate generalization performance to instances of medical text with different structures.
@@ -38,6 +32,8 @@ It is possible to reach an $98\%$ \fone score on the i2b2 2014 dataset by using 
 %
 Adversarial learning for deep learning models was popularized by \citet{goodfellow2014generative}.
 %
+
+The \ac{dann} architecture \citep{ganin2016domain} implements a three-party game 
 
 \begin{itemize}
     \item Learning fair representations \citep{zemel2013learning}

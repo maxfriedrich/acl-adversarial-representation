@@ -3,9 +3,9 @@
 
 \section{De-Identification Model}\label{sec:deidentification-model}
 %
-Our de-identification model uses a bidirectional \ac{lstm}-\ac{crf} architecture that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
+We use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
-In addition to pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, it uses the casing feature from \citet{reimers2017optimal} as an input.
+In addition to pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, we provide the casing feature from \citet{reimers2017optimal} as an input.
 %
 The feature maps words to a one-hot representation of their casing (\textit{numeric}, \textit{mainly numeric}, \textit{all lower}, \textit{all upper}, \textit{initial upper}, \textit{contains digit}, or \textit{other}).
 
@@ -25,6 +25,7 @@ The casing feature improves GloVe by $0.4$ percentage points.
         Our FastText & $97.67$ \\
         Our GloVe & $97.62$ \\
         \citet{dernoncourt2017identification} & $\bm{97.85}$\\
+        % TODO mention \citet{lee2017transfer}?
     \end{tabular}
     \caption{Average precision, recall, and \fone scores of our de-identification models in comparison to the state of the art.}\label{tab:baseline-results}
 \end{table}

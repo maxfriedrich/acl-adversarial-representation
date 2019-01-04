@@ -3,7 +3,7 @@
 
 \section{Adversarial Representation}\label{sec:adversarial-representation}
 %
-We evaluate an adversarial learning based approach that automatically tunes the representation parameters to protect against adversary models.
+We propose an adversarial learning based approach that automatically tunes the representation parameters to protect against adversary models.
 
 \begin{description}
     \item[Architecture]
@@ -20,6 +20,7 @@ We evaluate an adversarial learning based approach that automatically tunes the 
     %
     As before, the de-identification model outputs a sequence of class probabilities.
     %
+    % TODO the adversary receives two inputs
     The representation is also used as an input to the adversary that tries to infer information about the original embedding sequence.
     
     \begin{figure}
@@ -66,8 +67,6 @@ We evaluate an adversarial learning based approach that automatically tunes the 
         \item Given two representation sequences (and their cosine similarities), decide if they were obtained from the same sentence.
     \end{enumerate}
     
-    %
-    \Cref{fig:adversaries} shows the two adversaries with their respective inputs.
     %
     The first adversary's objective is a discriminatory formulation of an inverse representation model and causes representations for similar inputs (replacing any protected token with one of its $N$ neighbors) to be indistinguishable.
     %
@@ -194,8 +193,6 @@ We evaluate an adversarial learning based approach that automatically tunes the 
     The GloVe model does not beat the corresponding raw data model in any category.
     %
     It is most significantly weaker in the profession category.
-    %
-    The detailed evaluation tables can be found in \cref{app:baseline-evaluation}.
 \end{description}
 
 \begin{figure*}

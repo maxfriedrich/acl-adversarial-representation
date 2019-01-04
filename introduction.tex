@@ -3,20 +3,24 @@
 
 \section{Introduction}\label{sec:introduction}
 %
-In addition to structured medical data, electronic health records contain a free-text portion (clinical narrative) that is a rich source of information.
+In addition to structured medical data, electronic health records contain free-text patient notes that are a rich source of information.
 %
 Due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized.
 %
 De-identification is the task of finding and labeling \ac{phi} in medical text for sanitization.
 %
 \Ac{phi} includes potentially identifying information such as names, professions, geographic identifiers, dates, and account numbers.
+%
+The American \ac{hipaa} defines 18 categories of \ac{phi}.
 
 % TODO Why is it important (enable large-scale studies)
 
 %
 Trying to train a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified medical text for research (including for training the tool itself).
 %
-The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes (replacing e.g.\ every person name with a different person name and every date with a different date) in a document-coherent way.
+The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes (replacing e.g.\ every person name with a different person name and every date with a different date) in a document-coherent way \cite{uzuner2007evaluating}.
+
+% TODO including applying spelling mistakes to the substitutes etc
 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
 %

@@ -3,14 +3,9 @@
 
 \section{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
 %
-As state-of-the-art de-identification models do not rely on document coherency to identify \ac{phi}, we evaluate a naive word-level automatic pseudonymization approach to perturbing training data.
+We propose a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models work on the sentence level and do not rely on document coherency \citep{liu2017identification,dernoncourt2017identification}.
 %
 Before training, we replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
-
-%
-When using GloVe embeddings, only tokens that exist in the pre-computed embedding matrix are moved to their neighbors.
-%
-The unknown token is not modified as it does not contain any information (except that the token in question is not part of the precomputed matrix).
 
 %
 \cref{fig:auto-pseudo} shows the automatic pseudonymization experiment's results. 
@@ -20,15 +15,15 @@ For both FastText and GloVe, moving training \ac{phi} tokens to random tokens fr
 \fone scores for both models drop to around $95\%$ when selecting from $N=500$ neighbors and to around $90\%$ when using $N=1\,000$ neighbors.
 %
 With $N=100$, the FastText model achieves an \fone score of $96.75\%$ and the GloVe model achieves an \fone score of $96.42\%$.
-%
-The detailed evaluation tables for both FastText and GloVe can be found in \cref{app:baseline-evaluation}.
 
+
+% TODO is this discussion?
 %
 It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
 %
-The FastText model beats the respective raw data model in the profession, location, age and contact categories (see \cref{tab:detailed-mtn-fasttext}).
+The FastText model beats the respective raw data model in the profession, location, age and contact categories.
 %
-The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories (see \cref{tab:detailed-mtn-glove}).
+The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories.
 %
 However, the overall binary \ac{hipaa} \fone scores do not improve when using automatic pseudonymization.
 
