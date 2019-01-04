@@ -32,13 +32,13 @@ Preparing this data for sharing using the document-coherent pseudonymization app
 
 % Why is sharing training data the best solution for a de-identification model?
 %
-A representation of medical text that allows training a de-identification tool while not allowing inference of protected information would greatly simplify the collection of training data for a universal de-identification tool.
+We introduce two representation approaches to privacy-preserving sharing of medical text that allow training a de-identification tool: an automatic pseudonymization and an adversarially learned private representation.
 %
-This representation would still require humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step would be performed by the transformation to the representation.
+Our approaches still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representations.
 %
-A tool trained on the representation could easily be made publicly available because its parameters cannot contain any protected data, as it is never trained on raw text.
+A tool trained on our representations could easily be made publicly available because its parameters cannot contain any protected data, as it is never trained on raw text.
 %
-Simplifying the de-identification procedure could enable large-scale medical studies that are otherwise too costly.
+Simplifying the de-identification procedure may enable large-scale medical studies that are otherwise too costly.
 
 % TODO present results
 % use acronym short forms here (\acs{…}) and explain them later
