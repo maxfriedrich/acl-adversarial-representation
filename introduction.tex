@@ -3,7 +3,7 @@
 
 \section{Introduction}\label{sec:introduction}
 %
-In addition to structured medical data, electronic health records contain free-text patient notes that are a rich source of information.
+In addition to structured medical data, electronic health records contain free-text patient notes that are a rich source of information \citep{jensen2012mining}.
 %
 Due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized.
 %
@@ -13,7 +13,9 @@ De-identification is the task of finding and labeling \ac{phi} in medical text f
 %
 The American \ac{hipaa} defines 18 categories of \ac{phi}.
 
-% TODO Why is it important (enable large-scale studies)
+% TODO Why is it important? (enable large-scale studies)
+
+% TODO de-identification as a sequence tagging task like NER
 
 %
 Trying to train a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified medical text for research (including for training the tool itself).
@@ -35,6 +37,7 @@ To achieve a universal de-identification tool, many medical institutions would h
 Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 % Why is sharing training data the best solution for a de-identification model?
+% TODO automatic pseudonymization as a requirement/precursor for the learned representation instead of describing them as ``two approaches''
 %
 We introduce two representation approaches to privacy-preserving sharing of medical text that allow training a de-identification tool: an automatic pseudonymization and an adversarially learned private representation.
 %

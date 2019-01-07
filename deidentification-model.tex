@@ -2,6 +2,8 @@
 % !TeX spellcheck=en_US
 
 \section{De-Identification Model}\label{sec:deidentification-model}
+% TODO we don't use character embeddings -- FastText is character-based, GloVe is not
+% TODO maybe leave out FastText because it weakens the point?
 %
 We use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
@@ -20,12 +22,11 @@ The casing feature improves GloVe by $0.4$ percentage points.
         \toprule
         Model & \fone (\%)\\
         \midrule
-        % python -m deid.tools.graphics.baseline_table
         % \Ac{elmo} & $97.74$ \\
         Our FastText & $97.67$ \\
         Our GloVe & $97.62$ \\
-        \citet{dernoncourt2017identification} & $\bm{97.85}$\\
-        % TODO mention \citet{lee2017transfer}?
+        \citet{dernoncourt2017identification} & $97.85$\\
+        \citet{lee2017transfer} & $\bm{97.97}$\\
     \end{tabular}
-    \caption{Average precision, recall, and \fone scores of our de-identification models in comparison to the state of the art.}\label{tab:baseline-results}
+    \caption{Average precision, recall, and \fone scores of our de-identification models on the i2b2 2014 dataset in comparison to the state of the art.}\label{tab:baseline-results}
 \end{table}
