@@ -98,6 +98,22 @@ The \ac{dann} architecture \citep{ganin2016domain} implements a three-party game
 \section{Dataset and Methods}
 
 \subsection{i2b2 2014 Dataset}
+%
+The i2b2 2014 dataset~\citep{stubbs2015annotating} was released as part of the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly available dataset for de-identification today\footnote{The dataset for the 2016 CEGS N-GRID shared tasks track 1 is not yet available as of October 2018.}.
+% TODO update this date / talk about the other dataset if we use it
+%
+It contains 1304 free-text documents describing diabetic patients.
+%
+The main difference to the 2006 shared task dataset is the inclusion of longitudinal records, i.e.\ multiple records per patient.
+%
+The dataset spans 296 patients, on average $4.4$ records per patient.
+%
+To create the i2b2 dataset, raw medical records from a single source were prepared using manual annotation of \ac{phi} entities that were then replaced with suitable pseudonyms (e.g.\ person names were replaced with other person names, dates were offset by a random amount but date intervals were retained, misspellings were replaced with similar misspellings of the pseudonym).
+
+%
+The i2b2 dataset uses the 18 categories of \ac{phi} defined by \ac{hipaa} as a starting point for its own set of \ac{phi} categories.
+%
+In addition to the \ac{hipaa} set of categories, it includes (sub-)categories such as doctor names, professions, states, countries, and ages under 90.
 
 \subsection{De-Identification Model}\label{sec:deidentification-model}
 % TODO we don't use character embeddings -- FastText is character-based, GloVe is not
