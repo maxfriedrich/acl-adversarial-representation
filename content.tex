@@ -1,0 +1,580 @@
+% !TeX root=main
+% !TeX spellcheck=en_US
+
+\section{Introduction}\label{sec:introduction}
+%
+In addition to structured medical data, electronic health records contain free-text patient notes that are a rich source of information \citep{jensen2012mining}.
+%
+Due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized.
+%
+De-identification is the task of finding and labeling \ac{phi} in medical text for sanitization.
+%
+\Ac{phi} includes potentially identifying information such as names, professions, geographic identifiers, dates, and account numbers.
+%
+The American \ac{hipaa} defines 18 categories of \ac{phi}.
+
+% TODO Why is it important? (enable large-scale studies)
+
+% TODO de-identification as a sequence tagging task like NER
+
+%
+Trying to train a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified medical text for research (including for training the tool itself).
+%
+The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes (replacing e.g.\ every person name with a different person name and every date with a different date) in a document-coherent way \cite{uzuner2007evaluating}.
+
+% TODO including applying spelling mistakes to the substitutes etc
+
+% Why is manual pseudonymization not so great? (time-consuming, coherency)
+%
+Today, a pseudonymized dataset for de-identification from a single source is publicly available \citep{stubbs2015annotating}.
+%
+However, de-identification tools trained on the dataset are too specific for the concrete data and do not generalize well to data from other sources~\citep{stubbs2017identification}.
+%
+If a medical institution instead decides to train a de-identification tool on their raw text data, it is conceivable that the tool would contain traces of the \ac{phi} it was trained with, making it possible for an attacker to recover parts of the training data if the tool itself is shared.
+%
+To achieve a universal de-identification tool, many medical institutions would have to pool their data.
+%
+Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
+
+% Why is sharing training data the best solution for a de-identification model?
+% TODO automatic pseudonymization as a requirement/precursor for the learned representation instead of describing them as ``two approaches''
+%
+We introduce two representation approaches to privacy-preserving sharing of medical text that allow training a de-identification tool: an automatic pseudonymization and an adversarially learned private representation.
+%
+Our approaches still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representations.
+%
+A tool trained on our representations could easily be made publicly available because its parameters cannot contain any protected data, as it is never trained on raw text.
+%
+Simplifying the de-identification procedure may enable large-scale medical studies that are otherwise too costly.
+
+% TODO present results
+% use acronym short forms here (\acs{…}) and explain them later
+We train a basic \acs{lstm}-\acs{crf} de-identification model on raw and automatically pseudonymized text as well as on our adversarial private representation.
+%
+
+\section{Related Work}\label{sec:related}
+%
+
+
+\subsection{Automatic De-Identification}
+%
+In 2006, 2014 and 2016, three shared tasks on de-identification were organized by the i2b2 group.
+%
+The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the shared tasks \citep{stubbs2015annotating}.
+%
+An \fone score of $95\%$ has been suggested as a target for reasonable de-identification systems \citep{stubbs2015automated}.
+
+%
+Up to the 2014 shared task, the organizers emphasized that it is unclear if a tool trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
+%
+The 2016 shared task featured a sight-unseen track in which existing systems were evaluated on records from a new data source.
+%
+The best system achieved an \fone score of only $79\%$, proving that de-identification systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
+
+%
+\citet{dernoncourt2017identification} achieve state-of-the-art performance in de-identification with \iac{lstm} model.
+%
+Their model achieves an \fone score of $97.85\%$ on the i2b2 2014 dataset.
+%
+Using transfer learning from a model trained on a larger dataset, they were able to further improve their scores on the i2b2 2014 dataset \citep{lee2017transfer}.
+%
+It is possible to reach an $98\%$ \fone score on the i2b2 2014 dataset by using document position information as an additional input \citep{zhao2018leveraging}, which will, however, most likely deteriorate generalization performance to instances of medical text with different structures.
+
+\subsection{Adversarial Representation Learning}
+%
+Adversarial learning for deep learning models was popularized by \citet{goodfellow2014generative}.
+%
+
+The \ac{dann} architecture \citep{ganin2016domain} implements a three-party game 
+
+\begin{itemize}
+    \item Learning fair representations \citep{zemel2013learning}
+    \item \Ac{dann} architecture \citep{ganin2016domain}
+    \item Uses in anonymization / demographics independent representation \citet{elazar2018adversarial,li2018towards}
+    \item \citet{elazar2018adversarial} cautionary conclusion (continued adversary training beats the representation)
+    \item \citet{feutry2018learning} three-step learning procedure
+\end{itemize}
+
+\section{Dataset and Methods}
+
+\subsection{i2b2 2014 Dataset}
+
+\subsection{De-Identification Model}\label{sec:deidentification-model}
+% TODO we don't use character embeddings -- FastText is character-based, GloVe is not
+% TODO maybe leave out FastText because it weakens the point?
+%
+We use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
+%
+In addition to pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, we provide the casing feature from \citet{reimers2017optimal} as an input.
+%
+The feature maps words to a one-hot representation of their casing (\textit{numeric}, \textit{mainly numeric}, \textit{all lower}, \textit{all upper}, \textit{initial upper}, \textit{contains digit}, or \textit{other}).
+
+\begin{itemize}
+    \item model selection and hyperparameters
+\end{itemize}
+
+
+\subsection{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
+%
+We propose a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models work on the sentence level and do not rely on document coherency \citep{liu2017identification,dernoncourt2017identification}.
+%
+Before training, we replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
+
+\subsection{Adversarial Representation}\label{sec:adversarial-representation}
+%
+We propose an adversarial learning based approach that automatically tunes the representation parameters to protect against adversary models.
+
+\begin{description}
+    \item[Architecture]
+    %
+    Our approach uses a model that is composed of three components: a representation model, a de-identification model, and an adversary.
+    %
+    An overview of the architecture is shown in \cref{fig:adversarial-model}.
+    %
+    The representation model maps a sequence of word embeddings to an intermediate vector representation sequence.
+    %
+    The de-identification model receives this representation sequence as an input instead of the original embedding sequence.
+    %
+    It retains the casing feature as an additional input.
+    %
+    As before, the de-identification model outputs a sequence of class probabilities.
+    %
+    % TODO the adversary receives two inputs
+    The representation is also used as an input to the adversary that tries to infer information about the original embedding sequence.
+    
+    \begin{figure}
+        \centering
+        \input{images/tikz/adversarial}
+        \caption[Adversarial model architecture]{%
+            Simplified visualization of the adversarial model architecture.
+            %
+            Sequences of squares denote real-valued vectors, dotted arrows represent possible additional real or fake inputs to the adversary.
+            %
+            The casing feature that is provided as a second input to the de-identification model is omitted for legibility.}\label{fig:adversarial-model}
+    \end{figure}
+    
+    \item[Representations]
+    %
+    We evaluate two types of representation models: a feedforward and \iac{lstm} model.
+    %
+    Both apply Gaussian noise with zero mean and trainable standard deviations to their inputs and outputs.
+    %
+    The models learn a standard deviation for each of the input and output dimensions.
+    
+    % TODO formula for noise: N_out + LSTM(X + N_in)
+    
+    % TODO but we only describe results for d=50?
+    %
+    We try different representation sizes to explore the trade-off between de-identification and adversary performances.
+    %
+    In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
+    
+    \item[Adversaries]
+    %
+    In existing gradient reversal approaches \citep{ganin2016domain,feutry2018learning,elazar2018adversarial}, the learned representation is invariant to some attribute of the input.
+    %
+    Similarly, our representation should be invariant to small input changes, like a single token being replaced with a neighbor in the embedding space.
+    %
+    The number of neighbors $N$ controls the privacy properties of the representation.
+    
+    %
+    Additionally, we need our representation to contain a random element because we want to share the output representations as well as the representation model itself.
+    %
+    An attacker should not be able to create a lookup table of representations for exact sentences, i.e.\ the representation must be immune to known-plaintext attacks.
+    
+    %
+    To achieve these goals, we use two adversaries that are trained for the following tasks:
+    \begin{enumerate}
+        \item Given a representation and an embedding sequence, decide if they were obtained from the same sentence.
+        \item Given two representation sequences (and their cosine similarities), decide if they were obtained from the same sentence.
+    \end{enumerate}
+    
+    %
+    The first adversary's objective is a discriminatory formulation of an inverse representation model and causes representations for similar inputs (replacing any protected token with one of its $N$ neighbors) to be indistinguishable.
+    %
+    The second adversary's objective causes repeated representation computations for the same sentence to differ by a high enough degree to make it impossible to build a lookup table of representations.
+    %
+    We obtain the representation sequences for the second adversary from copies of the representation model with shared weights.
+    %
+    We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:automatic-pseudonymization}, limiting the number of replaced tokens to one per sentence.
+    
+    %
+    The adversaries are implemented as bidirectional \ac{lstm} models.
+    %
+    We confirmed that bidirectional \ac{lstm} models are able to learn the adversarial tasks on randomly generated data and raw word embeddings in a preliminary experiment.
+    %
+    To use the two adversaries in our architecture, we average their outputs.
+    
+    \item[Training]
+    %
+    We evaluate two training procedures: \ac{dann} training~\citep{ganin2016domain} and the alternating approach by \citet{feutry2018learning}.
+    
+    %
+    In \ac{dann} training, the three components are trained conjointly, optimizing the sum of losses.
+    %
+    Training the de-identification model modifies the representation model weights to generate a more meaningful representation for de-identification.
+    %
+    The adversary gradient is reversed with a gradient reversal layer between the adversary and the representation model in the backward pass, causing the representation to become less meaningful for the adversary.
+    
+    %
+    The training procedure by \citet{feutry2018learning} is shown in \cref{fig:feutry-training}.
+    %
+    It is composed of three sequential phases:
+    %
+    \begin{enumerate}
+        \item The de-identification and representation models are pre-trained together, optimizing the de-identification loss $L_{\text{deid}}$.
+        \item The representation model is frozen and the adversary is pre-trained, optimizing the adversarial loss $L_{\text{adv}}$.
+        \item In alternation, for one epoch each:
+        \begin{enumerate}
+            \item The representation is frozen and both de-identification model and adversary are trained, optimizing their respective losses $L_{\text{deid}}$ and $L_{\text{adv}}$.
+            \item The de-identification model and adversary are frozen and the representation is trained, optimizing the combined loss $L_{\text{repr}} = L_{\text{deid}} + \lambda \abs{L_{\text{adv}} - L_{\text{random}}}$. \label{item:repr-training}
+        \end{enumerate}
+    \end{enumerate}
+    
+    \begin{figure}
+        \centering
+        \input{images/tikz/training}
+        \caption[Adversarial training procedure]{%
+            Visualization of \citeauthor{feutry2018learning}'s training procedure.
+            %
+            The adversarial model layout follows \cref{fig:adversarial-model}: the representation model is at the bottom, the left branch is the de-identification model and the right branch is the adversary.
+            %
+            In each step, the thick components are trained while the thin components are frozen.
+            %
+            Steps 1 and 2 are trained until stable.
+            %
+            Then training alternates between one epoch and step 3a and one epoch of step 3b.
+        }\label{fig:feutry-training}
+    \end{figure}
+    
+    %
+    In the first two phases, we monitor the respective validation losses for early stopping to decide at which point the training should move on to the next phase.
+    %
+    The alternating steps in the third phase each last one training epoch.
+    %
+    We determine the early stopping epoch using only the combined validation loss (\cref{item:repr-training}).
+    
+    %
+    Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
+    %
+    The combined loss is motivated by the fact that the adversary performance should be the same as a random guessing model, which is a lower bound for anonymization~\citep{feutry2018learning}.
+    %
+    The term $\abs{L_{\text{adv}} - L_{\text{random}}}$ approaches $0$ when the adversary performance approaches random guessing\footnote{In the case of binary classification: $L_{\text{random}} = -\log \frac{1}{2} \approx 0.6931$.}.
+    %
+    $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
+    
+    \item[Application]
+    %
+    To apply the model in practice, a central model provider would train the three parts of the model on an initial \ac{phi}-annotated dataset, e.g.\ the i2b2 2014 data.
+    %
+    This initial training should confirm that the learned representation allows training a de-identification model while being robust to the adversaries.
+    %
+    The model provider would then publish the representation model along with their choice of pre-trained word embeddings.
+    %
+    Medical institutions would use the representation model to transform their \ac{phi}-labeled data into a private representation, which is then sent back to the central model provider with the respective labels.
+    %
+    This transformation replaces the manual document-coherent pseudonymization that is typically performed to share training data for de-identification.
+    
+    %
+    The model provider would then update the existing de-identification model or train a new model using all available representation data.
+    %
+    Periodically, the pipeline of representation model (possibly in a version without additive noise) and de-identification model would be published so it can be used by medical institutions on their unlabeled data.
+    
+\end{description}
+
+\begin{figure*}
+    \centering
+    \input{images/plt/adversarial-learning-curve-0.pgf}
+    \caption{This is a figure caption}
+\end{figure*}
+
+\section{Results}
+
+\subsection{Basic De-Identification Model}
+%
+When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to the state of the art (see \cref{tab:baseline-results}).
+%
+The casing feature improves GloVe by $0.4$ percentage points.
+
+% TODO these are the ``hipaa binary token'' scores
+\begin{table}
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        Model & \fone (\%)\\
+        \midrule
+        % \Ac{elmo} & $97.74$ \\
+        Our FastText & $97.67$ \\
+        Our GloVe & $97.62$ \\
+        \citet{dernoncourt2017identification} & $97.85$\\
+        \citet{liu2017identification} & $\bm{98.27}$\\
+    \end{tabular}
+    \caption{Average precision, recall, and \fone scores of our de-identification models on the i2b2 2014 dataset in comparison to the state of the art.}\label{tab:baseline-results}
+\end{table}
+
+\subsection{Automatic Pseudonymization}
+%
+\cref{fig:auto-pseudo} shows the automatic pseudonymization experiment's results. 
+%
+For both FastText and GloVe, moving training \ac{phi} tokens to random tokens from up to their $N=200$ closest neighbors does not significantly reduce de-identification performance.
+%
+\fone scores for both models drop to around $95\%$ when selecting from $N=500$ neighbors and to around $90\%$ when using $N=1\,000$ neighbors.
+%
+With $N=100$, the FastText model achieves an \fone score of $96.75\%$ and the GloVe model achieves an \fone score of $96.42\%$.
+
+
+% TODO is this discussion?
+%
+It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
+%
+The FastText model beats the respective raw data model in the profession, location, age and contact categories.
+%
+The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories.
+%
+However, the overall binary \ac{hipaa} \fone scores do not improve when using automatic pseudonymization.
+
+\begin{figure}
+    \centering
+    \input{images/plt/automatic-pseudonymization.pgf}
+    \caption[De-identification with automatic pseudonymization]{\fone scores of our models when trained on automatically pseudonymized data where \ac{phi} tokens are moved to one of different numbers of neighbors $N$.}\label{fig:auto-pseudo}
+    % TODO describe or delete the grey dashed lines
+\end{figure}
+
+\subsection{Adversarial Representation}
+%
+In our adversarial learning experiment, we do not achieve satisfactory results with the conjoint \ac{dann} training procedure: in all cases, our models learn representations that are not sufficiently resistant to the adversary.
+%
+When training the adversary on the frozen representation for an additional $20$ epochs, it is able to distinguish real from fake input pairs on a test set with accuracies above $80\%$.
+%
+This confirms the findings by \citet{elazar2018adversarial}.
+
+%
+With the training procedure by \citet{feutry2018learning}, we are able to train a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.
+%
+We select the \ac{lstm} representation model over the dense model because it allows $0.4$ percentage points higher de-identification \fone scores on average.
+
+%
+\Cref{fig:adversarial-deid} shows our de-identification results when using adversarially learned representations.
+%
+A higher number of neighbors $N$ means a stronger invariance requirement for the representation.
+%
+For values of $N$ up to $1\,000$, our FastText and GloVe models are able to learn representations that allow training de-identification models that reach the target \fone score of $95\%$.
+%
+However, training becomes unstable for $N>50$ when using GloVe and $N>500$ when using FastText embeddings.
+%
+Then, training results in representations that are not robust to the adversary, which is shown in the diagram on the right side.
+
+%
+Our choice of representation size $d \in \{50, 100, 300\}$ does not influence de-identifi\-ca\-tion or adversary performance, so we select $d=50$ for further evaluation.
+%
+For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ and the GloVe model reaches an \fone score of $96.89\%$.
+
+%
+The adversarially trained FastText model beats the FastText model trained on raw data in the contact category. 
+%
+The GloVe model does not beat the corresponding raw data model in any category.
+%
+It is most significantly weaker in the profession category.
+
+\begin{figure*}
+    \centering
+    \input{images/plt/adversarial-deid-50.pgf}
+    \caption[De-identification with adversarially learned representations]{%
+        Left: de-identification \fone scores of our models using an adversarially trained representation with representation size $d=50$ and different numbers of neighbors $N$ for the representation invariance requirement.
+        %
+        Right: mean accuracy on the two adversary tasks.
+        %
+        The validation accuracy lines show the maximum accuracy around the best epoch according to the combined loss as an attempt to visualize representation stability.
+    }\label{fig:adversarial-deid}
+\end{figure*}
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection{De-Identification Performance}
+%
+In this section, we discuss the de-identification performance properties of our models.
+
+\begin{description}
+    \item[Baseline De-Identification]
+    %
+    Our \ac{elmo} model is the best de-identification model, followed by the FastText and GloVe models.
+    %
+    \Ac{elmo} embeddings encapsulate the sentence context, making them more expressive than the non-contextual embedding types.
+    
+    %
+    \citet{reimers2017optimal} find that GloVe performs better than FastText in their \ac{ner} benchmark.
+    %
+    This is no contradiction to our result as the i2b2 2014 dataset in all likelihood contains more out-of-vocabulary tokens (that GloVe cannot embed) than their datasets.
+    %
+    FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) proves useful on datasets with misspellings and ungrammatical text.
+    %
+    However, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
+    %
+    The casing feature (which improves GloVe be $0.4$ percentage points in the hyperparameter optimization) makes up for GloVe's missing embeddings for unknown words.
+    
+    %
+    Analyzing our baseline models' predictions on the test set reveals that the models typically make wrong predictions for the same instances of \ac{phi}.
+    %
+    \Cref{tab:deid-errors} shows some wrong predictions from each of our models that are unique to the respective model\footnote{We show similar sentences to actual wrongly predicted sentences from the i2b2 test set.}.
+    %
+    Most notably, the GloVe model makes mistakes that can be avoided by using subword features. 
+    %
+    Slight misspellings have embeddings close to the correct spelling in \ac{elmo} and FastText.
+    %
+    Also, entity names that clearly belong to a specific category (like city names with the suffix ``-town'') have meaningful embeddings in \ac{elmo} and FastText.
+    %
+    Some of the \ac{elmo} and FastText models' mistakes could be avoided by using a dictionary of professions, hospital names, and medical terms as an additional data source, e.g.\ ``Bruce Protocol'' is a standard cardiac diagnostic test that would occur in a medical dictionary.
+\end{description}
+
+\begin{description}
+    \item[Automatically Pseudonymized Data]
+    %
+    Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
+    
+    %
+    \Cref{fig:pseudonymizations} shows four examples for automatically pseudonymized sentences that were generated by moving \ac{phi} tokens to one of their $N=100$ neighbors in the FastText embedding space.
+    %
+    While the first three sentences are coherent and could be the result of a human pseudonymization step, the unrealistic last sentence hints at the limitations of this naive approach.
+    %
+    The token ``HMS'' was seemingly moved too far because ``Q-ship'' is not a realistic hospital name, and the tokens ``Florida'' and ``Hospital'' were only perturbed by a small degree.
+    %
+    However, as deep learning models do not see the actual words but only their representations (that are neighbors in the embedding space), using the automatically pseudonymized data does not dramatically deteriorate de-identification performance.
+    %
+    Rather, models trained on automatically pseudonymized data beat their counterparts that were trained on raw data in some categories of \ac{phi} due to their higher robustness.
+    
+    \begin{figure}
+        % \small
+        % \sffamily
+        \begin{framed}
+            \begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt,leftmargin=*]
+                \item \sout{Bob} \textbf{John} continues to feel well
+                \item She is a fulltime \sout{historian} \textbf{photographer}
+                \item TReated with RAI \sout{February} \textbf{September} \sout{2071} \textbf{2080}
+                \item  Transferred in \sout{January} \textbf{October} to the \sout{HMS} \textbf{Q-ship} after presenting to the \sout{Florida} \textbf{Miami-Florida} \sout{Hospital} \textbf{Hosp} \sout{Orlando} \textbf{Merlina}
+            \end{itemize}
+        \end{framed}
+        \caption[Automatically pseudonymized data.]{Examples of automatically pseudonymized sentences using FastText embeddings and $N=100$ neighbors.}\label{fig:pseudonymizations}
+    \end{figure}
+    
+    \item[Adversarially Learned Representation]
+    %
+    Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models when using up to $N=1000$ neighbors as an invariance requirement.
+    
+    %
+    The adversarial de-identification results beat the automatic pseudonymization results because the representation model can act as a task-specific feature extractor.
+    %
+    Additionally, the representations are more general as they are invariant to word changes.
+    %
+    The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
+    
+\end{description}
+
+\subsection{Privacy Properties}
+%
+In this section, we discuss the privacy properties of our approaches.
+
+\begin{description}
+    \item[Embeddings]
+    %
+    When looking up embedding space neighbors for words, it is notable that many FastText neighbors include the original word or parts of it as a subword.
+    %
+    This is due to FastText's method of using the sum of subword embeddings in embedding calculation.
+    %
+    For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of their $N=100$ closest neighbors in the FastText embedding matrix contain the original token as a subword.
+    %
+    When looking up neighbors using GloVe embeddings, the value is $0.44$.
+    %
+    This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$) than GloVe to sufficiently obfuscate protected information.
+    
+    \item[Automatically Pseudonymized Data]
+    %
+    We identified some privacy weaknesses of our automatic pseudonymization approach.
+    %
+    For a last name like \textit{Wolf}, neighbors in the embedding space will include other animal names and not common last names.
+    %
+    In this case, it could be possible to infer the original name if there are only a limited number of people that might appear in the dataset, e.g.\ the population of a small town.
+    
+    %
+    If multiple sentences contain animal names (or any other similar names), they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
+    %
+    It may be possible to infer the original name using the overlapping neighbor spaces.
+    %
+    To counter this, we can re-introduce document-level pseudonymization, i.e.\ moving all occurrences of \iac{phi} token to the same neighbor.
+    %
+    However, we would then also need to detect misspelled names as well as other hints to the actual tokens and transform them similarly to the original, which would add back much of the complexity of manual pseudonymization that we try to avoid.
+    
+    %
+    In our adversarial evaluation, the adversaries reach test accuracies of $60\%$.
+    %
+    However, a $60\%$ accuracy is also reached by a similar \ac{lstm} adversary that is trained to discriminate original sequences from sequences with one occurrence of \ac{phi} moved to a neighbor.
+    %
+    This means that the adversary can achieve its accuracy only by learning to distinguish real from fake sentences and ignoring its pseudonymized sequence input.
+    
+    \item[Adversarially Learned Representation]
+    %
+    Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
+    %
+    While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
+    
+    %
+    \Cref{fig:adversarial-learning-curves} shows a set of typical (successful) learning curves for \citeauthor{feutry2018learning}'s training procedure.
+    %
+    The representation model and de-identification model are jointly pre-trained in the first phase.
+    %
+    In the second phase, the adversary is pre-trained to reach a validation accuracy of around $80\%$, which means that the pre-trained representation does not fit our invariance requirements.
+    %
+    At the beginning of the third training phase, both the de-identification model and the adversary learning curves show an oscillating pattern that is caused by the alternating training of the branches (with frozen representation model) and the representation model (with frozen branches).
+    %
+    Around 15 epochs into this phase, we find an adequate representation which is indicated by the adversary accuracy being close to the random guessing accuracy of $50\%$.
+    %
+    The de-identification validation loss is typically lower than the training loss in the alternating phase.
+    %
+    Since the representation and de-identification models are not trained together in this phase, the models always need to \textit{catch up} to the other model's parameter changes (training loss is averaged over all training samples of an epoch).
+    %
+    When freezing the representation model and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$.
+    %
+    Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.
+    
+    %
+    \Cref{fig:adversarial-learning-curves-failed} shows the learning curves of a failed experiment run where training becomes unstable due to the choice of $N=1000$.
+    %
+    The adversary learns to counter the representation several times in the alternating training phase.
+    %
+    These adversary accuracy peaks are always followed by a peak in the de-identification model's validation loss because the representation is worsened for both branches to combat the adversary.
+    %
+    Due to the combined loss with $\lambda=1$, the best model according to validation loss will often deliver good de-identification results but it may not guarantee robustness to the adversary, even if the concrete adversary test accuracy after the early stopping epoch is low.
+    %
+    Continued training of the adversary with a frozen representation will allow it to reach higher accuracies.
+    
+\end{description}
+
+\subsection{Generalization}
+
+\begin{itemize}
+    \item Evaluation on the 2016 sight-unseen dataset
+\end{itemize}
+
+\subsection{Future Work}
+%
+Our automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
+%
+Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
+
+%
+Our automatic pseudonymization and adversarial learning approaches will most likely be improved by using \ac{elmo} embeddings, which we did not use due to their computation cost.
+%
+In adversarial learning, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
+%
+A further possible extension is a dynamic noise level in the representation model that depends on the \ac{lstm} output instead of being a trained weight.
+%
+This might allow using lower amounts of noise for certain inputs while still being robust to the adversary.
+
+%
+When more training data from multiple sources becomes available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
+%
+Additionally, federated learning and the semi-supervised knowledge transfer approach for de-identification can be reasonably simulated with multiple sources of data.
+
+%TODO zalando concatenate different embeddings \citep{akbik2018contextual}
+%TODO other languages
+
+\section{Conclusions}\label{sec:conclusions}
