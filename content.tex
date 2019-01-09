@@ -83,18 +83,16 @@ Using transfer learning from a larger dataset slightly improves performance on t
 
 \subsection{Adversarial Representation Learning}
 %
-Adversarial learning for deep learning models was popularized by \citet{goodfellow2014generative}.
+Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode features of raw data that allows it to be used in e.g.\ machine learning algorithms while obfuscating membership in a protected group or other attributes.
 %
+The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementation of a three-party game between a representer, classifier, and adversary component.
+%
+It uses a gradient reversal layer to worsen the representation for the adversary during back-propagation.
 
-The \ac{dann} architecture \citep{ganin2016domain} implements a three-party game 
-
-\begin{itemize}
-    \item Learning fair representations \citep{zemel2013learning}
-    \item \Ac{dann} architecture \citep{ganin2016domain}
-    \item Uses in anonymization / demographics independent representation \citet{elazar2018adversarial,li2018towards}
-    \item \citet{elazar2018adversarial} cautionary conclusion (continued adversary training beats the representation)
-    \item \citet{feutry2018learning} three-step learning procedure
-\end{itemize}
+%
+Although initially conceived for use in domain adaptation, \acp{dann} have recently been used to obfuscate demographics attributes \citep{elazar2018adversarial,li2018towards} from text and subject identity \citep{feutry2018learning} from images.
+%
+\citet{elazar2018adversarial} warn that continued adversary training with a frozen representation may allow adversaries to break representation privacy.
 
 \section{Dataset and Methods}
 
