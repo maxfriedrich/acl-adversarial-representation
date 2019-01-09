@@ -124,9 +124,29 @@ In addition to pre-trained FastText \citep{bojanowski2016enriching} or GloVe \ci
 %
 The feature maps words to a one-hot representation of their casing (\textit{numeric}, \textit{mainly numeric}, \textit{all lower}, \textit{all upper}, \textit{initial upper}, \textit{contains digit}, or \textit{other}).
 
-\begin{itemize}
-    \item model selection and hyperparameters
-\end{itemize}
+%
+\Cref{tab:deid-hyperparameters} shows our model's hyperparameter configuration that was determined empirically through a random search.
+
+\begin{table}
+    \centering
+    \begin{tabular}{ll}
+     \toprule
+     Hyperparameter & Value\\
+     \midrule
+     Pre-trained embeddings & FastText, GloVe\\
+     Casing feature & Yes\\
+     Batch size & 32\\
+     Number of LSTM layers & 2\\
+     LSTM units per layer/dir. & 128\\
+     Input embedding dropout & $0.1$\\
+     Variational dropout & $0.25$\\
+     Dropout after LSTM & $0.5$\\
+     Optimizer & Nadam\\
+     Gradient norm clipping & $1.0$\\
+     \bottomrule
+    \end{tabular}
+    \caption{Hyperparameter configuration of our de-identification model.}\label{tab:deid-hyperparameters}
+\end{table}
 
 
 \subsection{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
