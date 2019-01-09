@@ -155,6 +155,8 @@ We propose a naive word-level automatic pseudonymization approach that exploits 
 %
 Before training, we replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
 
+% TODO example
+
 \subsection{Adversarial Representation}\label{sec:adversarial-representation}
 %
 We propose an adversarial learning based approach that automatically tunes the representation parameters to protect against adversary models.
@@ -174,9 +176,10 @@ We propose an adversarial learning based approach that automatically tunes the r
     %
     As before, the de-identification model outputs a sequence of class probabilities.
     %
-    % TODO the adversary receives two inputs
-    The representation is also used as an input to the adversary that tries to infer information about the original embedding sequence.
-    
+    The representation sequence is also used as one of the two inputs to the adversary that tries to infer information about the original sequence.
+    %
+    % TODO describe the second input
+
     \begin{figure}
         \centering
         \input{images/tikz/adversarial}
@@ -187,22 +190,6 @@ We propose an adversarial learning based approach that automatically tunes the r
             %
             The casing feature that is provided as a second input to the de-identification model is omitted for legibility.}\label{fig:adversarial-model}
     \end{figure}
-    
-    \item[Representations]
-    %
-    We evaluate two types of representation models: a feedforward and \iac{lstm} model.
-    %
-    Both apply Gaussian noise with zero mean and trainable standard deviations to their inputs and outputs.
-    %
-    The models learn a standard deviation for each of the input and output dimensions.
-    
-    % TODO formula for noise: N_out + LSTM(X + N_in)
-    
-    % TODO but we only describe results for d=50?
-    %
-    We try different representation sizes to explore the trade-off between de-identification and adversary performances.
-    %
-    In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
     
     \item[Adversaries]
     %
@@ -239,6 +226,23 @@ We propose an adversarial learning based approach that automatically tunes the r
     We confirmed that bidirectional \ac{lstm} models are able to learn the adversarial tasks on randomly generated data and raw word embeddings in a preliminary experiment.
     %
     To use the two adversaries in our architecture, we average their outputs.
+    
+    \item[Representations]
+    %
+    We use a bidirectional \ac{lstm} model to implement the representation.
+    %
+    It applies Gaussian noise $\bm{N}$ with zero mean and trainable standard deviations to the input embeddings $\bm{E}$ and output sequence.
+    %
+    The model learns a standard deviation for each of the input and output dimensions.
+    %
+    \begin{align}
+        \bm{R} = \bm{N}_{out} + \text{LSTM}(\bm{E} + \bm{N}_{in})
+    \end{align}
+    
+    %
+    In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
+    %
+    
     
     \item[Training]
     %
@@ -340,7 +344,8 @@ The casing feature improves GloVe by $0.4$ percentage points.
         \midrule
         % \Ac{elmo} & $97.74$ \\
         Our FastText & $97.67$ \\
-        Our GloVe & $97.62$ \\
+        Our GloVe + casing & $97.62$ \\
+        Our GloVe & $97.24$ \\
         \citet{dernoncourt2017identification} & $97.85$\\
         \citet{liu2017identification} & $\bm{98.27}$\\
     \end{tabular}
