@@ -20,9 +20,9 @@ The American \ac{hipaa} defines 18 categories of \ac{phi}.
 %
 Trying to train a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified medical text for research (including for training the tool itself).
 %
-The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes (replacing e.g.\ every person name with a different person name and every date with a different date) in a document-coherent way \cite{uzuner2007evaluating}.
-
-% TODO including applying spelling mistakes to the substitutes etc
+The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes in a document-coherent way.
+%
+This requires replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings on the pseudonym \cite{uzuner2007evaluating}.
 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
 %
@@ -98,16 +98,11 @@ Although initially conceived for use in domain adaptation, \acp{dann} have recen
 
 \subsection{i2b2 2014 Dataset}
 %
-The i2b2 2014 dataset~\citep{stubbs2015annotating} was released as part of the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly available dataset for de-identification today\footnote{The dataset for the 2016 CEGS N-GRID shared tasks track 1 is not yet available as of October 2018.}.
+The i2b2 2014 dataset~\citep{stubbs2015annotating} was released as part of the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly available dataset for de-identification today.
 % TODO update this date / talk about the other dataset if we use it
 %
-It contains 1304 free-text documents describing diabetic patients.
+It contains 1304 free-text documents with \ac{phi} annotations.
 %
-The main difference to the 2006 shared task dataset is the inclusion of longitudinal records, i.e.\ multiple records per patient.
-%
-The dataset spans 296 patients, on average $4.4$ records per patient.
-%
-To create the i2b2 dataset, raw medical records from a single source were prepared using manual annotation of \ac{phi} entities that were then replaced with suitable pseudonyms (e.g.\ person names were replaced with other person names, dates were offset by a random amount but date intervals were retained, misspellings were replaced with similar misspellings of the pseudonym).
 
 %
 The i2b2 dataset uses the 18 categories of \ac{phi} defined by \ac{hipaa} as a starting point for its own set of \ac{phi} categories.
