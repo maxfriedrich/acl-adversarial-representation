@@ -233,7 +233,7 @@ Additionally, it adds random noise to representations in way that prohibits buil
     %
     The adversaries are implemented as bidirectional \ac{lstm} models.
     %
-    We confirmed that bidirectional \ac{lstm} models are able to learn the adversarial tasks on randomly generated data and raw word embeddings in a preliminary experiment.
+    We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in a preliminary experiment.
     %
     To use the two adversaries in our architecture, we average their outputs.
     
@@ -334,7 +334,8 @@ Additionally, it adds random noise to representations in way that prohibits buil
 \begin{itemize}
     \item Preprocessing (tokenization like \citet{liu2017identification})
     \item train/val/test split
-    \item Keras, TensorFlow, spaCy, 
+    \item Keras, TensorFlow, spaCy
+    \item Binary HIPAA F1 score
 \end{itemize}
 
 \section{Results}
