@@ -120,7 +120,7 @@ In addition to pre-trained FastText \citep{bojanowski2016enriching} or GloVe \ci
 The feature maps words to a one-hot representation of their casing (\textit{numeric}, \textit{mainly numeric}, \textit{all lower}, \textit{all upper}, \textit{initial upper}, \textit{contains digit}, or \textit{other}).
 
 %
-\Cref{tab:deid-hyperparameters} shows our model's hyperparameter configuration that was determined empirically through a random search.
+\Cref{tab:deid-hyperparameters} shows our model's hyperparameter configuration that was determined through a random hyperparameter search.
 
 \begin{table}
     \centering
@@ -237,7 +237,7 @@ Additionally, it adds random noise to representations in way that prohibits buil
     %
     To use the two adversaries in our architecture, we average their outputs.
     
-    \item[Representations]
+    \item[Representation]
     %
     We use a bidirectional \ac{lstm} model to implement the representation.
     %
