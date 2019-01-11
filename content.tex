@@ -328,14 +328,14 @@ Additionally, it adds random noise to representations in way that prohibits buil
     The model provider would then update the existing de-identification model or train a new model using all available representation data.
     %
     Periodically, the pipeline of representation model (possibly in a version without additive noise) and de-identification model would be published so it can be used by medical institutions on their unlabeled data.
-    
 \end{description}
 
-\begin{figure*}
-    \centering
-    \input{images/plt/adversarial-learning-curve-0.pgf}
-    \caption{This is a figure caption}
-\end{figure*}
+\subsection{Experiments}
+\begin{itemize}
+    \item Preprocessing (tokenization like \citet{liu2017identification})
+    \item train/val/test split
+    \item Keras, TensorFlow, spaCy, 
+\end{itemize}
 
 \section{Results}
 
@@ -438,12 +438,11 @@ It is most significantly weaker in the profession category.
     }\label{fig:adversarial-deid}
 \end{figure*}
 
-\subsection{Experiments}
-\begin{itemize}
-    \item Preprocessing (tokenization like \citet{liu2017identification})
-    \item train/val/test split
-    \item Keras, TensorFlow, spaCy, 
-\end{itemize}
+\begin{figure*}
+    \centering
+    \input{images/plt/adversarial-learning-curve-0.pgf}
+    \caption{This is a figure caption}
+\end{figure*}
 
 \section{Discussion}\label{sec:discussion}
 
