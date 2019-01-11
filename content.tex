@@ -150,18 +150,33 @@ We propose a naive word-level automatic pseudonymization approach that exploits 
 %
 Before training, we replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
 
-% TODO example
+%
+Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
+%
+\begin{quote}
+    [James] was admitted to [St. Thomas]
+\end{quote}
+%
+may be replaced by the phrase
+\begin{quote}
+    [Henry] was admitted to [Chapel Davis].
+\end{quote}
+
+% TODO the new embeddings are still similar
 
 \subsection{Adversarial Representation}\label{sec:adversarial-representation}
 %
-We propose an adversarial learning based approach that automatically tunes the representation parameters to protect against adversary models.
+Based on the automatic pseudonymization, we propose an adversarially learned sentence representation that is invariant to \textit{any} of the \ac{phi} tokens being replaced with \textit{any} of its $N$ neighbors.
+%
+Additionally, it adds random noise to representations in way that prohibits building a lookup table for known-plaintext attacks.
 
 \begin{description}
     \item[Architecture]
     %
-    Our approach uses a model that is composed of three components: a representation model, a de-identification model, and an adversary.
+    Our approach uses a model that is composed of three components: a representation model, the de-identification model from \cref{sec:deidentification-model}, and an adversary.
     %
     An overview of the architecture is shown in \cref{fig:adversarial-model}.
+    
     %
     The representation model maps a sequence of word embeddings to an intermediate vector representation sequence.
     %
