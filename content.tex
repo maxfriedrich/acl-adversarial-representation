@@ -465,10 +465,7 @@ In this section, we discuss the de-identification performance properties of our 
 \begin{description}
     \item[Baseline De-Identification]
     %
-    Our \ac{elmo} model is the best de-identification model, followed by the FastText and GloVe models.
-    %
-    \Ac{elmo} embeddings encapsulate the sentence context, making them more expressive than the non-contextual embedding types.
-    
+    We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
     %
     \citet{reimers2017optimal} find that GloVe performs better than FastText in their \ac{ner} benchmark.
     %
@@ -480,6 +477,7 @@ In this section, we discuss the de-identification performance properties of our 
     %
     The casing feature (which improves GloVe be $0.4$ percentage points in the hyperparameter optimization) makes up for GloVe's missing embeddings for unknown words.
     
+    % TODO error analysis with only GloVe + FastText, table of errors
     %
     Analyzing our baseline models' predictions on the test set reveals that the models typically make wrong predictions for the same instances of \ac{phi}.
     %
@@ -487,11 +485,11 @@ In this section, we discuss the de-identification performance properties of our 
     %
     Most notably, the GloVe model makes mistakes that can be avoided by using subword features. 
     %
-    Slight misspellings have embeddings close to the correct spelling in \ac{elmo} and FastText.
+    Slight misspellings have embeddings close to the correct spelling in FastText.
     %
-    Also, entity names that clearly belong to a specific category (like city names with the suffix ``-town'') have meaningful embeddings in \ac{elmo} and FastText.
+    Also, entity names that clearly belong to a specific category (like city names with the suffix ``-town'') have meaningful embeddings in FastText.
     %
-    Some of the \ac{elmo} and FastText models' mistakes could be avoided by using a dictionary of professions, hospital names, and medical terms as an additional data source, e.g.\ ``Bruce Protocol'' is a standard cardiac diagnostic test that would occur in a medical dictionary.
+    Some of the FastText models' mistakes could be avoided by using a dictionary of professions, hospital names, and medical terms as an additional data source, e.g.\ ``Bruce Protocol'' is a standard cardiac diagnostic test that would occur in a medical dictionary.
 \end{description}
 
 \begin{description}
@@ -628,8 +626,6 @@ Our automatic pseudonymization approach could serve as a data augmentation schem
 %
 Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
 
-%
-Our automatic pseudonymization and adversarial learning approaches will most likely be improved by using \ac{elmo} embeddings, which we did not use due to their computation cost.
 %
 In adversarial learning, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
 %
