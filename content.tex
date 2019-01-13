@@ -184,8 +184,6 @@ Additionally, it adds random noise to representations in way that prohibits buil
     %
     It retains the casing feature as an additional input.
     %
-    As before, the de-identification model outputs a sequence of class probabilities.
-    %
     The representation sequence is also used as one of the two inputs to the adversary that tries to infer information about the original sequence.
     %
     % TODO describe the second input
@@ -203,12 +201,13 @@ Additionally, it adds random noise to representations in way that prohibits buil
     
     \item[Adversaries]
     %
-    In existing gradient reversal approaches \citep{ganin2016domain,feutry2018learning,elazar2018adversarial}, the learned representation is invariant to some attribute of the input.
+    In previous gradient reversal approaches \citep{ganin2016domain,feutry2018learning,elazar2018adversarial}, the learned representation is invariant to some attribute of the input.
     %
     Similarly, our representation should be invariant to small input changes, like a single token being replaced with a neighbor in the embedding space.
     %
     The number of neighbors $N$ controls the privacy properties of the representation.
     
+    % TODO Why do we want to share the output representations as well as the representation model?
     %
     Additionally, we need our representation to contain a random element because we want to share the output representations as well as the representation model itself.
     %
@@ -251,8 +250,6 @@ Additionally, it adds random noise to representations in way that prohibits buil
     
     %
     In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
-    %
-    
     
     \item[Training]
     %
@@ -271,12 +268,12 @@ Additionally, it adds random noise to representations in way that prohibits buil
     It is composed of three sequential phases:
     %
     \begin{enumerate}
-        \item The de-identification and representation models are pre-trained together, optimizing the de-identification loss $L_{\text{deid}}$.
-        \item The representation model is frozen and the adversary is pre-trained, optimizing the adversarial loss $L_{\text{adv}}$.
+        \item The de-identification and representation models are pre-trained together, optimizing the de-identification loss $l_{\text{deid}}$.
+        \item The representation model is frozen and the adversary is pre-trained, optimizing the adversarial loss $l_{\text{adv}}$.
         \item In alternation, for one epoch each:
         \begin{enumerate}
-            \item The representation is frozen and both de-identification model and adversary are trained, optimizing their respective losses $L_{\text{deid}}$ and $L_{\text{adv}}$.
-            \item The de-identification model and adversary are frozen and the representation is trained, optimizing the combined loss $L_{\text{repr}} = L_{\text{deid}} + \lambda \abs{L_{\text{adv}} - L_{\text{random}}}$. \label{item:repr-training}
+            \item The representation is frozen and both de-identification model and adversary are trained, optimizing their respective losses $l_{\text{deid}}$ and $l_{\text{adv}}$.
+            \item The de-identification model and adversary are frozen and the representation is trained, optimizing the combined loss $l_{\text{repr}} = l_{\text{deid}} + \lambda \abs{l_{\text{adv}} - l_{\text{random}}}$. \label{item:repr-training}
         \end{enumerate}
     \end{enumerate}
     
@@ -289,10 +286,6 @@ Additionally, it adds random noise to representations in way that prohibits buil
             The adversarial model layout follows \cref{fig:adversarial-model}: the representation model is at the bottom, the left branch is the de-identification model and the right branch is the adversary.
             %
             In each step, the thick components are trained while the thin components are frozen.
-            %
-            Steps 1 and 2 are trained until stable.
-            %
-            Then training alternates between one epoch and step 3a and one epoch of step 3b.
         }\label{fig:feutry-training}
     \end{figure}
     
@@ -308,15 +301,15 @@ Additionally, it adds random noise to representations in way that prohibits buil
     %
     The combined loss is motivated by the fact that the adversary performance should be the same as a random guessing model, which is a lower bound for anonymization~\citep{feutry2018learning}.
     %
-    The term $\abs{L_{\text{adv}} - L_{\text{random}}}$ approaches $0$ when the adversary performance approaches random guessing\footnote{In the case of binary classification: $L_{\text{random}} = -\log \frac{1}{2} \approx 0.6931$.}.
+    The term $\abs{l_{\text{adv}} - l_{\text{random}}}$ approaches $0$ when the adversary performance approaches random guessing\footnote{In the case of binary classification: $L_{\text{random}} = -\log \frac{1}{2} \approx 0.6931$.}.
     %
     $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
-    
+
     \item[Application]
     %
     To apply the model in practice, a central model provider would train the three parts of the model on an initial \ac{phi}-annotated dataset, e.g.\ the i2b2 2014 data.
     %
-    This initial training should confirm that the learned representation allows training a de-identification model while being robust to the adversaries.
+    This initial training should confirm that the learned representation allows training a de-identification model while being robust to the adversary.
     %
     The model provider would then publish the representation model along with their choice of pre-trained word embeddings.
     %
@@ -331,18 +324,38 @@ Additionally, it adds random noise to representations in way that prohibits buil
 \end{description}
 
 \subsection{Experiments}
-\begin{itemize}
-    \item Preprocessing (tokenization like \citet{liu2017identification})
-    \item train/val/test split
-    \item Keras, TensorFlow, spaCy
-    \item Binary HIPAA F1 score
-\end{itemize}
+%
+We evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
+%
+
+\begin{description}
+    \item[Preprocessing]
+    %
+    We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting on all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
+    %
+    We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting on multiple lines on whitespace and bulleted list items.
+    
+    \item[Evaluation]
+    %
+    In order to compare our results to the state of the art, we use the binary \ac{hipaa} \fone score as our main metric for de-identification performance.
+    %
+    \citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
+    
+    % TODO probably throw this section away?
+    \item[Training, Validation, and Test Set]
+    %
+    While developing the models, we use a fixed, relatively large validation set.
+    %
+    At test time, we combine the training and validation set and use a smaller validation split.
+    %
+    We use the test set only for the final evaluation of each model. 
+\end{description}
 
 \section{Results}
 
 \subsection{Basic De-Identification Model}
 %
-When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to the state of the art (see \cref{tab:baseline-results}).
+When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results (see \cref{tab:baseline-results}).
 %
 The casing feature improves GloVe by $0.4$ percentage points.
 
@@ -355,19 +368,19 @@ The casing feature improves GloVe by $0.4$ percentage points.
         \midrule
         % \Ac{elmo} & $97.74$ \\
         Our FastText & $97.67$ \\
-        Our GloVe + casing & $97.62$ \\
         Our GloVe & $97.24$ \\
-        \citet{dernoncourt2017identification} & $97.85$\\
-        \citet{liu2017identification} & $\bm{98.27}$\\
+        Our GloVe + casing & $97.62$ \\
+        \addlinespace
+        \citeauthor{dernoncourt2017identification} (\ac{lstm}-\ac{crf}) & $97.85$\\
+        \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
+        \bottomrule
     \end{tabular}
     \caption{Average precision, recall, and \fone scores of our de-identification models on the i2b2 2014 dataset in comparison to the state of the art.}\label{tab:baseline-results}
 \end{table}
 
 \subsection{Automatic Pseudonymization}
 %
-\cref{fig:auto-pseudo} shows the automatic pseudonymization experiment's results. 
-%
-For both FastText and GloVe, moving training \ac{phi} tokens to random tokens from up to their $N=200$ closest neighbors does not significantly reduce de-identification performance.
+For both FastText and GloVe, moving training \ac{phi} tokens to random tokens from up to their $N=200$ closest neighbors does not significantly reduce de-identification performance (see \cref{fig:auto-pseudo}).
 %
 \fone scores for both models drop to around $95\%$ when selecting from $N=500$ neighbors and to around $90\%$ when using $N=1\,000$ neighbors.
 %
@@ -401,8 +414,6 @@ This confirms the findings by \citet{elazar2018adversarial}.
 
 %
 With the training procedure by \citet{feutry2018learning}, we are able to train a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.
-%
-We select the \ac{lstm} representation model over the dense model because it allows $0.4$ percentage points higher de-identification \fone scores on average.
 
 %
 \cref{fig:adversarial-deid} (left) shows our de-identification results when using adversarially learned representations.
