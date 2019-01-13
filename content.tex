@@ -49,7 +49,7 @@ Simplifying the de-identification procedure may enable large-scale medical studi
 
 % TODO present results
 % use acronym short forms here (\acs{…}) and explain them later
-We train a basic \acs{lstm}-\acs{crf} de-identification model on raw and automatically pseudonymized text as well as on our adversarial private representation.
+We train a basic deep learning de-identification model on raw and automatically pseudonymized text as well as on our adversarial private representation.
 %
 
 \section{Related Work}\label{sec:related}
@@ -58,7 +58,7 @@ We train a basic \acs{lstm}-\acs{crf} de-identification model on raw and automat
 
 \subsection{Automatic De-Identification}
 %
-Analogously to many \ac{nlp} task, the state of the art in de-identification changed from rule-based systems and shallow machine learning \citep{uzuner2007evaluating,meystre2010automatic} to deep learning methods \citep{stubbs2017identification, dernoncourt2017identification, liu2017identification} in recent years.
+Analogously to many \ac{nlp} task, the state of the art in de-identification changed from rule-based systems and shallow machine learning approaches like \acp{crf} \citep{uzuner2007evaluating,meystre2010automatic} to deep learning methods \citep{stubbs2017identification, dernoncourt2017identification, liu2017identification} in recent years.
 
 %
 Three shared tasks on de-identification were run in 2006 \citep{uzuner2007evaluating}, 2014 \citep{stubbs2015annotating, stubbs2015automated}, and 2016 \citep{stubbs2017identification}.
@@ -75,7 +75,7 @@ The 2016 shared task featured a sight-unseen track in which existing systems wer
 The best system achieved an \fone score of only $79\%$, proving that de-identification systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
 
 %
-\citet{dernoncourt2017identification} first applied \iac{lstm}-\ac{crf} model to de-identification.
+\citet{dernoncourt2017identification} first applied \iac{lstm} \citep{hochreiter1997long} model with \iac{crf} output component to de-identification.
 %
 Using transfer learning from a larger dataset slightly improves performance on the i2b2 2014 dataset \citep{lee2017transfer}.
 %
@@ -90,7 +90,7 @@ The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementa
 It uses a gradient reversal layer to worsen the representation for the adversary during back-propagation.
 
 %
-Although initially conceived for use in domain adaptation, \acp{dann} have recently been used to obfuscate demographics attributes \citep{elazar2018adversarial,li2018towards} from text and subject identity \citep{feutry2018learning} from images.
+Although initially conceived for use in domain adaptation, \acp{dann} and similar adversarial deep learning models have recently been used to obfuscate demographics attributes \citep{elazar2018adversarial,li2018towards} from text and subject identity \citep{feutry2018learning} from images.
 %
 \citet{elazar2018adversarial} warn that continued adversary training with a frozen representation may allow adversaries to break representation privacy.
 
