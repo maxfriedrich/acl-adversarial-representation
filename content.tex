@@ -153,16 +153,21 @@ Before training, we replace all \ac{phi} tokens with a random choice of a fixed 
 %
 Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
 %
+% TODO maybe find a better example sentence that totally changes meaning?
 \begin{quote}
     [James] was admitted to [St. Thomas]
 \end{quote}
 %
-may be replaced by the phrase
+may be replaced by
 \begin{quote}
     [Henry] was admitted to [Chapel Davis].
 \end{quote}
+%
+% TODO the sentence does not make sense but the embeddings are still similar
 
-% TODO the new embeddings are still similar
+%
+We train the de-identification model on the transformed data and test it on the raw data.
+
 
 \subsection{Adversarial Representation}\label{sec:adversarial-representation}
 %
@@ -250,6 +255,8 @@ Additionally, it adds random noise to representations in way that prohibits buil
     
     %
     In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
+    %
+    We evaluate the representation sizes $d \in \{50, 100, 300\}$. 
     
     \item[Training]
     %
@@ -386,27 +393,19 @@ For both FastText and GloVe, moving training \ac{phi} tokens to random tokens fr
 %
 With $N=100$, the FastText model achieves an \fone score of $96.75\%$ and the GloVe model achieves an \fone score of $96.42\%$.
 
-
-% TODO is this discussion?
-%
-It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
-%
-The FastText model beats the respective raw data model in the profession, location, age and contact categories.
-%
-The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories.
-%
-However, the overall binary \ac{hipaa} \fone scores do not improve when using automatic pseudonymization.
-
 \begin{figure}
     \centering
     \input{images/plt/automatic-pseudonymization.pgf}
-    \caption[De-identification with automatic pseudonymization]{\fone scores of our models when trained on automatically pseudonymized data where \ac{phi} tokens are moved to one of different numbers of neighbors $N$.}\label{fig:auto-pseudo}
-    % TODO describe or delete the grey dashed lines
+    \caption[De-identification with automatic pseudonymization]{%
+        \fone scores of our models when trained on automatically pseudonymized data where \ac{phi} tokens are moved to one of different numbers of neighbors $N$.
+        %
+        The gray dashed line marks the $95\%$ target \fone score.
+}\label{fig:auto-pseudo}
 \end{figure}
 
 \subsection{Adversarial Representation}
 %
-In our adversarial learning experiment, we do not achieve satisfactory results with the conjoint \ac{dann} training procedure: in all cases, our models learn representations that are not sufficiently resistant to the adversary.
+We do not achieve satisfactory results with the conjoint \ac{dann} training procedure: in all cases, our models learn representations that are not sufficiently resistant to the adversary.
 %
 When training the adversary on the frozen representation for an additional $20$ epochs, it is able to distinguish real from fake input pairs on a test set with accuracies above $80\%$.
 %
@@ -431,36 +430,22 @@ Our choice of representation size $d \in \{50, 100, 300\}$ does not influence de
 %
 For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ and the GloVe model reaches an \fone score of $96.89\%$.
 
-%
-The adversarially trained FastText model beats the FastText model trained on raw data in the contact category. 
-%
-The GloVe model does not beat the corresponding raw data model in any category.
-%
-It is most significantly weaker in the profession category.
-
 \begin{figure*}
     \centering
     \input{images/plt/adversarial-deid-50.pgf}
     \caption[De-identification with adversarially learned representations]{%
-        Left: de-identification \fone scores of our models using an adversarially trained representation with representation size $d=50$ and different numbers of neighbors $N$ for the representation invariance requirement.
+        Left: de-identification \fone scores of our models using an adversarially trained representation with different numbers of neighbors $N$ for the representation invariance requirement.
         %
         Right: mean accuracy on the two adversary tasks.
-        %
-        The validation accuracy lines show the maximum accuracy around the best epoch according to the combined loss as an attempt to visualize representation stability.
     }\label{fig:adversarial-deid}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \input{images/plt/adversarial-learning-curve-0.pgf}
-    \caption{This is a figure caption}
+    % TODO the adversary accuracy figure with the lighter color lines is not super clear
 \end{figure*}
 
 \section{Discussion}\label{sec:discussion}
+%
+In this section, we discuss the de-identification performance and privacy properties, and generalization abilities of our models.
 
 \subsection{De-Identification Performance}
-%
-In this section, we discuss the de-identification performance properties of our models.
 
 \begin{description}
     \item[Baseline De-Identification]
@@ -477,11 +462,9 @@ In this section, we discuss the de-identification performance properties of our 
     %
     The casing feature (which improves GloVe be $0.4$ percentage points in the hyperparameter optimization) makes up for GloVe's missing embeddings for unknown words.
     
-    % TODO error analysis with only GloVe + FastText, table of errors
+    % TODO error analysis with only GloVe + FastText (or only GloVe)
     %
     Analyzing our baseline models' predictions on the test set reveals that the models typically make wrong predictions for the same instances of \ac{phi}.
-    %
-    \cref{tab:deid-errors} shows some wrong predictions from each of our models that are unique to the respective model\footnote{We show similar sentences to actual wrongly predicted sentences from the i2b2 test set.}.
     %
     Most notably, the GloVe model makes mistakes that can be avoided by using subword features. 
     %
@@ -490,37 +473,20 @@ In this section, we discuss the de-identification performance properties of our 
     Also, entity names that clearly belong to a specific category (like city names with the suffix ``-town'') have meaningful embeddings in FastText.
     %
     Some of the FastText models' mistakes could be avoided by using a dictionary of professions, hospital names, and medical terms as an additional data source, e.g.\ ``Bruce Protocol'' is a standard cardiac diagnostic test that would occur in a medical dictionary.
-\end{description}
 
-\begin{description}
     \item[Automatically Pseudonymized Data]
     %
     Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
     
+    % TODO is this discussion?
     %
-    \cref{fig:pseudonymizations} shows four examples for automatically pseudonymized sentences that were generated by moving \ac{phi} tokens to one of their $N=100$ neighbors in the FastText embedding space.
+    It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
     %
-    While the first three sentences are coherent and could be the result of a human pseudonymization step, the unrealistic last sentence hints at the limitations of this naive approach.
+    The FastText model beats the respective raw data model in the profession, location, age and contact categories.
     %
-    The token ``HMS'' was seemingly moved too far because ``Q-ship'' is not a realistic hospital name, and the tokens ``Florida'' and ``Hospital'' were only perturbed by a small degree.
+    The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories.
     %
-    However, as deep learning models do not see the actual words but only their representations (that are neighbors in the embedding space), using the automatically pseudonymized data does not dramatically deteriorate de-identification performance.
-    %
-    Rather, models trained on automatically pseudonymized data beat their counterparts that were trained on raw data in some categories of \ac{phi} due to their higher robustness.
-    
-    \begin{figure}
-        % \small
-        % \sffamily
-        \begin{framed}
-            \begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt,leftmargin=*]
-                \item \sout{Bob} \textbf{John} continues to feel well
-                \item She is a fulltime \sout{historian} \textbf{photographer}
-                \item TReated with RAI \sout{February} \textbf{September} \sout{2071} \textbf{2080}
-                \item  Transferred in \sout{January} \textbf{October} to the \sout{HMS} \textbf{Q-ship} after presenting to the \sout{Florida} \textbf{Miami-Florida} \sout{Hospital} \textbf{Hosp} \sout{Orlando} \textbf{Merlina}
-            \end{itemize}
-        \end{framed}
-        \caption[Automatically pseudonymized data.]{Examples of automatically pseudonymized sentences using FastText embeddings and $N=100$ neighbors.}\label{fig:pseudonymizations}
-    \end{figure}
+    However, the overall binary \ac{hipaa} \fone scores do not improve when using automatic pseudonymization.
     
     \item[Adversarially Learned Representation]
     %
@@ -533,7 +499,23 @@ In this section, we discuss the de-identification performance properties of our 
     %
     The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
     
+    %
+    The adversarially trained FastText model beats the FastText model trained on raw data in the contact category. 
+    %
+    The GloVe model does not beat the corresponding raw data model in any category.
+    %
+    It is most significantly weaker in the profession category.
 \end{description}
+
+\begin{figure*}
+    \centering
+    \input{images/plt/adversarial-learning-curve-0.pgf}
+    \caption{Learning curves of one adversarial experiment run (FastText embeddings, $N=10, d=50$).
+        %
+        The training is split into three parts: de-identification pre-training, adversary pre-training, and alternating training.
+        %
+        Dashed lines denote model resets after early stopping.}\label{fig:adversarial-learning-curves}
+\end{figure*}
 
 \subsection{Privacy Properties}
 %
@@ -569,13 +551,6 @@ In this section, we discuss the privacy properties of our approaches.
     %
     However, we would then also need to detect misspelled names as well as other hints to the actual tokens and transform them similarly to the original, which would add back much of the complexity of manual pseudonymization that we try to avoid.
     
-    %
-    In our adversarial evaluation, the adversaries reach test accuracies of $60\%$.
-    %
-    However, a $60\%$ accuracy is also reached by a similar \ac{lstm} adversary that is trained to discriminate original sequences from sequences with one occurrence of \ac{phi} moved to a neighbor.
-    %
-    This means that the adversary can achieve its accuracy only by learning to distinguish real from fake sentences and ignoring its pseudonymized sequence input.
-    
     \item[Adversarially Learned Representation]
     %
     Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
@@ -599,19 +574,7 @@ In this section, we discuss the privacy properties of our approaches.
     %
     When freezing the representation model and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$.
     %
-    Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.
-    
-    %
-    \cref{fig:adversarial-learning-curves-failed} shows the learning curves of a failed experiment run where training becomes unstable due to the choice of $N=1000$.
-    %
-    The adversary learns to counter the representation several times in the alternating training phase.
-    %
-    These adversary accuracy peaks are always followed by a peak in the de-identification model's validation loss because the representation is worsened for both branches to combat the adversary.
-    %
-    Due to the combined loss with $\lambda=1$, the best model according to validation loss will often deliver good de-identification results but it may not guarantee robustness to the adversary, even if the concrete adversary test accuracy after the early stopping epoch is low.
-    %
-    Continued training of the adversary with a frozen representation will allow it to reach higher accuracies.
-    
+    Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 \end{description}
 
 \subsection{Generalization}
@@ -638,6 +601,7 @@ When more training data from multiple sources becomes available in the future, i
 %
 Additionally, federated learning and the semi-supervised knowledge transfer approach for de-identification can be reasonably simulated with multiple sources of data.
 
+%TODO mention elmo \citep{peters2018deep} here
 %TODO zalando concatenate different embeddings \citep{akbik2018contextual}
 %TODO other languages
 
