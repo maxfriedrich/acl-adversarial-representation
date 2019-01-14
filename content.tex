@@ -519,16 +519,11 @@ In this section, we discuss the privacy properties of our approaches.
     
     \item[Automatically Pseudonymized Data]
     %
-    We identified some privacy weaknesses of our automatic pseudonymization approach.
+    The word-level pseudonymization may allow an adversary to piece together documents from the shuffled sentences.
     %
-    For a last name like \textit{Wolf}, neighbors in the embedding space will include other animal names and not common last names.
+    If multiple sentences contain similar pseudonymized identifiers, they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
     %
-    In this case, it could be possible to infer the original name if there are only a limited number of people that might appear in the dataset, e.g.\ the population of a small town.
-    
-    %
-    If multiple sentences contain animal names (or any other similar names), they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
-    %
-    It may be possible to infer the original name using the overlapping neighbor spaces.
+    It may be possible to infer the original information using the overlapping neighbor spaces.
     %
     To counter this, we can re-introduce document-level pseudonymization, i.e.\ moving all occurrences of \iac{phi} token to the same neighbor.
     %
@@ -551,11 +546,10 @@ In this section, we discuss the privacy properties of our approaches.
     %
     Around 15 epochs into this phase, we find an adequate representation which is indicated by the adversary accuracy being close to the random guessing accuracy of $50\%$.
     %
-    The de-identification validation loss is typically lower than the training loss in the alternating phase.
+    The de-identification loss improves through further training.
+
     %
-    Since the representation and de-identification models are not trained together in this phase, the models always need to \textit{catch up} to the other model's parameter changes (training loss is averaged over all training samples of an epoch).
-    %
-    When freezing the representation model and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$.
+    When freezing the representation model and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$ (not shown in the figure).
     %
     Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 \end{description}
