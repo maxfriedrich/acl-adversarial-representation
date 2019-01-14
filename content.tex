@@ -151,6 +151,8 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 We propose a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models work on the sentence level and do not rely on document coherency \citep{liu2017identification,dernoncourt2017identification}.
 %
 Before training, we replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
+%
+% TODO we also shuffle the sentences 
 
 %
 Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
@@ -251,7 +253,7 @@ Additionally, it adds random noise to representations in way that prohibits buil
     The model learns a standard deviation for each of the input and output dimensions.
     %
     \begin{align}
-        \bm{R} = \bm{N}_{out} + \text{LSTM}(\bm{E} + \bm{N}_{in})
+        \bm{R} = \bm{N}_{\text{out}} + \text{LSTM}(\bm{E} + \bm{N}_{\text{in}})
     \end{align}
     
     %
@@ -451,8 +453,9 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     However, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
     %
     The casing feature (which improves GloVe be $0.4$ percentage points in the hyperparameter optimization) makes up for GloVe's missing embeddings for unknown words.
-    
+        
     % TODO error analysis with only GloVe + FastText (or only GloVe)
+    % TODO explain why we don't beat the Liu et al model (no rules)
 
     \item[Automatically Pseudonymized Data]
     %
