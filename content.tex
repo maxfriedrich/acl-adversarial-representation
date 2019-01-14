@@ -608,3 +608,45 @@ Additionally, federated learning and the semi-supervised knowledge transfer appr
 %TODO other languages
 
 \section{Conclusions}\label{sec:conclusions}
+%
+Privacy laws require medical text to be de-identified before it is shared.
+%
+De-identifi\-ca\-tion is time-consuming and costly when performed by humans, which motivates the creation of automatic de-identification tools.
+%
+Automatic de-identification requires training data, which is typically created by substituting all protected information from raw medical records.
+%
+Today's de-identification tools fail on unseen data.
+%
+A training set from multiple sources is required to train more general de-identification tools.
+%
+We evaluated approaches to sharing training data for de-identification that require lower human effort than the existing approach of document-coherent pseudonymization.
+
+%
+As a precursor to our data sharing approaches, we developed a baseline deep learning model for de-identification that does rely on explicit character features.
+%
+It uses word embeddings as well as a casing feature as inputs.
+%
+On the i2b2 2014 test set, the model reaches an \fone score of $97.74\%$, a near-state-of-the-art result.
+
+%
+Our automatic pseudonymization approach replaces protected information with neighboring words in an embedding space.
+%
+A model trained on this augmented data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the raw data baseline, scoring $96.75\%$.
+
+%
+We presented an adversarial learning based private representation of medical text that is invariant to any protected information word being replaced with any of its embedding space neighbors and contains a random element.
+%
+The representation allows training a de-identification model while being robust to adversaries trying to re-identify protected information or building a lookup table of representations.
+%
+We extended existing adversarial representation learning approaches by using two adversaries that discriminate real from fake sequence pairs with an additional sequence input.
+%
+Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is closer to the raw data baseline than to the automatic pseudonymization score.
+%
+The representation acts as a task-specific feature extractor.
+%
+For an invariance criterion of up to $N=50$ (GloVe) or $N=500$ (FastText) neighbors, training is stable and adversaries cannot beat the random guessing accuracy of $50\%$.
+
+%
+Our approaches, especially the adversarially trained representation, allow cost-effective private sharing of training data for de-identification.
+%
+Better de-identification tools could help enable large-scale medical studies that improve public health.
