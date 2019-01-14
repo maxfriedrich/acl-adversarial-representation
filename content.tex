@@ -348,15 +348,6 @@ We evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
     In order to compare our results to the state of the art, we use the binary \ac{hipaa} \fone score as our main metric for de-identification performance.
     %
     \citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
-    
-    % TODO probably throw this section away?
-    \item[Training, Validation, and Test Set]
-    %
-    While developing the models, we use a fixed, relatively large validation set.
-    %
-    At test time, we combine the training and validation set and use a smaller validation split.
-    %
-    We use the test set only for the final evaluation of each model. 
 \end{description}
 
 \section{Results}
@@ -443,8 +434,6 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
 \end{figure*}
 
 \section{Discussion}\label{sec:discussion}
-%
-In this section, we discuss the de-identification performance and privacy properties, and generalization abilities of our models.
 
 \subsection{De-Identification Performance}
 
@@ -464,16 +453,6 @@ In this section, we discuss the de-identification performance and privacy proper
     The casing feature (which improves GloVe be $0.4$ percentage points in the hyperparameter optimization) makes up for GloVe's missing embeddings for unknown words.
     
     % TODO error analysis with only GloVe + FastText (or only GloVe)
-    %
-    Analyzing our baseline models' predictions on the test set reveals that the models typically make wrong predictions for the same instances of \ac{phi}.
-    %
-    Most notably, the GloVe model makes mistakes that can be avoided by using subword features. 
-    %
-    Slight misspellings have embeddings close to the correct spelling in FastText.
-    %
-    Also, entity names that clearly belong to a specific category (like city names with the suffix ``-town'') have meaningful embeddings in FastText.
-    %
-    Some of the FastText models' mistakes could be avoided by using a dictionary of professions, hospital names, and medical terms as an additional data source, e.g.\ ``Bruce Protocol'' is a standard cardiac diagnostic test that would occur in a medical dictionary.
 
     \item[Automatically Pseudonymized Data]
     %
