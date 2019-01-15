@@ -48,6 +48,7 @@ Our approaches still requires humans to annotate \ac{phi} (as this is the traini
 A tool trained on our representations could easily be made publicly available because its parameters cannot contain any protected data, as it is never trained on raw text.
 %
 Simplifying the de-identification procedure may enable large-scale medical studies that are otherwise too costly.
+% TODO (Arne): Auch sagen, dass man dann die Repräsentationen teilen kann um Datenpooling zum Training zu nutzen.  Mit publicly available wäre ich etwas vorsichtig, da ja auch die pseudonymisierten Daten auf denen das System jetzt trainiert wurde aus guten Gründen nicht frei verfügbar sind.
 
 % TODO present results
 % use acronym short forms here (\acs{…}) and explain them later
@@ -177,8 +178,11 @@ We train the de-identification model on the transformed data and test it on the 
 \subsection{Adversarial Representation}\label{sec:adversarial-representation}
 %
 Based on the automatic pseudonymization, we propose an adversarially learned sentence representation that is invariant to \textit{any} of the \ac{phi} tokens being replaced with \textit{any} of its $N$ neighbors.
+% TODO (Arne): Vielleicht als Definition mit Namen einführen und dann dahin referenzieren statt zu wiederholen?
 %
 Additionally, it adds random noise to representations in way that prohibits building a lookup table for known-plaintext attacks.
+
+% TODO (Arne): Vielleicht zuerst erklären welche Angriffe man verhindern will und auf der Basis die Adversaries einführen statt umgekehrt?  Wenn man denen dann einen Namen gibt, kann man später besser darauf verweisen.
 
 \begin{description}
     \item[Architecture]
@@ -436,12 +440,11 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
         %
         Right: mean accuracy on the two adversary tasks.
     }\label{fig:adversarial-deid}
-    % TODO the adversary accuracy figure with the lighter color lines is not super clear
+    % TODO the adversary accuracy figure with the lighter color lines is not clear -- describe in the text or delete
+    % TODO (Arne): Kästen rechteckiger machen um Höhe zu sparen
 \end{figure*}
 
-\section{Discussion}\label{sec:discussion}
-
-\subsection{De-Identification Performance}
+\section{De-Identification Performance}
 
 \begin{description}
     \item[Baseline De-Identification]
@@ -504,7 +507,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
         Dashed lines denote model resets after early stopping.}\label{fig:adversarial-learning-curves}
 \end{figure*}
 
-\subsection{Privacy Properties}
+\section{Privacy Properties}
 %
 In this section, we discuss the privacy properties of our approaches.
 
@@ -539,6 +542,7 @@ In this section, we discuss the privacy properties of our approaches.
     %
     While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
     
+    % TODO maybe delete this paragraph and the learning curves figure?
     %
     \cref{fig:adversarial-learning-curves} shows a set of typical (successful) learning curves for \citeauthor{feutry2018learning}'s training procedure.
     %
@@ -558,13 +562,13 @@ In this section, we discuss the privacy properties of our approaches.
     Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 \end{description}
 
-\subsection{Generalization}
+\section{Generalization Properties}
 
 \begin{itemize}
     \item Evaluation on the 2016 sight-unseen dataset
 \end{itemize}
 
-\subsection{Future Work}
+\section{Future Work \& Conclusions}
 %
 Our automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
 %
@@ -587,7 +591,6 @@ Additionally, federated learning and the semi-supervised knowledge transfer appr
 %TODO zalando concatenate different embeddings \citep{akbik2018contextual}
 %TODO other languages
 
-\section{Conclusions}\label{sec:conclusions}
 %
 Privacy laws require medical text to be de-identified before it is shared.
 %
