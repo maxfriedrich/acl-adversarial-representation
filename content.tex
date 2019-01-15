@@ -1,6 +1,8 @@
 % !TeX root=main
 % !TeX spellcheck=en_US
 
+% TODO general: is it ``medical'' or ``clinical'' text?
+
 \section{Introduction}\label{sec:introduction}
 %
 In addition to structured medical data, electronic health records contain free-text patient notes that are a rich source of information \citep{jensen2012mining}.
@@ -9,7 +11,7 @@ Due to privacy and data protection laws, medical records can only be shared and 
 %
 De-identification is the task of finding and labeling \ac{phi} in medical text for sanitization.
 %
-\Ac{phi} includes potentially identifying information such as names, professions, geographic identifiers, dates, and account numbers.
+\Ac{phi} includes potentially identifying information such as names, geographic identifiers, dates, and account numbers.
 %
 The American \ac{hipaa} defines 18 categories of \ac{phi}.
 
@@ -27,28 +29,28 @@ The standard method of data protection compliant sharing of training data for a 
 This requires replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings on the pseudonym \cite{uzuner2007evaluating}.
 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
+% Why is sharing training data the best solution for a de-identification model?
 %
 Today, a pseudonymized dataset for de-identification from a single source is publicly available \citep{stubbs2015annotating}.
 %
 However, de-identification tools trained on the dataset are too specific for the concrete data and do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
+% TODO maybe skip this argument and concentrate only on the sharing, not on the models containing secrets
 If a medical institution instead decides to train a de-identification tool on their raw text data, it is conceivable that the tool would contain traces of the \ac{phi} it was trained with, making it possible for an attacker to recover parts of the training data if the tool itself is shared.
 %
 To achieve a universal de-identification tool, many medical institutions would have to pool their data.
 %
 Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
-% Why is sharing training data the best solution for a de-identification model?
 % TODO automatic pseudonymization as a requirement/precursor for the learned representation instead of describing them as ``two approaches''
 %
 We introduce two representation approaches to privacy-preserving sharing of medical text that allow training a de-identification tool: an automatic pseudonymization and an adversarially learned private representation.
 %
 Our approaches still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representations.
 %
-A tool trained on our representations could easily be made publicly available because its parameters cannot contain any protected data, as it is never trained on raw text.
+A tool trained on our representations cannot contain any protected data, as it is never trained on raw text.
 %
 Simplifying the de-identification procedure may enable large-scale medical studies that are otherwise too costly.
-% TODO (Arne): Auch sagen, dass man dann die Repräsentationen teilen kann um Datenpooling zum Training zu nutzen.  Mit publicly available wäre ich etwas vorsichtig, da ja auch die pseudonymisierten Daten auf denen das System jetzt trainiert wurde aus guten Gründen nicht frei verfügbar sind.
 
 % TODO present results
 % use acronym short forms here (\acs{…}) and explain them later
