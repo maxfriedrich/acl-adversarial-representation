@@ -64,25 +64,25 @@ In this section, we present related work regarding de-identification and adversa
 Analogously to many \ac{nlp} task, the state of the art in de-identification changed from rule-based systems and shallow machine learning approaches like \acp{crf} \citep{uzuner2007evaluating,meystre2010automatic} to deep learning methods \citep{stubbs2017identification, dernoncourt2017identification, liu2017identification} in recent years.
 
 %
-Three shared tasks on de-identification were run in 2006 \citep{uzuner2007evaluating}, 2014 \citep{stubbs2015annotating, stubbs2015automated}, and 2016 \citep{stubbs2017identification}.
+Three shared tasks on de-identification were run in 2006 \citep{uzuner2007evaluating}, 2014 \citep{stubbs2015automated}, and 2016 \citep{stubbs2017identification}.
 %
 The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the shared tasks.
 %
 An \fone score of $95\%$ has been suggested as a target for reasonable de-identification systems \citep{stubbs2015automated}.
 
 %
-Up to the 2014 shared task, the organizers emphasized that it is unclear if a tool trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
-%
-The 2016 shared task featured a sight-unseen track in which existing systems were evaluated on records from a new data source.
-%
-The best system achieved an \fone score of only $79\%$, proving that de-identification systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
-
-%
 \citet{dernoncourt2017identification} first applied \iac{lstm} \citep{hochreiter1997long} model with \iac{crf} output component to de-identification.
 %
 Using transfer learning from a larger dataset slightly improves performance on the i2b2 2014 dataset \citep{lee2017transfer}.
 %
-\citet{liu2017identification} achieve state-of-the-art performance in de-identification with a deep learning ensemble and a rule component.
+\citet{liu2017identification} achieve state-of-the-art performance in de-identification by combining a deep learning ensemble and a rule component.
+
+%
+Up to the 2014 shared task, the organizers emphasized that it is unclear if a system trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
+%
+The 2016 shared task featured a sight-unseen track in which de-identification systems were evaluated on records from a new data source.
+%
+The best system achieved an \fone score of $79\%$, proving that systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
 
 \subsection{Adversarial Representation Learning}
 %
