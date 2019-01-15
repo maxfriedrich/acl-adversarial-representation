@@ -42,20 +42,18 @@ To achieve a universal de-identification tool, many medical institutions would h
 %
 Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
-% TODO automatic pseudonymization as a requirement/precursor for the learned representation instead of describing them as ``two approaches''
 %
-We introduce two representation approaches to privacy-preserving sharing of medical text that allow training a de-identification tool: an automatic pseudonymization and an adversarially learned private representation.
+We introduce an adversarially learned private representation that allows privacy-preserving sharing of medical text for training a de-identification tool.
 %
-Our approaches still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representations.
+Our approach still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representation.
 %
-A tool trained on our representations cannot contain any protected data, as it is never trained on raw text.
+A tool trained on our representation cannot contain any protected data, as it is never trained on raw text.
 %
 Simplifying the de-identification procedure may enable large-scale medical studies that are otherwise too costly.
 
 % TODO present results
-% use acronym short forms here (\acs{…}) and explain them later
-We train a basic deep learning de-identification model on raw and automatically pseudonymized text as well as on our adversarial private representation.
 %
+We train a basic deep learning de-identification model on raw and automatically pseudonymized text as well as on our adversarial private representation.
 
 \section{Related Work}\label{sec:related}
 %
