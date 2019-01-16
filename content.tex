@@ -334,7 +334,7 @@ To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
     
     \item[Evaluation]
     %
-    In order to compare our results to the state of the art, we use the binary \ac{hipaa} \fone score as our main metric for de-identification performance.
+    In order to compare our results to the state of the art, we use the token-based binary \ac{hipaa} \fone score as our main metric for de-identification performance.
     %
     \citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
 \end{description}
@@ -349,7 +349,6 @@ When trained on the raw i2b2 2014 data, our models achieve \fone scores that are
 %
 The casing feature improves GloVe by $0.4$ percentage points.
 
-% TODO these are the ``hipaa binary token'' scores
 \begin{table}
     \centering
     \begin{tabular}{ll}
@@ -365,7 +364,7 @@ The casing feature improves GloVe by $0.4$ percentage points.
         \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
         \bottomrule
     \end{tabular}
-    \caption{Average precision, recall, and \fone scores of our de-identification models on the i2b2 2014 dataset in comparison to the state of the art.}\label{tab:baseline-results}
+    \caption{Binary \ac{hipaa} \fone scores of our de-identification models on the i2b2 2014 test set in comparison to the state of the art.}\label{tab:baseline-results}
 \end{table}
 
 \subsection{Automatic Pseudonymization}
