@@ -523,29 +523,7 @@ In this section, we discuss the privacy properties of our approaches.
     \item Evaluation on the 2016 sight-unseen dataset
 \end{itemize}
 
-\section{Future Work \& Conclusions}
-%
-Our automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
-%
-Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
-
-%
-In adversarial learning, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
-%
-A further possible extension is a dynamic noise level in the representation model that depends on the \ac{lstm} output instead of being a trained weight.
-%
-This might allow using lower amounts of noise for certain inputs while still being robust to the adversary.
-
-% TODO or maybe it is possible now if we get the sight-unseen data
-%
-When more training data from multiple sources becomes available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
-%
-Additionally, federated learning and the semi-supervised knowledge transfer approach for de-identification can be reasonably simulated with multiple sources of data.
-
-%TODO mention elmo \citep{peters2018deep} here
-%TODO zalando concatenate different embeddings \citep{akbik2018contextual}
-%TODO other languages
-
+\section{Conclusions \& Future Work}
 %
 Privacy laws require medical text to be de-identified before it is shared.
 %
@@ -588,3 +566,23 @@ For an invariance criterion of up to $N=50$ (GloVe) or $N=500$ (FastText) neighb
 Our approaches, especially the adversarially trained representation, allow cost-effective private sharing of training data for de-identification.
 %
 Better de-identification tools could help enable large-scale medical studies that improve public health.
+
+% Future Work
+%
+Our automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
+%
+Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
+
+%
+In adversarial learning, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
+%
+A further possible extension is a dynamic noise level in the representation model that depends on the \ac{lstm} output instead of being a trained weight.
+%
+This might allow using lower amounts of noise for certain inputs while still being robust to the adversary.
+
+%TODO Mention other embedding schemes, e.g. elmo \citep{peters2018deep}
+
+% TODO or maybe it is possible now if we get the sight-unseen data
+%
+When more training data from multiple sources becomes available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
+
