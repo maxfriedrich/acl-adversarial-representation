@@ -483,16 +483,6 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     It is most significantly weaker in the profession category.
 \end{description}
 
-\begin{figure*}
-    \centering
-    \input{images/plt/adversarial-learning-curve-0.pgf}
-    \caption{Learning curves of one adversarial experiment run (FastText embeddings, $N=10, d=50$).
-        %
-        The training is split into three parts: de-identification pre-training, adversary pre-training, and alternating training.
-        %
-        Dashed lines denote model resets after early stopping.}\label{fig:adversarial-learning-curves}
-\end{figure*}
-
 \section{Privacy Properties}
 %
 In this section, we discuss the privacy properties of our approaches.
@@ -528,22 +518,8 @@ In this section, we discuss the privacy properties of our approaches.
     %
     While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
     
-    % TODO maybe delete this paragraph and the learning curves figure?
     %
-    \cref{fig:adversarial-learning-curves} shows a set of typical (successful) learning curves for \citeauthor{feutry2018learning}'s training procedure.
-    %
-    The representation model and de-identification model are jointly pre-trained in the first phase.
-    %
-    In the second phase, the adversary is pre-trained to reach a validation accuracy of around $80\%$, which means that the pre-trained representation does not fit our invariance requirements.
-    %
-    At the beginning of the third training phase, both the de-identification model and the adversary learning curves show an oscillating pattern that is caused by the alternating training of the branches (with frozen representation model) and the representation model (with frozen branches).
-    %
-    Around 15 epochs into this phase, we find an adequate representation which is indicated by the adversary accuracy being close to the random guessing accuracy of $50\%$.
-    %
-    The de-identification loss improves through further training.
-
-    %
-    When freezing the representation model and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$ (not shown in the figure).
+    When freezing the representation model from a stable experiment run and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$.
     %
     Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 \end{description}
