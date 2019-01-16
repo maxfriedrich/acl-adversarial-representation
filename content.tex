@@ -48,12 +48,6 @@ We introduce an adversarially learned private representation that allows privacy
 Our approach still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representation.
 %
 A tool trained on our representation cannot contain any protected data, as it is never trained on raw text.
-%
-Simplifying the de-identification procedure may enable large-scale medical studies that are otherwise too costly.
-
-% TODO present results
-%
-We train a basic deep learning de-identification model on raw and automatically pseudonymized text as well as on our adversarial private representation.
 
 \section{Related Work}\label{sec:related}
 %
@@ -313,22 +307,23 @@ Since both the representation model and the resulting representations are shared
     %
     The alternating steps in the third phase each last one training epoch.
     %
-    We determine the early stopping epoch using only the combined validation loss (\cref{item:repr-training}).
+    We determine the early stopping epoch using only the combined validation loss (step~\ref{item:repr-training}).
     
     %
     Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
     %
     The combined loss is motivated by the fact that the adversary performance should be the same as a random guessing model, which is a lower bound for anonymization~\citep{feutry2018learning}.
     %
-    The term $\abs{l_{\text{adv}} - l_{\text{random}}}$ approaches $0$ when the adversary performance approaches random guessing\footnote{In the case of binary classification: $L_{\text{random}} = -\log \frac{1}{2} \approx 0.6931$.}.
+    The term $\abs{l_{\text{adv}} - l_{\text{random}}}$ approaches $0$ when the adversary performance approaches random guessing\footnote{In the case of binary classification: $L_{\text{random}} = -\log \frac{1}{2}$.}.
     %
     $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
 \end{description}
 
 \subsection{Experiments}
 %
-We evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
+To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
 %
+% TODO and maybe the sight-unseen part of the 2016 data?
 
 \begin{description}
     \item[Preprocessing]
@@ -427,7 +422,6 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
         Right: mean accuracy on the two adversary tasks.
     }\label{fig:adversarial-deid}
     % TODO the adversary accuracy figure with the lighter color lines is not clear -- describe in the text or delete
-    % TODO (Arne): Kästen rechteckiger machen um Höhe zu sparen
 \end{figure*}
 
 \section{De-Identification Performance}
