@@ -33,10 +33,7 @@ This requires replacing e.g.\ every person or place name with a different name, 
 %
 Today, a pseudonymized dataset for de-identification from a single source is publicly available \citep{stubbs2015annotating}.
 %
-However, de-identification tools trained on the dataset are too specific for the concrete data and do not generalize well to data from other sources~\citep{stubbs2017identification}.
-%
-% TODO maybe skip this argument and concentrate only on the sharing, not on the models containing secrets
-If a medical institution instead decides to train a de-identification tool on their raw text data, it is conceivable that the tool would contain traces of the \ac{phi} it was trained with, making it possible for an attacker to recover parts of the training data if the tool itself is shared.
+However, de-identification tools trained on the dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
 To achieve a universal de-identification tool, many medical institutions would have to pool their data.
 %
@@ -187,9 +184,9 @@ We introduce a new data sharing approach that is based on an adversarially learn
 %
 After training the representation on an initial publicly available dataset, e.g.\ the i2b2 2014 data, a central model provider shares the frozen representation model with participating medical institutions.
 %
-They transform their \ac{phi}-labeled data into the representation, which is then shared either with the central model provider or as a new public dataset for de-identification.
+They transform their \ac{phi}-labeled data into the representation, which is then pooled into a new public dataset for de-identification.
 %
-Periodically, the pipeline of representation model and a trained de-identification model can be published to be used by medical institutions on their unlabeled data.
+Periodically, the pipeline consisting of the representation model and a trained de-identification model can be published to be used by medical institutions on their unlabeled data.
 
 %
 Since both the representation model and the resulting representations are shared in this scenario, our representation procedure is required to prevent two attacks:
