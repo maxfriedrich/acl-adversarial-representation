@@ -15,10 +15,8 @@ De-identification is the task of finding and labeling \ac{phi} in medical text f
 %
 The American \ac{hipaa} defines 18 categories of \ac{phi}.
 
-% TODO challenges of de-identification: lexical overlap, misspellings, etc
-
 %
-Trying to train a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified medical text for research (including for training the tool itself).
+Trying to create a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified medical text for research (including for training the tool itself).
 %
 The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes in a document-coherent way.
 %
@@ -102,12 +100,13 @@ The i2b2 dataset uses the 18 categories of \ac{phi} defined by \ac{hipaa} as a s
 In addition to the \ac{hipaa} set of categories, it includes (sub-)categories such as doctor names, professions, states, countries, and ages under 90.
 
 \subsection{De-Identification Model}\label{sec:deidentification-model}
-% TODO we don't use character embeddings -- FastText is character-based, GloVe is not
-% TODO maybe leave out FastText because it weakens the point?
 %
 We use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
-In addition to pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, we provide the casing feature from \citet{reimers2017optimal} as an input.
+We only use pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, not character embeddings, as we suspect these may allow easy re-identification of private information.
+% TODO does this even make sense? In the baseline model, the data is public, and in the adversarial representation model, the representation should be able to obscure the character features
+%
+Instead of learned character features, we provide the casing feature from \citet{reimers2017optimal} as an additional input.
 %
 The feature maps words to a one-hot representation of their casing (\textit{numeric}, \textit{mainly numeric}, \textit{all lower}, \textit{all upper}, \textit{initial upper}, \textit{contains digit}, or \textit{other}).
 
@@ -205,8 +204,6 @@ Since both the representation model and the resulting representations are shared
     It retains the casing feature as an additional input.
     %
     The representation sequence is also used as one of the two inputs to the adversary that tries to infer information about the original sequence.
-    %
-    % TODO describe the second input
     
     \item[Representation]
     %
@@ -323,6 +320,10 @@ To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
     %
     We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting on multiple lines on whitespace and bulleted list items.
     
+    \item[Deep Learning Models]
+    %
+    We use the Keras framework \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
+    
     \item[Evaluation]
     %
     In order to compare our results to the state of the art, we use the token-based binary \ac{hipaa} \fone score as our main metric for de-identification performance.
@@ -411,7 +412,6 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
         %
         Right: mean accuracy on the two adversary tasks.
     }\label{fig:adversarial-deid}
-    % TODO the adversary accuracy figure with the lighter color lines is not clear -- describe in the text or delete
 \end{figure*}
 
 \section{De-Identification Performance}
@@ -421,25 +421,22 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     %
     We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
     %
-    \citet{reimers2017optimal} find that GloVe performs better than FastText in their \ac{ner} benchmark.
-    %
-    This is no contradiction to our result as the i2b2 2014 dataset in all likelihood contains more out-of-vocabulary tokens (that GloVe cannot embed) than their datasets.
-    %
     FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) proves useful on datasets with misspellings and ungrammatical text.
     %
     However, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
     %
-    The casing feature (which improves GloVe be $0.4$ percentage points in the hyperparameter optimization) makes up for GloVe's missing embeddings for unknown words.
-        
-    % TODO error analysis with only GloVe + FastText (or only GloVe)
-    % TODO explain why we don't beat the Liu et al model (no rules)
+    The casing feature makes up for GloVe's missing embeddings for unknown words.
+    
+    %
+    \citet{liu2017identification} use a deep learning ensemble with hand-crafted rules to achieve state-of-the-art results de-identification.
+    %
+    Our model's scores are similar to the previous state of the art, a bidirectional \ac{lstm}-\ac{crf} model with character features \citep{dernoncourt2017identification}.
+    
 
     \item[Automatically Pseudonymized Data]
     %
     Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
-    
-    % TODO is this discussion?
-    %
+        %
     It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
     %
     The FastText model beats the respective raw data model in the profession, location, age and contact categories.
@@ -499,6 +496,9 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
     %
     While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
+    %
+    This is shown by the lighter color validation plots in \cref{fig:adversarial-deid}, which show the maximum validation accuracy around the epoch where training ended.
+    % TODO training the adversary for more epochs would be a cleaner way to show this
     
     %
     When freezing the representation model from a stable experiment run and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$.
