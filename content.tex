@@ -15,10 +15,6 @@ De-identification is the task of finding and labeling \ac{phi} in medical text f
 %
 The American \ac{hipaa} defines 18 categories of \ac{phi}.
 
-% TODO Why is it important? (enable large-scale studies)
-
-% TODO de-identification as a sequence tagging task like NER
-
 % TODO challenges of de-identification: lexical overlap, misspellings, etc
 
 %
@@ -145,8 +141,6 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 We introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models work on the sentence level and do not rely on document coherency \citep{liu2017identification,dernoncourt2017identification}.
 %
 Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
-%
-% TODO we also shuffle the sentences 
 
 %
 Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
