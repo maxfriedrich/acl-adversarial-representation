@@ -233,7 +233,7 @@ Since both the representation model and the resulting representations are shared
     \item[Adversaries]
     %
     We use two adversaries that are trained on tasks that directly follow from \ref{item:attack1} and \ref{item:attack2}:
-    \begin{enumerate}
+    \begin{enumerate}[label=T\arabic*.,ref=T\arabic*]
         \item Given a representation and an embedding sequence, decide if they were obtained from the same sentence.
         \item Given two representation sequences (and their cosine similarities), decide if they were obtained from the same sentence.
     \end{enumerate}
@@ -278,7 +278,7 @@ Since both the representation model and the resulting representations are shared
     %
     It is composed of three sequential phases:
     %
-    \begin{enumerate}
+    \begin{enumerate}[label=P\arabic*.,ref=P\arabic*]
         \item The de-identification and representation models are pre-trained together, optimizing the de-identification loss $l_{\text{deid}}$.
         \item The representation model is frozen and the adversary is pre-trained, optimizing the adversarial loss $l_{\text{adv}}$.
         \item In alternation, for one epoch each:
@@ -293,7 +293,7 @@ Since both the representation model and the resulting representations are shared
     %
     The alternating steps in the third phase each last one training epoch.
     %
-    We determine the early stopping epoch using only the combined validation loss (step~\ref{item:repr-training}).
+    We determine the early stopping epoch using only the combined validation loss from \ref{item:repr-training}.
     
     %
     Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
