@@ -254,7 +254,7 @@ Since both the representation model and the resulting representations are shared
         \centering
         \input{images/tikz/training}
         \caption[Adversarial training procedure]{%
-            Visualization of \citeauthor{feutry2018learning}'s training procedure.
+            Visualization of \citeauthor{feutry2018learning}'s three-part training procedure.
             %
             The adversarial model layout follows \cref{fig:adversarial-model}: the representation model is at the bottom, the left branch is the de-identification model and the right branch is the adversary.
             %
@@ -264,7 +264,7 @@ Since both the representation model and the resulting representations are shared
     
     \item[Training]
     %
-    We evaluate two training procedures: \ac{dann} training~\citep{ganin2016domain} and the alternating approach by \citet{feutry2018learning}.
+    We evaluate two training procedures: \ac{dann} training~\citep{ganin2016domain} and the three-part procedure from \citet{feutry2018learning}.
     
     %
     In \ac{dann} training, the three components are trained conjointly, optimizing the sum of losses.
@@ -384,7 +384,7 @@ When training the adversary on the frozen representation for an additional $20$ 
 This confirms the findings by \citet{elazar2018adversarial}.
 
 %
-With the training procedure by \citet{feutry2018learning}, we are able to train a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.
+With the three-part training procedure, we are able to learn a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.
 
 %
 \Cref{fig:adversarial-deid} (left) shows our de-identification results when using adversarially learned representations.
@@ -555,7 +555,7 @@ The automatic pseudonymization approach could serve as a data augmentation schem
 Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
 
 %
-In adversarial learning, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
+In adversarial learning with the three-part training procedure, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
 %
 A further possible extension is a dynamic noise level in the representation model that depends on the \ac{lstm} output instead of being a trained weight.
 %
