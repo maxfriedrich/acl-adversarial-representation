@@ -426,7 +426,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     The casing feature makes up for GloVe's missing embeddings for unknown words.
     
     %
-    \citet{liu2017identification} use a deep learning ensemble with hand-crafted rules to achieve state-of-the-art results de-identification.
+    \citet{liu2017identification} use a deep learning ensemble in combination with hand-crafted rules to achieve state-of-the-art results de-identification.
     %
     Our model's scores are similar to the previous state of the art, a bidirectional \ac{lstm}-\ac{crf} model with character features \citep{dernoncourt2017identification}.
     
@@ -495,7 +495,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     %
     While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
     %
-    This is shown by the lighter color validation plots in \cref{fig:adversarial-deid}, which show the maximum validation accuracy around the epoch where training ended.
+    This is shown by the lighter color validation plots in \cref{fig:adversarial-deid}, which show the maximum validation accuracy around the epoch where training ended as a proxy for the possible accuracy of an adversary that receives further training on a frozen representation.
     % TODO training the adversary for more epochs would be a cleaner way to show this
     
     %
