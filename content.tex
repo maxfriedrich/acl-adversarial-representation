@@ -522,22 +522,15 @@ Today's de-identification tools fail on unseen data.
 %
 A training set from multiple sources is required to train more general de-identification tools.
 %
-We evaluated approaches to sharing training data for de-identification that require lower human effort than the existing approach of document-coherent pseudonymization.
+We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.
 
 %
-As a precursor to our data sharing approaches, we developed a baseline deep learning model for de-identification that does rely on explicit character features.
+As precursors to our adversarial representation approach, we developed a baseline deep learning model for de-identification that does rely on explicit character features as well as an automatic word-level pseudonymization approach.
 %
-It uses word embeddings as well as a casing feature as inputs.
-%
-On the i2b2 2014 test set, the model reaches an \fone score of $97.74\%$, a near-state-of-the-art result.
+A model trained on our automatically pseudonymized data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the raw data baseline, scoring $96.75\%$ on the i2b2 2014 test set.
 
 %
-Our automatic pseudonymization approach replaces protected information with neighboring words in an embedding space.
-%
-A model trained on this augmented data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the raw data baseline, scoring $96.75\%$.
-
-%
-We presented an adversarial learning based private representation of medical text that is invariant to any protected information word being replaced with any of its embedding space neighbors and contains a random element.
+We presented an adversarial learning based private representation of medical text that is invariant to any \ac{phi} word being replaced with any of its embedding space neighbors and contains a random element.
 %
 The representation allows training a de-identification model while being robust to adversaries trying to re-identify protected information or building a lookup table of representations.
 %
@@ -550,13 +543,14 @@ The representation acts as a task-specific feature extractor.
 For an invariance criterion of up to $N=50$ (GloVe) or $N=500$ (FastText) neighbors, training is stable and adversaries cannot beat the random guessing accuracy of $50\%$.
 
 %
-Our approaches, especially the adversarially trained representation, allow cost-effective private sharing of training data for de-identification.
+Our adversarial representation approach allows cost-effective private sharing of training data for de-identification.
 %
 Better de-identification tools could help enable large-scale medical studies that improve public health.
 
 % Future Work
+% TODO maybe add a section header here to make the transition more clear?
 %
-Our automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
+The automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
 %
 Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
 
