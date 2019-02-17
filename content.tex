@@ -408,7 +408,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     \caption[De-identification with adversarially learned representations]{%
         Left: de-identification \fone scores of our models using an adversarially trained representation with different numbers of neighbors $N$ for the representation invariance requirement.
         %
-        Right: mean accuracy on the two adversary tasks.
+        Right: mean adversary accuracy when trained on the frozen representation for an additional 60 epochs.
     }\label{fig:adversarial-deid}
 \end{figure*}
 
@@ -503,12 +503,6 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     %
     Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 \end{description}
-
-\section{Generalization Properties}
-
-\begin{itemize}
-    \item Evaluation on the 2016 sight-unseen dataset
-\end{itemize}
 
 \section{Conclusions \& Future Work}
 %
