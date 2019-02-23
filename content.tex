@@ -173,7 +173,7 @@ We train our de-identification model on the transformed data and test it on the 
 \end{figure}
 
 %
-We introduce a new data sharing approach that is based on an adversarially learned private representation.
+We introduce a new data sharing approach that is based on an adversarially learned private representation and improves on the pseudonymization from \cref{sec:automatic-pseudonymization}.
 %
 After training the representation on an initial publicly available dataset, e.g.\ the i2b2 2014 data, a central model provider shares the frozen representation model with participating medical institutions.
 %
@@ -201,13 +201,13 @@ Since both the representation model and the resulting representations are shared
     %
     The de-identification model receives this representation sequence as an input instead of the original embedding sequence.
     %
-    It retains the casing feature as an additional input.
+    It retains the casing feature as an auxiliary input.
     %
-    The adversary has two inputs: the representation sequence and a second embedding or representation sequence.
+    The adversary has two inputs: the representation sequence and an additional embedding or representation sequence.
     
     \item[Representation]
     %
-    To protect against \ref{item:attack1}, our representation should be invariant to small input changes, like a single \ac{phi} token being replaced with a neighbor in the embedding space.
+    To protect against \ref{item:attack1}, our representation must be invariant to small input changes, like a single \ac{phi} token being replaced with a neighbor in the embedding space.
     %
     The number of neighbors $N$ controls the privacy level of the representation.
     
@@ -217,7 +217,7 @@ Since both the representation model and the resulting representations are shared
     %
     We use a bidirectional \ac{lstm} model to implement the representation.
     %
-    It applies Gaussian noise $\bm{N}$ with zero mean and trainable standard deviations to the input embeddings $\bm{E}$ and output sequence.
+    It applies Gaussian noise $\bm{N}$ with zero mean and trainable standard deviations to the input embeddings $\bm{E}$ and the output sequence.
     %
     The model learns a standard deviation for each of the input and output dimensions.
     %
@@ -276,7 +276,7 @@ Since both the representation model and the resulting representations are shared
     %
     The training procedure by \citet{feutry2018learning} is shown in \cref{fig:feutry-training}.
     %
-    It is composed of three sequential phases:
+    It is composed of three phases:
     %
     \begin{enumerate}[label=P\arabic*.,ref=P\arabic*]
         \item The de-identification and representation models are pre-trained together, optimizing the de-identification loss $l_{\text{deid}}$.
@@ -393,9 +393,7 @@ A higher number of neighbors $N$ means a stronger invariance requirement for the
 %
 For values of $N$ up to $1\,000$, our FastText and GloVe models are able to learn representations that allow training de-identification models that reach the target \fone score of $95\%$.
 %
-However, training becomes unstable for $N>50$ when using GloVe and $N>500$ when using FastText embeddings.
-%
-Then, training results in representations that are not robust to the adversary, which is shown in the diagram on the right side.
+However, training becomes unstable for $N>500$: at this point, the adversary is able to beat the representation when trained for an additional $50$ epochs (\cref{fig:adversarial-deid} right).
 
 %
 Our choice of representation size $d \in \{50, 100, 300\}$ does not influence de-identifi\-ca\-tion or adversary performance, so we select $d=50$ for further evaluation.
@@ -408,7 +406,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     \caption[De-identification with adversarially learned representations]{%
         Left: de-identification \fone scores of our models using an adversarially trained representation with different numbers of neighbors $N$ for the representation invariance requirement.
         %
-        Right: mean adversary accuracy when trained on the frozen representation for an additional 60 epochs.
+        Right: mean adversary accuracy when trained on the frozen representation for an additional $50$ epochs.
     }\label{fig:adversarial-deid}
 \end{figure*}
 
@@ -499,7 +497,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     % TODO training the adversary for more epochs would be a cleaner way to show this
     
     %
-    When freezing the representation model from a stable experiment run and training the adversary for an additional $60$ epochs, it still does not achieve higher accuracies than $50\%$.
+    When freezing the representation model from a stable experiment run and training the adversary for an additional $50$ epochs, it still does not achieve higher accuracies than $50\%$.
     %
     Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 \end{description}
@@ -534,7 +532,7 @@ Using the adversarially learned representation, de-identification models reach a
 %
 The representation acts as a task-specific feature extractor.
 %
-For an invariance criterion of up to $N=50$ (GloVe) or $N=500$ (FastText) neighbors, training is stable and adversaries cannot beat the random guessing accuracy of $50\%$.
+For an invariance criterion of up to $N=500$ neighbors, training is stable and adversaries cannot beat the random guessing accuracy of $50\%$.
 
 %
 Our adversarial representation approach allows cost-effective private sharing of training data for de-identification.
