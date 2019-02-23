@@ -20,7 +20,7 @@ Trying to create a software tool for automatic de-identification leads to a ``ch
 %
 The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes in a document-coherent way.
 %
-This requires replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings on the pseudonym \cite{uzuner2007evaluating}.
+This includes replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings on the pseudonym \cite{uzuner2007evaluating}.
 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
 % Why is sharing training data the best solution for a de-identification model?
@@ -78,7 +78,7 @@ The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementa
 It uses a gradient reversal layer to worsen the representation for the adversary during back-propagation.
 
 %
-Although initially conceived for use in domain adaptation, \acp{dann} and similar adversarial deep learning models have recently been used to obfuscate demographics attributes \citep{elazar2018adversarial,li2018towards} from text and subject identity \citep{feutry2018learning} from images.
+Although initially conceived for use in domain adaptation, \acp{dann} and similar adversarial deep learning models have recently been used to obfuscate demographics attributes from text \citep{elazar2018adversarial,li2018towards} and subject identity \citep{feutry2018learning} from images.
 %
 \citet{elazar2018adversarial} warn that continued adversary training with a frozen representation may allow adversaries to break representation privacy.
 
@@ -137,7 +137,7 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 
 \subsection{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
 %
-We introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models work on the sentence level and do not rely on document coherency \citep{liu2017identification,dernoncourt2017identification}.
+We introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our basic de-identification model work on the sentence level and do not rely on document coherency.
 %
 Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
 
@@ -156,7 +156,7 @@ may be replaced by
 %
 While the resulting sentences do not necessarily make sense to a reader (e.g.\ ``Croix Scott'' is not a realistic hospital name), its embedding representation is similar to the original.
 %
-We train the de-identification model on the transformed data and test it on the raw data.
+We train our de-identification model on the transformed data and test it on the raw data.
 
 
 \subsection{Adversarial Representation}\label{sec:adversarial-representation}
