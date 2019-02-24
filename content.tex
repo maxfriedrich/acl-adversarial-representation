@@ -34,9 +34,9 @@ To achieve a universal de-identification classifier, many medical institutions w
 Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
-We introduce an adversarially learned private representation that allows privacy-preserving sharing of medical text for training a de-identification classifier.
+We introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier.
 %
-Our approach still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representation.
+Our approach still requires humans to annotate \ac{phi} (as this is the training data for the de-identification task) but the pseudonymization step is performed by the transformation to the representation.
 %
 A classifier trained on our representation cannot contain any protected data, as it is never trained on raw text.
 
@@ -416,95 +416,86 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
 
 \section{De-Identification Performance}
 
-\begin{description}
-    \item[Baseline De-Identification]
-    %
-    We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
-    %
-    FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) proves useful on datasets with misspellings and ungrammatical text.
-    %
-    However, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
-    %
-    The casing feature makes up for GloVe's missing embeddings for unknown words.
-    
-    %
-    \citet{liu2017identification} use a deep learning ensemble in combination with hand-crafted rules to achieve state-of-the-art results de-identification.
-    %
-    Our model's scores are similar to the previous state of the art, a bidirectional \ac{lstm}-\ac{crf} model with character features \citep{dernoncourt2017identification}.
-    
+\textbf{Baseline De-Identification:}
+%
+We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
+%
+FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) proves useful on datasets with misspellings and ungrammatical text.
+%
+However, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
+%
+The casing feature makes up for GloVe's missing embeddings for unknown words.
 
-    \item[Automatically Pseudonymized Data]
+%
+\citet{liu2017identification} use a deep learning ensemble in combination with hand-crafted rules to achieve state-of-the-art results de-identification.
+%
+Our model's scores are similar to the previous state of the art, a bidirectional \ac{lstm}-\ac{crf} model with character features \citep{dernoncourt2017identification}.
+
+\textbf{Automatically Pseudonymized Data:}
+%
+Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
     %
-    Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
-        %
-    It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
-    %
-    The FastText model beats the respective raw data model in the profession, location, age and contact categories.
-    %
-    The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories.
-    %
-    However, the overall binary \ac{hipaa} \fone scores do not improve when using automatic pseudonymization.
-    
-    \item[Adversarially Learned Representation]
-    %
-    Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models when using up to $N=1000$ neighbors as an invariance requirement.
-    
-    %
-    The adversarial de-identification results beat the automatic pseudonymization results because the representation model can act as a task-specific feature extractor.
-    %
-    Additionally, the representations are more general as they are invariant to word changes.
-    %
-    The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
-    
-    %
-    The adversarially trained FastText model beats the FastText model trained on raw data in the contact category. 
-    %
-    The GloVe model does not beat the corresponding raw data model in any category.
-    %
-    It is most significantly weaker in the profession category.
-\end{description}
+It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
+%
+The FastText model beats the respective raw data model in the profession, location, age and contact categories.
+%
+The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories.
+%
+However, the overall binary \ac{hipaa} \fone scores do not improve when using automatic pseudonymization.
+
+\textbf{Adversarially Learned Representation:}
+%
+Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models (\fone scores above $95\%$) when using up to $N=1000$ neighbors as an invariance requirement.
+%
+The adversarial representation results beat the automatic pseudonymization results because the representation model can act as a task-specific feature extractor.
+%
+Additionally, the representations are more general as they are invariant to word changes.
+%
+The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
+
+%
+The adversarially trained FastText model beats the FastText model trained on raw data in the contact category. 
+%
+The GloVe model does not beat the corresponding raw data model in any category.
+%
+It is most significantly weaker in the profession category.
 
 \section{Privacy Properties}
 
-\begin{description}
-    \item[Embeddings]
-    %
-    When looking up embedding space neighbors for words, it is notable that many FastText neighbors include the original word or parts of it as a subword.
-    %
-    This is due to FastText's method of using the sum of subword embeddings in embedding calculation.
-    %
-    For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of their $N=100$ closest neighbors in the FastText embedding matrix contain the original token as a subword.
-    %
-    When looking up neighbors using GloVe embeddings, the value is $0.44$.
-    %
-    This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$) than GloVe to sufficiently obfuscate protected information.
-    
-    \item[Automatically Pseudonymized Data]
-    %
-    The word-level pseudonymization may allow an adversary to piece together documents from the shuffled sentences.
-    %
-    If multiple sentences contain similar pseudonymized identifiers, they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
-    %
-    It may be possible to infer the original information using the overlapping neighbor spaces.
-    %
-    To counter this, we can re-introduce document-level pseudonymization, i.e.\ moving all occurrences of \iac{phi} token to the same neighbor.
-    %
-    However, we would then also need to detect misspelled names as well as other hints to the actual tokens and transform them similarly to the original, which would add back much of the complexity of manual pseudonymization that we try to avoid.
-    
-    \item[Adversarially Learned Representation]
-    %
-    Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
-    %
-    While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
-    %
-    This is shown by the lighter color validation plots in \cref{fig:adversarial-deid}, which show the maximum validation accuracy around the epoch where training ended as a proxy for the possible accuracy of an adversary that receives further training on a frozen representation.
-    % TODO training the adversary for more epochs would be a cleaner way to show this
-    
-    %
-    When freezing the representation model from a stable experiment run and training the adversary for an additional $50$ epochs, it still does not achieve higher accuracies than $50\%$.
-    %
-    Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
-\end{description}
+\textbf{Embeddings:}
+%
+When looking up embedding space neighbors for words, it is notable that many FastText neighbors include the original word or parts of it as a subword.
+%
+This is due to FastText's method of using the sum of subword embeddings in embedding calculation.
+%
+For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of their $N=100$ closest neighbors in the FastText embedding matrix contain the original token as a subword.
+%
+When looking up neighbors using GloVe embeddings, the value is $0.44$.
+%
+This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$) than GloVe to sufficiently obfuscate protected information.
+
+\textbf{Automatically Pseudonymized Data:}
+%
+The word-level pseudonymization may allow an adversary to piece together documents from the shuffled sentences.
+%
+If multiple sentences contain similar pseudonymized identifiers, they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
+%
+It may be possible to infer the original information using the overlapping neighbor spaces.
+%
+To counter this, we can re-introduce document-level pseudonymization, i.e.\ moving all occurrences of \iac{phi} token to the same neighbor.
+%
+However, we would then also need to detect misspelled names as well as other hints to the actual tokens and transform them similarly to the original, which would add back much of the complexity of manual pseudonymization that we try to avoid.
+
+\textbf{Adversarially Learned Representation:}
+%
+Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
+%
+While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
+
+%
+When freezing the representation model from a stable experiment run and training the adversary for an additional $50$ epochs, it still does not achieve higher-than-chance accuracies.
+%
+Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 
 \section{Conclusions \& Future Work}
 %
@@ -543,10 +534,8 @@ Our adversarial representation approach allows cost-effective private sharing of
 %
 Better de-identification classifiers could help enable large-scale medical studies that improve public health.
 
-% Future Work
-% TODO maybe add a section header here to make the transition more clear?
 %
-The automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
+\textbf{Future Work:} The automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
 %
 Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
 
