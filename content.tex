@@ -25,20 +25,20 @@ This includes replacing e.g.\ every person or place name with a different name, 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
 % Why is sharing training data the best solution for a de-identification model?
 %
-Today, a pseudonymized dataset for de-identification from a single source is publicly available \citep{stubbs2015annotating}.
+Today, a pseudonymized dataset for de-identification from a single source, the i2b2 2014 dataset, is publicly available \citep{stubbs2015annotating}.
 %
-However, de-identification classifiers trained on the dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
+However, de-identification classifiers trained on this dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
 To achieve a universal de-identification classifier, many medical institutions would have to pool their data.
 %
 Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
-We introduce an adversarially learned private representation that allows privacy-preserving sharing of medical text for training a de-identification tool.
+We introduce an adversarially learned private representation that allows privacy-preserving sharing of medical text for training a de-identification classifier.
 %
 Our approach still requires humans to annotate \ac{phi} (as this is the training data for the task) but the pseudonymization step is performed by the transformation to the representation.
 %
-A tool trained on our representation cannot contain any protected data, as it is never trained on raw text.
+A classifier trained on our representation cannot contain any protected data, as it is never trained on raw text.
 
 \section{Related Work}\label{sec:related}
 %
@@ -51,7 +51,7 @@ Analogously to many \ac{nlp} task, the state of the art in de-identification cha
 %
 Three shared tasks on de-identification were run in 2006 \citep{uzuner2007evaluating}, 2014 \citep{stubbs2015automated}, and 2016 \citep{stubbs2017identification}.
 %
-The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the shared tasks.
+The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the tasks.
 %
 An \fone score of $95\%$ has been suggested as a target for reasonable de-identification systems \citep{stubbs2015automated}.
 
@@ -60,7 +60,7 @@ An \fone score of $95\%$ has been suggested as a target for reasonable de-identi
 %
 Using transfer learning from a larger dataset slightly improves performance on the i2b2 2014 dataset \citep{lee2017transfer}.
 %
-\citet{liu2017identification} achieve state-of-the-art performance in de-identification by combining a deep learning ensemble and a rule component.
+\citet{liu2017identification} achieve state-of-the-art performance in de-identification by combining a deep learning ensemble with a rule component.
 
 %
 Up to the 2014 shared task, the organizers emphasized that it is unclear if a system trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
@@ -71,7 +71,7 @@ The best system achieved an \fone score of $79\%$, proving that systems at the t
 
 \subsection{Adversarial Representation Learning}
 %
-Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode features of raw data that allows it to be used in e.g.\ machine learning algorithms while obfuscating membership in a protected group or other attributes.
+Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode features of raw data that allows it to be used in e.g.\ machine learning algorithms while obfuscating membership in a protected group or other sensitive attributes.
 %
 The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementation of a three-party game between a representer, classifier, and adversary component.
 %
@@ -189,121 +189,123 @@ Since both the representation model and the resulting representations are shared
     \item Building a lookup table of inputs and their exact representations that can be used in known plaintext attacks.\label{item:attack2}
 \end{enumerate}
 
-\begin{description}
-    \item[Architecture]
-    %
-    Our approach uses a model that is composed of three components: a representation model, the de-identification model from \cref{sec:deidentification-model}, and an adversary.
-    %
-    An overview of the architecture is shown in \cref{fig:adversarial-model}.
-    
-    %
-    The representation model maps a sequence of word embeddings to an intermediate vector representation sequence.
-    %
-    The de-identification model receives this representation sequence as an input instead of the original embedding sequence.
-    %
-    It retains the casing feature as an auxiliary input.
-    %
-    The adversary has two inputs: the representation sequence and an additional embedding or representation sequence.
-    
-    \item[Representation]
-    %
-    To protect against \ref{item:attack1}, our representation must be invariant to small input changes, like a single \ac{phi} token being replaced with a neighbor in the embedding space.
-    %
-    The number of neighbors $N$ controls the privacy level of the representation.
-    
-    %
-    To protect against \ref{item:attack2}, we add a random element to the representation that makes repeated transformations of one sentence indistinguishable from representations of similar input sentences.
-    
-    %
-    We use a bidirectional \ac{lstm} model to implement the representation.
-    %
-    It applies Gaussian noise $\bm{N}$ with zero mean and trainable standard deviations to the input embeddings $\bm{E}$ and the output sequence.
-    %
-    The model learns a standard deviation for each of the input and output dimensions.
-    %
-    \begin{align}
-    \bm{R} = \bm{N}_{\text{out}} + \text{LSTM}(\bm{E} + \bm{N}_{\text{in}})
-    \end{align}
-    
-    %
-    In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
-    %
-    We evaluate the representation sizes $d \in \{50, 100, 300\}$. 
-    
-    \item[Adversaries]
-    %
-    We use two adversaries that are trained on tasks that directly follow from \ref{item:attack1} and \ref{item:attack2}:
-    \begin{enumerate}[label=T\arabic*.,ref=T\arabic*]
-        \item Given a representation and an embedding sequence, decide if they were obtained from the same sentence.
-        \item Given two representation sequences (and their cosine similarities), decide if they were obtained from the same sentence.
-    \end{enumerate}
+\subsubsection{Architecture}
+%
+Our approach uses a model that is composed of three components: a representation model, the de-identification model from \cref{sec:deidentification-model}, and an adversary.
+%
+An overview of the architecture is shown in \cref{fig:adversarial-model}.
 
-    %
-    We obtain the representation sequences for the second adversary from a copy of the representation model with shared weights.
-    %
-    We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:automatic-pseudonymization}, limiting the number of replaced \ac{phi} tokens to one per sentence.
-    
-    %
-    The adversaries are implemented as bidirectional \ac{lstm} models.
-    %
-    We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in a preliminary experiment.
-    %
-    To use the two adversaries in our architecture, we average their outputs.
-    
-     \begin{figure}
-        \centering
-        \input{images/tikz/training}
-        \caption[Adversarial training procedure]{%
-            Visualization of \citeauthor{feutry2018learning}'s three-part training procedure.
-            %
-            The adversarial model layout follows \cref{fig:adversarial-model}: the representation model is at the bottom, the left branch is the de-identification model and the right branch is the adversary.
-            %
-            In each step, the thick components are trained while the thin components are frozen.
-        }\label{fig:feutry-training}
-    \end{figure}
-    
-    \item[Training]
-    %
-    We evaluate two training procedures: \ac{dann} training~\citep{ganin2016domain} and the three-part procedure from \citet{feutry2018learning}.
-    
-    %
-    In \ac{dann} training, the three components are trained conjointly, optimizing the sum of losses.
-    %
-    Training the de-identification model modifies the representation model weights to generate a more meaningful representation for de-identification.
-    %
-    The adversary gradient is reversed with a gradient reversal layer between the adversary and the representation model in the backward pass, causing the representation to become less meaningful for the adversary.
-    
-    %
-    The training procedure by \citet{feutry2018learning} is shown in \cref{fig:feutry-training}.
-    %
-    It is composed of three phases:
-    %
-    \begin{enumerate}[label=P\arabic*.,ref=P\arabic*]
-        \item The de-identification and representation models are pre-trained together, optimizing the de-identification loss $l_{\text{deid}}$.
-        \item The representation model is frozen and the adversary is pre-trained, optimizing the adversarial loss $l_{\text{adv}}$.
-        \item In alternation, for one epoch each:
-        \begin{enumerate}
-            \item The representation is frozen and both de-identification model and adversary are trained, optimizing their respective losses $l_{\text{deid}}$ and $l_{\text{adv}}$.
-            \item The de-identification model and adversary are frozen and the representation is trained, optimizing the combined loss $l_{\text{repr}} = l_{\text{deid}} + \lambda \abs{l_{\text{adv}} - l_{\text{random}}}$. \label{item:repr-training}
-        \end{enumerate}
+%
+The representation model maps a sequence of word embeddings to an intermediate vector representation sequence.
+%
+The de-identification model receives this representation sequence as an input instead of the original embedding sequence.
+%
+It retains the casing feature as an auxiliary input.
+%
+The adversary has two inputs: the representation sequence and an additional embedding or representation sequence.
+
+\subsubsection{Representation}
+%
+To protect against \ref{item:attack1}, our representation must be invariant to small input changes, like a single \ac{phi} token being replaced with a neighbor in the embedding space.
+%
+The number of neighbors $N$ controls the privacy level of the representation.
+
+%
+To protect against \ref{item:attack2}, we add a random element to the representation that makes repeated transformations of one sentence indistinguishable from representations of similar input sentences.
+
+%
+We use a bidirectional \ac{lstm} model to implement the representation.
+%
+It applies Gaussian noise $\bm{N}$ with zero mean and trainable standard deviations to the input embeddings $\bm{E}$ and the output sequence.
+%
+The model learns a standard deviation for each of the input and output dimensions.
+%
+\begin{align}
+\bm{R} = \bm{N}_{\text{out}} + \text{LSTM}(\bm{E} + \bm{N}_{\text{in}})
+\end{align}
+
+%
+In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach process all tokens to represent them in a new embedding space.
+%
+We evaluate the representation sizes $d \in \{50, 100, 300\}$. 
+
+\subsubsection{Adversaries}
+%
+We use two adversaries that are trained on tasks that directly follow from \ref{item:attack1} and \ref{item:attack2}:
+\begin{enumerate}[label=T\arabic*.,ref=T\arabic*]
+    \item Given a representation and an embedding sequence, decide if they were obtained from the same sentence.
+    \item Given two representation sequences (and their cosine similarities), decide if they were obtained from the same sentence.
+\end{enumerate}
+
+%
+We obtain the representation sequences for the second adversary from a copy of the representation model with shared weights.
+%
+We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:automatic-pseudonymization}, limiting the number of replaced \ac{phi} tokens to one per sentence.
+
+%
+The adversaries are implemented as bidirectional \ac{lstm} models.
+%
+We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in a preliminary experiment.
+%
+To use the two adversaries in our architecture, we average their outputs.
+
+ \begin{figure}
+    \centering
+    \input{images/tikz/training}
+    \caption[Adversarial training procedure]{%
+        Visualization of \citeauthor{feutry2018learning}'s three-part training procedure.
+        %
+        The adversarial model layout follows \cref{fig:adversarial-model}: the representation model is at the bottom, the left branch is the de-identification model and the right branch is the adversary.
+        %
+        In each step, the thick components are trained while the thin components are frozen.
+    }\label{fig:feutry-training}
+\end{figure}
+
+\subsubsection{Training}
+%
+We evaluate two training procedures: \ac{dann} training~\citep{ganin2016domain} and the three-part procedure from \citet{feutry2018learning}.
+
+%
+In \ac{dann} training, the three components are trained conjointly, optimizing the sum of losses.
+%
+Training the de-identification model modifies the representation model weights to generate a more meaningful representation for de-identification.
+%
+The adversary gradient is reversed with a gradient reversal layer between the adversary and the representation model in the backward pass, causing the representation to become less meaningful for the adversary.
+
+%
+The training procedure by \citet{feutry2018learning} is shown in \cref{fig:feutry-training}.
+%
+It is composed of three phases:
+%
+\begin{enumerate}[label=P\arabic*.,ref=P\arabic*]
+    \item The de-identification and representation models are pre-trained together, optimizing the de-identification loss $l_{\text{deid}}$.
+    \item The representation model is frozen and the adversary is pre-trained, optimizing the adversarial loss $l_{\text{adv}}$.
+    \item In alternation, for one epoch each:
+    \begin{enumerate}
+        \item The representation is frozen and both de-identification model and adversary are trained, optimizing their respective losses $l_{\text{deid}}$ and $l_{\text{adv}}$.
+        \item The de-identification model and adversary are frozen and the representation is trained, optimizing the combined loss
+        \begin{align}
+            l_{\text{repr}} = l_{\text{deid}} + \lambda \abs{l_{\text{adv}} - l_{\text{random}}}
+        \end{align}
+        \label{item:repr-training}
     \end{enumerate}
-    
-    %
-    In the first two phases, we monitor the respective validation losses for early stopping to decide at which point the training should move on to the next phase.
-    %
-    The alternating steps in the third phase each last one training epoch.
-    %
-    We determine the early stopping epoch using only the combined validation loss from \ref{item:repr-training}.
-    
-    %
-    Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
-    %
-    The combined loss is motivated by the fact that the adversary performance should be the same as a random guessing model, which is a lower bound for anonymization~\citep{feutry2018learning}.
-    %
-    The term $\abs{l_{\text{adv}} - l_{\text{random}}}$ approaches $0$ when the adversary performance approaches random guessing\footnote{In the case of binary classification: $L_{\text{random}} = -\log \frac{1}{2}$.}.
-    %
-    $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
-\end{description}
+\end{enumerate}
+
+%
+In each of the first two phases, we monitor the respective validation loss for early stopping to decide at which point the training should move on to the next phase.
+%
+The alternating steps in the third phase each last one training epoch.
+%
+We determine the early stopping time for the third phase using only the combined validation loss from \ref{item:repr-training}.
+
+%
+Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
+%
+The combined loss is motivated by the fact that the adversary performance should be the same as a random guessing model, which is a lower bound for anonymization~\citep{feutry2018learning}.
+%
+The term $\abs{l_{\text{adv}} - l_{\text{random}}}$ approaches $0$ when the adversary performance approaches random guessing\footnote{In the case of binary classification: $L_{\text{random}} = -\log \frac{1}{2}$.}.
+%
+$\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
 
 \subsection{Experiments}
 %
@@ -311,23 +313,25 @@ To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
 %
 % TODO and maybe the sight-unseen part of the 2016 data?
 
-\begin{description}
-    \item[Preprocessing]
-    %
-    We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting on all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
-    %
-    We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting on multiple lines on whitespace and bulleted list items.
-    
-    \item[Deep Learning Models]
-    %
-    We use the Keras framework \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
-    
-    \item[Evaluation]
-    %
-    In order to compare our results to the state of the art, we use the token-based binary \ac{hipaa} \fone score as our main metric for de-identification performance.
-    %
-    \citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
-\end{description}
+\textbf{Preprocessing:}
+%
+We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting on all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
+%
+We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting on multiple lines on whitespace and bulleted list items.
+
+\textbf{Deep Learning Models:}
+%
+We use the Keras framework \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
+%
+%We use \iac{crf} layer implementation from the Keras community contributions repository\footnote{\url{https://github.com/keras-team/keras-contrib}}.
+
+\textbf{Evaluation:}
+%
+In order to compare our results to the state of the art, we use the token-based binary \ac{hipaa} \fone score as our main metric for de-identification performance.
+%
+\citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
+%
+We perform evaluation with the official evaluation script\footnote{\url{https://github.com/kotfic/i2b2\_evaluation\_scripts}}.
 
 \section{Results}
 %
@@ -506,13 +510,13 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
 %
 Privacy laws require medical text to be de-identified before it is shared.
 %
-De-identifi\-ca\-tion is time-consuming and costly when performed by humans, which motivates the creation of automatic de-identification tools.
+De-identifi\-ca\-tion is time-consuming and costly when performed by humans, which motivates the creation of automatic de-identification classifiers.
 %
 Automatic de-identification requires training data, which is typically created by substituting all protected information from raw medical records.
 %
-Today's de-identification tools fail on unseen data.
+Today's de-identification classifiers fail on unseen data.
 %
-A training set from multiple sources is required to train more general de-identification tools.
+A training set from multiple sources is required to train more general de-identification classifiers.
 %
 We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.
 
@@ -537,7 +541,7 @@ For an invariance criterion of up to $N=500$ neighbors, training is stable and a
 %
 Our adversarial representation approach allows cost-effective private sharing of training data for de-identification.
 %
-Better de-identification tools could help enable large-scale medical studies that improve public health.
+Better de-identification classifiers could help enable large-scale medical studies that improve public health.
 
 % Future Work
 % TODO maybe add a section header here to make the transition more clear?
