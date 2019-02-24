@@ -16,9 +16,9 @@ De-identification is the task of finding and labeling \ac{phi} in medical text f
 The American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
 
 %
-Trying to create a software tool for automatic de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification tool cannot be developed, but without such a tool, it is difficult to share de-identified medical text for research (including for training the tool itself).
+Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without such a classifier, it is difficult to share de-identified medical text for research (including for training the classifier itself).
 %
-The standard method of data protection compliant sharing of training data for a de-identification tool requires humans to pseudonymize protected information with substitutes in a document-coherent way.
+The standard method of data protection compliant sharing of training data for a de-identification classifier requires humans to pseudonymize protected information with substitutes in a document-coherent way.
 %
 This includes replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings on the pseudonym \cite{uzuner2007evaluating}.
 
@@ -27,9 +27,9 @@ This includes replacing e.g.\ every person or place name with a different name, 
 %
 Today, a pseudonymized dataset for de-identification from a single source is publicly available \citep{stubbs2015annotating}.
 %
-However, de-identification tools trained on the dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
+However, de-identification classifiers trained on the dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
-To achieve a universal de-identification tool, many medical institutions would have to pool their data.
+To achieve a universal de-identification classifier, many medical institutions would have to pool their data.
 %
 Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
