@@ -89,7 +89,6 @@ In this section, we describe the i2b2 2014 dataset as well as our experimental a
 \subsection{i2b2 2014 Dataset}
 %
 The i2b2 2014 dataset~\citep{stubbs2015annotating} was released as part of the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly available dataset for de-identification today.
-% TODO update this date / talk about the other dataset if we use it
 %
 It contains 1304 free-text documents with \ac{phi} annotations.
 %
@@ -310,8 +309,6 @@ $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
 \subsection{Experiments}
 %
 To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
-%
-% TODO and maybe the sight-unseen part of the 2016 data?
 
 \textbf{Preprocessing:}
 %
@@ -548,7 +545,6 @@ This might allow using lower amounts of noise for certain inputs while still bei
 
 %TODO Mention other embedding schemes, e.g. elmo \citep{peters2018deep}
 
-% TODO or maybe it is possible now if we get the sight-unseen data
 %
 When more training data from multiple sources becomes available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
 
