@@ -1,7 +1,8 @@
-
-%
-% 2018: modified line numbering to be in gainsboro gray color so one
-% can write comments on the margins.	-- Shay Cohen / Kevin Gimpel / Wei Lu
+% This is the LaTex style file for ACL 2019, based off of ACL 2018 and NAACL 2019.
+% Addressing bibtex issues mentioned in https://github.com/acl-org/acl-pub/issues/2
+% Other major modifications include
+% changing the color of the line numbers to a light gray; changing font size of abstract to be 10pt; changing caption font size to be 10pt.
+% -- M Mitchell and Stephanie Lukin
 
 % 2017: modified to support DOI links in bibliography.  Now uses
 % natbib package rather than defining citation commands in this file.
@@ -91,7 +92,7 @@
 % where <new height> can be something larger than 5cm
 
 % include hyperref, unless user specifies nohyperref option like this:
-% \usepackage[nohyperref]{acl2018}
+% \usepackage[nohyperref]{naaclhlt2018}
 \newif\ifacl@hyperref
 \DeclareOption{hyperref}{\acl@hyperreftrue}
 \DeclareOption{nohyperref}{\acl@hyperreffalse}
@@ -111,7 +112,7 @@
   \usepackage{xcolor}
 \fi
 
-\typeout{Conference Style for ACL 2018}
+\typeout{Conference Style for ACL 2019}
 
 % NOTE:  Some laser printers have a serious problem printing TeX output.
 % These printing devices, commonly known as ``write-white'' laser
@@ -221,7 +222,7 @@
 %% In contrast to the original, we do not include the definitions for/using:
 %% gridpicture, div[2], isMEMOIR[1], gridSetup[6][], subgridstyle{dotted}, labelfactor{}, gap{}, gridunitname{}, gridunit{}, gridlines{\thinlines}, subgridlines{\thinlines}, the {keyval} package, evenside margin, nor any definitions with 'color'.
 %%
-%% These are beyond  what is needed for the NAACL style.
+%% These are beyond  what is needed for the NAACL/ACL style.
 %%
 \newcommand\LenToUnit[1]{#1\@gobble}
 \newcommand\AtPageUpperLeft[1]{%
@@ -296,7 +297,7 @@
 
 %% ----- Submitted version markup: Page numbers, ruler, and confidentiality.  Using ideas/code from cvpr.sty 2015. --MM
 
-\font\naaclhv  = phvb at 8pt 
+\font\aclhv  = phvb at 8pt 
 
 %% Define vruler %%
 
@@ -323,10 +324,11 @@
 \textheight=#5\vbadness=10000\vfuzz=120ex\overfullrule=0pt%
 \global\setbox\aclrulerbox=\vbox to \textheight{%
 {\parskip=0pt\hfuzz=150em\cv@boxheight=\textheight
+\color{gray}
 \cv@lineheight=#1\global\aclrulercount=#2%
 \cv@tot\cv@boxheight\divide\cv@tot\cv@lineheight\advance\cv@tot2%
 \cv@refno1\vskip-\cv@lineheight\vskip1ex%
-\loop\setbox\cv@tmpbox=\hbox to0cm{{\naaclhv\hfil\fillzeros[#4]\aclrulercount}}%
+\loop\setbox\cv@tmpbox=\hbox to0cm{{\aclhv\hfil\fillzeros[#4]\aclrulercount}}%
 \ht\cv@tmpbox\cv@lineheight\dp\cv@tmpbox0pt\box\cv@tmpbox\break
 \advance\cv@refno1\global\advance\aclrulercount#3\relax
 \ifnum\cv@refno<\cv@tot\repeat}}\endgroup}%
@@ -334,7 +336,7 @@
 
 
 \def\aclpaperid{***}
-\def\confidential{ACL 2018 Submission~\aclpaperid.  Confidential Review Copy.  DO NOT DISTRIBUTE.}
+\def\confidential{\textcolor{black}{ACL 2019 Submission~\aclpaperid.  Confidential Review Copy.  DO NOT DISTRIBUTE.}}
 
 %% Page numbering, Vruler and Confidentiality %%
 % \makevruler[<SCALE>][<INITIAL_COUNT>][<STEP>][<DIGITS>][<HEIGHT>]
@@ -349,17 +351,17 @@
 \ifaclfinal\else\pagenumbering{arabic}
 \AddToShipoutPicture{%
 \ifaclfinal\else
-\AtPageLowishCenter{\thepage}
+\AtPageLowishCenter{\textcolor{black}{\thepage}}
 \aclruleroffset=\textheight
 \advance\aclruleroffset4pt
-  \AtTextUpperLeft{%
+  \AtTextUpperLeft{% 
     \put(\LenToUnit{\leftoffset},\LenToUnit{-\aclruleroffset}){%left ruler
       \aclruler{\aclrulercount}}
     \put(\LenToUnit{\rightoffset},\LenToUnit{-\aclruleroffset}){%right ruler
       \aclruler{\aclrulercount}}
   }
   \AtTextUpperLeft{%confidential
-    \put(0,\LenToUnit{1cm}){\parbox{\textwidth}{\centering\naaclhv\confidential}}
+    \put(0,\LenToUnit{1cm}){\parbox{\textwidth}{\centering\aclhv\confidential}}
   }
 \fi
 }
@@ -376,7 +378,7 @@
 	     \bf\@author
 	\else 
 		% Avoiding common accidental de-anonymization issue. --MM
-     		\bf Anonymous ACL submission
+        \bf Anonymous ACL submission
 	\fi
     \end{tabular}}
 
@@ -414,17 +416,31 @@
   \vskip 0.3in plus 2fil minus 0.1in
 }}
 
-% margins for abstract
+% margins and font size for abstract
 \renewenvironment{abstract}%
 		 {\centerline{\large\bf Abstract}%
 		  \begin{list}{}%
 		     {\setlength{\rightmargin}{0.6cm}%
 		      \setlength{\leftmargin}{0.6cm}}%
-		   \item[]\ignorespaces}%
+		   \item[]\ignorespaces%
+		   \@setsize\normalsize{12pt}\xpt\@xpt
+		   }%
 		 {\unskip\end{list}}
-		     
+  
 %\renewenvironment{abstract}{\centerline{\large\bf  
 % Abstract}\vspace{0.5ex}\begin{quote}}{\par\end{quote}\vskip 1ex}
+
+% Resizing figure and table captions - SL
+\newcommand{\figcapfont}{\rm}
+\newcommand{\tabcapfont}{\rm}
+\renewcommand{\fnum@figure}{\figcapfont Figure \thefigure}
+\renewcommand{\fnum@table}{\tabcapfont Table \thetable}
+\renewcommand{\figcapfont}{\@setsize\normalsize{12pt}\xpt\@xpt}
+\renewcommand{\tabcapfont}{\@setsize\normalsize{12pt}\xpt\@xpt}	
+% Support for interacting with the caption, subfigure, and subcaption packages - SL
+\usepackage{caption}
+\DeclareCaptionFont{10pt}{\fontsize{10pt}{12pt}\selectfont}
+\captionsetup{font=10pt}
 
 \RequirePackage{natbib}
 % for citation commands in the .tex, authors can use:
@@ -433,6 +449,10 @@
 \renewcommand\cite{\citep}	% to get "(Author Year)" with natbib    
 \newcommand\shortcite{\citeyearpar}% to get "(Year)" with natbib    
 \newcommand\newcite{\citet}	% to get "Author (Year)" with natbib    
+
+% DK/IV: Workaround for annoying hyperref pagewrap bug 
+\RequirePackage{etoolbox}
+\patchcmd\@combinedblfloats{\box\@outputbox}{\unvbox\@outputbox}{}{\errmessage{\noexpand patch failed}}
 
 % bibliography
 
