@@ -208,6 +208,7 @@ The adversary has two inputs: the representation sequence and an additional embe
 To protect against \ref{item:attack1}, our representation must be invariant to small input changes, like a single \ac{phi} token being replaced with a neighbor in the embedding space.
 %
 The number of neighbors $N$ controls the privacy level of the representation.
+\todo[inline]{Details $N$}
 
 %
 To protect against \ref{item:attack2}, we add a random element to the representation that makes repeated transformations of one sentence indistinguishable from representations of similar input sentences.
@@ -391,6 +392,7 @@ With the three-part training procedure, we are able to learn a representation th
 \Cref{fig:adversarial-deid} (left) shows our de-identification results when using adversarially learned representations.
 %
 A higher number of neighbors $N$ means a stronger invariance requirement for the representation.
+\todo[inline]{Details $N$}
 %
 For values of $N$ up to $1\,000$, our FastText and GloVe models are able to learn representations that allow training de-identification models that reach the target \fone score of $95\%$.
 %
@@ -432,7 +434,7 @@ Our model's scores are similar to the previous state of the art, a bidirectional
 %
 Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
 %
-TODO what else?
+\todo[inline]{what else?}
 
 \textbf{Adversarially Learned Representation:}
 %
@@ -457,6 +459,7 @@ For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of
 When looking up neighbors using GloVe embeddings, the value is $0.44$.
 %
 This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$) than GloVe to sufficiently obfuscate protected information.
+\todo[inline]{Details $N$}
 
 \textbf{Automatically Pseudonymized Data:}
 %
@@ -482,6 +485,7 @@ When freezing the representation model from a stable experiment run and training
 Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
 
 \section{Conclusions \& Future Work}
+\todo[inline]{Make clearer what the novel contribution is}
 %
 Privacy laws require medical text to be de-identified before it is shared.
 %
