@@ -431,14 +431,8 @@ Our model's scores are similar to the previous state of the art, a bidirectional
 \textbf{Automatically Pseudonymized Data:}
 %
 Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
-    %
-It is notable that models that were trained on automatically pseudonymized data outperform the corresponding model that was trained on raw data in \fone score in several categories of \ac{phi}.
 %
-The FastText model beats the respective raw data model in the profession, location, age and contact categories.
-%
-The automatic pseudonymization GloVe model outperforms the raw data model in the name, location, and date categories.
-%
-However, the overall binary \ac{hipaa} \fone scores do not improve when using automatic pseudonymization.
+TODO what else?
 
 \textbf{Adversarially Learned Representation:}
 %
@@ -449,13 +443,6 @@ The adversarial representation results beat the automatic pseudonymization resul
 Additionally, the representations are more general as they are invariant to word changes.
 %
 The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
-
-%
-The adversarially trained FastText model beats the FastText model trained on raw data in the contact category. 
-%
-The GloVe model does not beat the corresponding raw data model in any category.
-%
-It is most significantly weaker in the profession category.
 
 \section{Privacy Properties}
 
