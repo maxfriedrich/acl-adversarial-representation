@@ -417,11 +417,11 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
 %
 We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
 %
-FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) proves useful on datasets with misspellings and ungrammatical text.
+FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) should intuitively prove useful on datasets with misspellings and ungrammatical text.
 %
-However, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
+However, when using the additional casing feature, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
 %
-The casing feature makes up for GloVe's missing embeddings for unknown words.
+In this task, the casing feature makes up for GloVe's inability to embed unknown words.
 
 %
 \citet{liu2017identification} use a deep learning ensemble in combination with hand-crafted rules to achieve state-of-the-art results de-identification.
