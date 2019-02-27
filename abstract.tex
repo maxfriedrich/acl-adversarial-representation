@@ -5,13 +5,17 @@
 %
 De-identification is the task of detecting \ac{phi} in medical text.
 %
+It is a critical step in preparing \acp{ehr} to be shared for research.
+%
 Automatic classifiers can significantly speed up the de-identification process.
 %
-However, obtaining a large and diverse dataset to train such a classifier poses a challenge as privacy laws prohibit sharing of raw medical records.
+However, obtaining a large and diverse dataset to train such a classifier that works well across many types of medical text poses a challenge as privacy laws prohibit sharing of raw medical records.
 %
 We introduce a method to create privacy-preserving shareable representations of medical text (i.e.\ they contain no \ac{phi}) that does not require expensive manual pseudonymization. 
 %
 These representations can be shared between organizations to create unified datasets for training de-identification models.
 %
 Our representation allows training a simple \acs{lstm}-\acs{crf} de-identification model to an \fone score of $97.4\%$, which is comparable to a strong non-private baseline.
+%
+A widely available de-identification classifier could potentially enable medical studies for which de-identification would otherwise be too costly.
 \end{abstract}
