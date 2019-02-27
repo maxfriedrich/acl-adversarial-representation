@@ -440,7 +440,7 @@ Our naive automatic word-level pseudonymization approach allows training reasona
 
 \textbf{Adversarially Learned Representation:}
 %
-Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models (\fone scores above $95\%$) when using up to $N=1000$ neighbors as an invariance requirement.
+Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models (\fone scores above $95\%$) when using up to $N=1\,000$ neighbors as an invariance requirement.
 %
 The adversarial representation results beat the automatic pseudonymization results because the representation model can act as a task-specific feature extractor.
 %
@@ -479,14 +479,14 @@ However, we would then also need to detect misspelled names as well as other hin
 %
 Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
 %
-While it is possible for de-identification models to achieve \fone scores of $95\%$ using our adversarially learned representation with up to $N=1000$ neighbors, training becomes unstable for large $N$.
+When freezing the representation model from an experiment run using up to $N = 500$ neighbors and training the adversary for an additional $50$ epochs, it still does not achieve higher-than-chance accuracies.
+%
+Due to the additive noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.
 
 %
-When freezing the representation model from a stable experiment run and training the adversary for an additional $50$ epochs, it still does not achieve higher-than-chance accuracies.
+In the case of $N = 1\,000$ neighbors, the representation never becomes stable in the alternating training phase.
 %
-Due to the added noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.    
-%
-\todo[inline]{Make clarer -- we solved the problem/warning by \citep{elazar2018adversarial} for this task}
+The adversary is always able to beat the representation.
 
 \section{Conclusions \& Future Work}
 \todo[inline]{Make clearer what the novel contribution is}
