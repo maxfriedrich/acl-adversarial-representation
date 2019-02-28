@@ -140,7 +140,7 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 %
 We introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our basic de-identification model work on the sentence level and do not rely on document coherency.
 %
-Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their neighbors in an embedding space, as determined by cosine distance in a pre-computed embedding matrix.
+Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their closest neighbors in an embedding space (including the token itself), as determined by cosine distance in a pre-computed embedding matrix.
 
 %
 Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
@@ -158,7 +158,8 @@ may be replaced by
 While the resulting sentences do not necessarily make sense to a reader (e.g.\ ``Croix Scott'' is not a realistic hospital name), its embedding representation is similar to the original.
 %
 We train our de-identification model on the transformed data and test it on the raw data.
-
+%
+The number of neighbors $N$ controls the privacy properties of the approach: $N = 1$ means no pseudonymization; setting $N$ to the number of rows in a precomputed embedding matrix delivers perfect anonymization but the resulting data may be worthless for training a de-identification model.
 
 \subsection{Adversarial Representation}\label{sec:adversarial-representation}
 
@@ -209,8 +210,7 @@ The adversary has two inputs: the representation sequence and an additional embe
 %
 To protect against \ref{item:attack1}, our representation must be invariant to small input changes, like a single \ac{phi} token being replaced with a neighbor in the embedding space.
 %
-The number of neighbors $N$ controls the privacy level of the representation.
-\todo[inline]{Details $N$}
+Again, the number of neighbors $N$ controls the privacy level of the representation.
 
 %
 To protect against \ref{item:attack2}, we add a random element to the representation that makes repeated transformations of one sentence indistinguishable from representations of similar input sentences.
@@ -394,7 +394,6 @@ With the three-part training procedure, we are able to learn a representation th
 \Cref{fig:adversarial-deid} (left) shows our de-identification results when using adversarially learned representations.
 %
 A higher number of neighbors $N$ means a stronger invariance requirement for the representation.
-\todo[inline]{Details $N$}
 %
 For values of $N$ up to $1\,000$, our FastText and GloVe models are able to learn representations that allow training de-identification models that reach the target \fone score of $95\%$.
 %
@@ -436,7 +435,7 @@ Our model's scores are similar to the previous state of the art, a bidirectional
 %
 Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
 %
-\todo[inline]{what else?}
+There is almost no decrease in \fone score for up to $N = 20$ neighbors for both the FastText and GloVe model.
 
 \textbf{Adversarially Learned Representation:}
 %
@@ -461,7 +460,6 @@ For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of
 When looking up neighbors using GloVe embeddings, the value is $0.44$.
 %
 This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$) than GloVe to sufficiently obfuscate protected information.
-\todo[inline]{Details $N$}
 
 \textbf{Automatically Pseudonymized Data:}
 %
