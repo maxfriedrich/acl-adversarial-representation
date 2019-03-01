@@ -9,13 +9,14 @@
 %
 In addition to structured medical data, \acp{ehr} contain free-text patient notes that are a rich source of information \citep{jensen2012mining}.
 %
-Due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized.
+However, due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized to not include information potentially identifying patients.
 %
-De-identification is the task of finding and labeling \ac{phi} in medical text for sanitization.
+The \ac{phi} to remove includes potentially identifying information such as names, geographic identifiers, dates, and account numbers; the American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
 %
-\Ac{phi} includes potentially identifying information such as names, geographic identifiers, dates, and account numbers.
-%
-The American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
+De-identification is the task of finding and labeling \ac{phi} in medical text for sanitization;
+automatically finding these instances helps manual annotators to then replace the \ac{phi} with
+non-identifying replacements.  As the information to be removed is very sensitive, the sanitization
+cannot be fully automated -- the automatic labeling serves to speed up the process.
 
 %
 Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without such a classifier, it is difficult to share de-identified medical text for research (including for training the classifier itself).
@@ -31,12 +32,13 @@ Today, a pseudonymized dataset for de-identification from a single source, the i
 %
 However, de-identification classifiers trained on this dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
-To achieve a universal de-identification classifier, many medical institutions would have to pool their data.
+To achieve a universal de-identification classifier, many medical institutions would have to pool their data, but
 %
-Preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
+preparing this data for sharing by using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
-We introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier.
+We introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier
+by transforming text non-reversible into a vector space and only sharing that representation.
 %
 Our approach still requires humans to annotate \ac{phi} (as this is the training data for the de-identification task) but the pseudonymization step is performed by the transformation to the representation.
 %
@@ -44,7 +46,12 @@ A classifier trained on our representation cannot contain any protected data, as
 
 \section{Related Work}\label{sec:related}
 %
-In this section, we present related work regarding de-identification and adversarial representation learning.
+Our work builds upon two lines of research: first, de-identification,
+as the system has to provide good de-identification performance, and
+second adversarial representation learning, to remove all identifying
+information from the representations to be distributed.
+
+% In this section, we present related work regarding de-identification and adversarial representation learning.
 
 \subsection{Automatic De-Identification}
 %
@@ -77,32 +84,41 @@ Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode 
 %
 The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementation of a three-party game between a representer, classifier, and adversary component.
 %
-It uses a gradient reversal layer to worsen the representation for the adversary during back-propagation.
+The adversary and the classifier are neural networks which share the first layers and the system
+uses a gradient reversal layer to worsen the representation for the adversary during back-propagation,
+i.\,e.\ when training the adversary, the adversary-specific part of the network is optimized for the
+adversary but the shared part is updated against the gradient to make the shared representation less suitable
+for the adversary.
 
 %
 Although initially conceived for use in domain adaptation, \acp{dann} and similar adversarial deep learning models have recently been used to obfuscate demographics attributes from text \citep{elazar2018adversarial,li2018towards} and subject identity \citep{feutry2018learning} from images.
 %
-\citet{elazar2018adversarial} warn that continued adversary training with a frozen representation may allow adversaries to break representation privacy.
+\citet{elazar2018adversarial} warn that continued adversary training with a frozen representation may allow adversaries to break representation privacy. Therefore, to test whether the unwanted information is not extractable from the generated information anymore, adversary training needs to continue after finishing training the system and only if after that the information cannot be recovered, we have evidence that it really is not contained in the representation anymore.
 
-\section{Dataset and Methods}
-%
-In this section, we describe the i2b2 2014 dataset as well as our experimental approaches.
+%\section{Dataset and Methods}
+% Hinweis: Solche Sätze findet man häufiger um eine leere Section zu vermeiden, aber der Satz
+% gibt nicht viel mehr Information als die Überschrift selbst.  Deshalb:  Mehr schreiben :-)
+% In this section, we describe the i2b2 2014 dataset as well as our experimental approaches.
 
-\subsection{i2b2 2014 Dataset}
-%
-The i2b2 2014 dataset~\citep{stubbs2015annotating} was released as part of the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly available dataset for de-identification today.
+%TODO
+
+\section{Dataset and de-identification model}
+
+All our models are evaluated on the i2b2 2014
+dataset~\citep{stubbs2015annotating}, which was released as part of
+the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly
+available dataset for de-identification today.
 %
 It contains 1304 free-text documents with \ac{phi} annotations.
-%
-
 %
 The i2b2 dataset uses the 18 categories of \ac{phi} defined by \ac{hipaa} as a starting point for its own set of \ac{phi} categories.
 %
 In addition to the \ac{hipaa} set of categories, it includes (sub-)categories such as doctor names, professions, states, countries, and ages under 90.
 
-\subsection{De-Identification Model}\label{sec:deidentification-model}
+%\subsection{De-Identification Model}\label{sec:deidentification-model}
 %
-We use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
+For the non-private baseline as well as the privacy-enabled extensions,
+we use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
 We only use pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, not explicit character embeddings, as we suspect these may allow easy re-identification of private information if used in shared representations.
 % TODO does this even make sense? In the baseline model, the data is public, and in the adversarial representation model, the representation should be able to obscure the character features
@@ -136,7 +152,7 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 \end{table}
 
 
-\subsection{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
+\section{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
 %
 We introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our basic de-identification model work on the sentence level and do not rely on document coherency.
 %
@@ -161,7 +177,7 @@ We train our de-identification model on the transformed data and test it on the 
 %
 The number of neighbors $N$ controls the privacy properties of the approach: $N = 1$ means no pseudonymization; setting $N$ to the number of rows in a precomputed embedding matrix delivers perfect anonymization but the resulting data may be worthless for training a de-identification model.
 
-\subsection{Adversarial Representation}\label{sec:adversarial-representation}
+\section{Adversarial Representation}\label{sec:adversarial-representation}
 
 \begin{figure}
     \centering
@@ -191,7 +207,7 @@ Since both the representation model and the resulting representations are shared
     \item Building a lookup table of inputs and their exact representations that can be used in known plaintext attacks.\label{item:attack2}
 \end{enumerate}
 
-\subsubsection{Architecture}
+\subsection{Architecture}
 %
 Our approach uses a model that is composed of three components: a representation model, the de-identification model from \cref{sec:deidentification-model}, and an adversary.
 %
@@ -206,7 +222,7 @@ It retains the casing feature as an auxiliary input.
 %
 The adversary has two inputs: the representation sequence and an additional embedding or representation sequence.
 
-\subsubsection{Representation}
+\subsection{Representation}
 %
 To protect against \ref{item:attack1}, our representation must be invariant to small input changes, like a single \ac{phi} token being replaced with a neighbor in the embedding space.
 %
@@ -231,7 +247,7 @@ In contrast to the automatic pseudonymization approach from \cref{sec:automatic-
 %
 We evaluate the representation sizes $d \in \{50, 100, 300\}$. 
 
-\subsubsection{Adversaries}
+\subsection{Adversaries}
 %
 We use two adversaries that are trained on tasks that directly follow from \ref{item:attack1} and \ref{item:attack2}:
 \begin{enumerate}[label=T\arabic*.,ref=T\arabic*]
@@ -309,7 +325,7 @@ The term $\abs{l_{\text{adv}} - l_{\text{random}}}$ approaches $0$ when the adve
 %
 $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
 
-\subsection{Experiments}
+\section{Experiments}
 %
 To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
 
@@ -542,3 +558,8 @@ This might allow using lower amounts of noise for certain inputs while still bei
 %
 When more training data from multiple sources becomes available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
