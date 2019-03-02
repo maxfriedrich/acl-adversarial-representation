@@ -38,7 +38,7 @@ preparing this data for sharing by using the document-coherent pseudonymization 
 
 %
 We introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier
-by transforming text non-reversible into a vector space and only sharing that representation.
+by transforming text non-reversibly into a vector space and only sharing that representation.
 %
 Our approach still requires humans to annotate \ac{phi} (as this is the training data for the de-identification task) but the pseudonymization step is performed by the transformation to the representation.
 %
@@ -46,9 +46,9 @@ A classifier trained on our representation cannot contain any protected data, as
 
 \section{Related Work}\label{sec:related}
 %
-Our work builds upon two lines of research: first, de-identification,
+Our work builds upon two lines of research: firstly de-identification,
 as the system has to provide good de-identification performance, and
-second adversarial representation learning, to remove all identifying
+secondly adversarial representation learning, to remove all identifying
 information from the representations to be distributed.
 
 % In this section, we present related work regarding de-identification and adversarial representation learning.
@@ -84,11 +84,9 @@ Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode 
 %
 The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementation of a three-party game between a representer, classifier, and adversary component.
 %
-The adversary and the classifier are neural networks which share the first layers and the system
-uses a gradient reversal layer to worsen the representation for the adversary during back-propagation,
-i.\,e.\ when training the adversary, the adversary-specific part of the network is optimized for the
-adversary but the shared part is updated against the gradient to make the shared representation less suitable
-for the adversary.
+The adversary and the classifier are neural networks which share the first layers.
+%
+A gradient reversal layer is used to worsen the representation for the adversary during back-propagation, i.e.\ when training the adversary, the adversary-specific part of the network is optimized for the adversarial task but the shared part is updated against the gradient to make the shared representation less suitable for the adversary.
 
 %
 Although initially conceived for use in domain adaptation, \acp{dann} and similar adversarial deep learning models have recently been used to obfuscate demographics attributes from text \citep{elazar2018adversarial,li2018towards} and subject identity \citep{feutry2018learning} from images.
