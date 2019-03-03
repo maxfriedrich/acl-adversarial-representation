@@ -532,18 +532,19 @@ Further, we presented an adversarial learning based private representation of me
 The representation allows training a de-identification model while being robust to adversaries trying to re-identify protected information or building a lookup table of representations.
 %
 We extended existing adversarial representation learning approaches by using two adversaries that discriminate real from fake sequence pairs with an additional sequence input.
-%
-Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is closer to the raw data baseline than the automatic pseudonymization approach
-and represents a 20\% relative error reduction to the automatic pseudomization approach.
-% TODO: Maybe call the raw data baseline something different than baseline.  Baseline == lower bound, but for us it is more like the upper bound.
-% "raw data system"?
-% TODO: this 20% relative error reduction is computed against automatic pseudomization with N=100. We should probably compare it to N=500 as this is the upper bound for which the approach is stable.
-% Current computation: (97.4-96.75)/(100-96.75)*100
-% I don't have the number for N=500.
+
 %
 The representation acts as a task-specific feature extractor.
 %
 For an invariance criterion of up to $N=500$ neighbors, training is stable and adversaries cannot beat the random guessing accuracy of $50\%$.
+
+%
+Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is closer to the raw data system than the automatic pseudonymization approach.
+%
+At $N = 500$, the adversarial approach achieves a $47.42\%$ relative error reduction to the automatic pseudonymization system.
+% 
+% For N = 500:
+% (97.35 - 94.96)/(100-94.96)*100 = 47.42%!
 
 %
 Our adversarial representation approach allows cost-effective private sharing of training data for de-identification.
