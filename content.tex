@@ -102,8 +102,8 @@ Although initially conceived for use in domain adaptation, \acp{dann} and simila
 
 \section{Dataset and De-Identification Model}\label{sec:deidentification-model}
 
-All our models are evaluated on the i2b2 2014
-dataset~\citep{stubbs2015annotating}, which was released as part of
+We evaluate our approaches using the i2b2 2014
+dataset~\citep{stubbs2015annotating} which was released as part of
 the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly
 available dataset for de-identification today.
 %
@@ -115,20 +115,20 @@ In addition to the \ac{hipaa} set of categories, it includes (sub-)categories su
 
 %\subsection{De-Identification Model}\label{sec:deidentification-model}
 %
-We compare three different approaches: a none-private baseline, and two privacy-enabled extensions: automatic pseudonymization (\cref{sec:automatic-pseudonymization}) and adversarial representations (\cref{sec:deidentification-model}).
+We compare three different approaches: a none-private de-identifiation classifier and two privacy-enabled extensions, automatic pseudonymization (\cref{sec:automatic-pseudonymization}) and adversarially learned representations (\cref{sec:adversarial-representation}).
 
-For the non-private baseline as well as the privacy-enabled extensions,
-we use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
+%
+Our non-private system as well as the privacy-enabled extensions are based on a bidirectional \ac{lstm}-\ac{crf} architecture that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
 We only use pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, not explicit character embeddings, as we suspect these may allow easy re-identification of private information if used in shared representations.
 % TODO does this even make sense? In the baseline model, the data is public, and in the adversarial representation model, the representation should be able to obscure the character features
 %
-Instead of learned character features, we provide the casing feature from \citet{reimers2017optimal} as an additional input.
+In place of learned character features, we provide the casing feature from \citet{reimers2017optimal} as an additional input.
 %
 The feature maps words to a one-hot representation of their casing (\textit{numeric}, \textit{mainly numeric}, \textit{all lower}, \textit{all upper}, \textit{initial upper}, \textit{contains digit}, or \textit{other}).
 
 %
-\Cref{tab:deid-hyperparameters} shows our model's hyperparameter configuration that was determined through a random hyperparameter search.
+\Cref{tab:deid-hyperparameters} shows our raw de-identification model's hyperparameter configuration that was determined through a random hyperparameter search.
 
 \begin{table}
     \centering
@@ -435,7 +435,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
 
 \section{De-Identification Performance}
 
-\paragraph{Baseline De-Identification:}
+\paragraph{Raw Text De-Identification:}
 %
 We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
 %
@@ -522,9 +522,9 @@ We introduced a new approach to sharing training data for de-identification that
 \footnote{Implementations of our models and experiments can be found at: \url{https://github.com/anonymized}}
 
 %
-As precursors to our adversarial representation approach, we developed a baseline deep learning model for de-identification that does rely on explicit character features as well as an automatic word-level pseudonymization approach.
+As precursors to our adversarial representation approach, we developed a deep learning model for de-identification that does not rely on explicit character features as well as an automatic word-level pseudonymization approach.
 %
-A model trained on our automatically pseudonymized data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the raw data baseline, scoring $96.75\%$ on the i2b2 2014 test set.
+A model trained on our automatically pseudonymized data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the raw data system, scoring $96.75\%$ on the i2b2 2014 test set.
 
 %
 Further, we presented an adversarial learning based private representation of medical text that is invariant to any \ac{phi} word being replaced with any of its embedding space neighbors and contains a random element.
