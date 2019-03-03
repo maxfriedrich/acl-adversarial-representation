@@ -100,10 +100,9 @@ Although initially conceived for use in domain adaptation, \acp{dann} and simila
 
 %TODO
 
-\section{Dataset and De-Identification Model}\label{sec:deidentification-model}
+\section{Dataset and Experimental Approach}
 
-All our models are evaluated on the i2b2 2014
-dataset~\citep{stubbs2015annotating}, which was released as part of
+To evaluate our approaches, we perform experiments using the i2b2 2014 dataset~\citep{stubbs2015annotating} which was released as part of
 the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly
 available dataset for de-identification today.
 %
@@ -113,8 +112,30 @@ The i2b2 dataset uses the 18 categories of \ac{phi} defined by \ac{hipaa} as a s
 %
 In addition to the \ac{hipaa} set of categories, it includes (sub-)categories such as doctor names, professions, states, countries, and ages under 90.
 
-%\subsection{De-Identification Model}\label{sec:deidentification-model}
+
+
+\textbf{Preprocessing:}
 %
+We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting on all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
+%
+We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting on multiple lines on whitespace and bulleted list items.
+
+\textbf{Deep Learning Models:}
+%
+We use the Keras framework \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
+%
+%We use \iac{crf} layer implementation from the Keras community contributions repository\footnote{\url{https://github.com/keras-team/keras-contrib}}.
+
+\textbf{Evaluation:}
+%
+In order to compare our results to the state of the art, we use the token-based binary \ac{hipaa} \fone score as our main metric for de-identification performance.
+%
+\citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
+%
+We perform evaluation with the official evaluation script\footnote{\url{https://github.com/kotfic/i2b2\_evaluation\_scripts}}.
+
+\section{De-Identification Model}\label{sec:deidentification-model}
+
 For the non-private baseline as well as the privacy-enabled extensions,
 we use a basic bidirectional \ac{lstm}-\ac{crf} model that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
@@ -131,23 +152,62 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 \begin{table}
     \centering
     \begin{tabular}{ll}
-     \toprule
-     Hyperparameter & Value\\
-     \midrule
-     Pre-trained embeddings & FastText, GloVe\\
-     Casing feature & Yes\\
-     Batch size & 32\\
-     Number of LSTM layers & 2\\
-     LSTM units per layer/dir. & 128\\
-     Input embedding dropout & $0.1$\\
-     Variational dropout & $0.25$\\
-     Dropout after LSTM & $0.5$\\
-     Optimizer & Nadam\\
-     Gradient norm clipping & $1.0$\\
-     \bottomrule
+        \toprule
+        Hyperparameter & Value\\
+        \midrule
+        Pre-trained embeddings & FastText, GloVe\\
+        Casing feature & Yes\\
+        Batch size & 32\\
+        Number of LSTM layers & 2\\
+        LSTM units per layer/dir. & 128\\
+        Input embedding dropout & $0.1$\\
+        Variational dropout & $0.25$\\
+        Dropout after LSTM & $0.5$\\
+        Optimizer & Nadam\\
+        Gradient norm clipping & $1.0$\\
+        \bottomrule
     \end{tabular}
     \caption{Hyperparameter configuration of our de-identification model.}\label{tab:deid-hyperparameters}
 \end{table}
+
+\subsection{Results}
+%
+When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results (see \cref{tab:baseline-results}).
+%
+The casing feature improves GloVe by $0.4$ percentage points.
+
+\begin{table}
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        Model & \fone (\%)\\
+        \midrule
+        % \Ac{elmo} & $97.74$ \\
+        Our FastText & $97.67$ \\
+        Our GloVe & $97.24$ \\
+        Our GloVe + casing & $97.62$ \\
+        \addlinespace
+        \citeauthor{dernoncourt2017identification} (\ac{lstm}-\ac{crf}) & $97.85$\\
+        \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
+        \bottomrule
+    \end{tabular}
+    \caption{Binary \ac{hipaa} \fone scores of our de-identification models on the i2b2 2014 test set in comparison to the state of the art.}\label{tab:baseline-results}
+\end{table}
+
+\subsection{De-Identification Performance}
+%
+We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
+%
+FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) should intuitively prove useful on datasets with misspellings and ungrammatical text.
+%
+However, when using the additional casing feature, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
+%
+In this task, the casing feature makes up for GloVe's inability to embed unknown words.
+
+%
+\citet{liu2017identification} use a deep learning ensemble in combination with hand-crafted rules to achieve state-of-the-art results de-identification.
+%
+Our model's scores are similar to the previous state of the art, a bidirectional \ac{lstm}-\ac{crf} model with character features \citep{dernoncourt2017identification}.
 
 
 \section{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
@@ -174,6 +234,43 @@ While the resulting sentences do not necessarily make sense to a reader (e.g.\ `
 We train our de-identification model on the transformed data and test it on the raw data.
 %
 The number of neighbors $N$ controls the privacy properties of the approach: $N = 1$ means no pseudonymization; setting $N$ to the number of rows in a precomputed embedding matrix delivers perfect anonymization but the resulting data may be worthless for training a de-identification model.
+
+\subsection{Results}
+%
+For both FastText and GloVe, moving training \ac{phi} tokens to random tokens from up to their $N=200$ closest neighbors does not significantly reduce de-identification performance (see \cref{fig:auto-pseudo}).
+%
+\fone scores for both models drop to around $95\%$ when selecting from $N=500$ neighbors and to around $90\%$ when using $N=1\,000$ neighbors.
+%
+With $N=100$, the FastText model achieves an \fone score of $96.75\%$ and the GloVe model achieves an \fone score of $96.42\%$.
+
+\begin{figure}
+    \centering
+    \input{images/plt/automatic-pseudonymization.pgf}
+    \caption[De-identification with automatic pseudonymization]{%
+        \fone scores of our models when trained on automatically pseudonymized data where \ac{phi} tokens are moved to one of different numbers of neighbors $N$.
+        %
+        The gray dashed line marks the $95\%$ target \fone score.
+    }\label{fig:auto-pseudo}
+\end{figure}
+
+\subsection{De-Identification Performance}
+%
+Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
+%
+There is almost no decrease in \fone score for up to $N = 20$ neighbors for both the FastText and GloVe model.
+
+\subsection{Privacy Properties}
+%
+The word-level pseudonymization may allow an adversary to piece together documents from the shuffled sentences.
+%
+If multiple sentences contain similar pseudonymized identifiers, they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
+%
+It may be possible to infer the original information using the overlapping neighbor spaces.
+%
+To counter this, we can re-introduce document-level pseudonymization, i.e.\ moving all occurrences of \iac{phi} token to the same neighbor.
+%
+However, we would then also need to detect misspelled names as well as other hints to the actual tokens and transform them similarly to the original, which would add back much of the complexity of manual pseudonymization that we try to avoid.
+
 
 \section{Adversarial Representation}\label{sec:adversarial-representation}
 
@@ -265,7 +362,7 @@ We confirmed that this type of model is able to learn the adversarial tasks on r
 %
 To use the two adversaries in our architecture, we average their outputs.
 
- \begin{figure}
+\begin{figure}
     \centering
     \input{images/tikz/training}
     \caption[Adversarial training procedure]{%
@@ -277,7 +374,7 @@ To use the two adversaries in our architecture, we average their outputs.
     }\label{fig:feutry-training}
 \end{figure}
 
-\subsubsection{Training}
+\subsection{Training}
 %
 We evaluate two training procedures: \ac{dann} training~\citep{ganin2016domain} and the three-part procedure from \citet{feutry2018learning}.
 
@@ -301,7 +398,7 @@ It is composed of three phases:
         \item The representation is frozen and both de-identification model and adversary are trained, optimizing their respective losses $l_{\text{deid}}$ and $l_{\text{adv}}$.
         \item The de-identification model and adversary are frozen and the representation is trained, optimizing the combined loss
         \begin{align}
-            l_{\text{repr}} = l_{\text{deid}} + \lambda \abs{l_{\text{adv}} - l_{\text{random}}}
+        l_{\text{repr}} = l_{\text{deid}} + \lambda \abs{l_{\text{adv}} - l_{\text{random}}}
         \end{align}
         \label{item:repr-training}
     \end{enumerate}
@@ -323,77 +420,7 @@ The term $\abs{l_{\text{adv}} - l_{\text{random}}}$ approaches $0$ when the adve
 %
 $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
 
-\section{Experiments}
-%
-To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
-
-\textbf{Preprocessing:}
-%
-We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting on all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
-%
-We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting on multiple lines on whitespace and bulleted list items.
-
-\textbf{Deep Learning Models:}
-%
-We use the Keras framework \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
-%
-%We use \iac{crf} layer implementation from the Keras community contributions repository\footnote{\url{https://github.com/keras-team/keras-contrib}}.
-
-\textbf{Evaluation:}
-%
-In order to compare our results to the state of the art, we use the token-based binary \ac{hipaa} \fone score as our main metric for de-identification performance.
-%
-\citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
-%
-We perform evaluation with the official evaluation script\footnote{\url{https://github.com/kotfic/i2b2\_evaluation\_scripts}}.
-
-\section{Results}
-%
-In this section, we present our experiment results.
-
-\subsection{Basic De-Identification Model}
-%
-When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results (see \cref{tab:baseline-results}).
-%
-The casing feature improves GloVe by $0.4$ percentage points.
-
-\begin{table}
-    \centering
-    \begin{tabular}{ll}
-        \toprule
-        Model & \fone (\%)\\
-        \midrule
-        % \Ac{elmo} & $97.74$ \\
-        Our FastText & $97.67$ \\
-        Our GloVe & $97.24$ \\
-        Our GloVe + casing & $97.62$ \\
-        \addlinespace
-        \citeauthor{dernoncourt2017identification} (\ac{lstm}-\ac{crf}) & $97.85$\\
-        \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
-        \bottomrule
-    \end{tabular}
-    \caption{Binary \ac{hipaa} \fone scores of our de-identification models on the i2b2 2014 test set in comparison to the state of the art.}\label{tab:baseline-results}
-\end{table}
-
-\subsection{Automatic Pseudonymization}
-%
-For both FastText and GloVe, moving training \ac{phi} tokens to random tokens from up to their $N=200$ closest neighbors does not significantly reduce de-identification performance (see \cref{fig:auto-pseudo}).
-%
-\fone scores for both models drop to around $95\%$ when selecting from $N=500$ neighbors and to around $90\%$ when using $N=1\,000$ neighbors.
-%
-With $N=100$, the FastText model achieves an \fone score of $96.75\%$ and the GloVe model achieves an \fone score of $96.42\%$.
-
-\begin{figure}
-    \centering
-    \input{images/plt/automatic-pseudonymization.pgf}
-    \caption[De-identification with automatic pseudonymization]{%
-        \fone scores of our models when trained on automatically pseudonymized data where \ac{phi} tokens are moved to one of different numbers of neighbors $N$.
-        %
-        The gray dashed line marks the $95\%$ target \fone score.
-}\label{fig:auto-pseudo}
-\end{figure}
-
-\subsection{Adversarial Representation}
+\subsection{Results}
 %
 We do not achieve satisfactory results with the conjoint \ac{dann} training procedure: in all cases, our models learn representations that are not sufficiently resistant to the adversary.
 %
@@ -428,30 +455,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
     }\label{fig:adversarial-deid}
 \end{figure*}
 
-\section{De-Identification Performance}
-
-\textbf{Baseline De-Identification:}
-%
-We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
-%
-FastText's approach to embedding unknown words (word embeddings are the sum of their subword embeddings) should intuitively prove useful on datasets with misspellings and ungrammatical text.
-%
-However, when using the additional casing feature, FastText beats GloVe only by $0.05$ percentage points on the i2b2 test set.
-%
-In this task, the casing feature makes up for GloVe's inability to embed unknown words.
-
-%
-\citet{liu2017identification} use a deep learning ensemble in combination with hand-crafted rules to achieve state-of-the-art results de-identification.
-%
-Our model's scores are similar to the previous state of the art, a bidirectional \ac{lstm}-\ac{crf} model with character features \citep{dernoncourt2017identification}.
-
-\textbf{Automatically Pseudonymized Data:}
-%
-Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
-%
-There is almost no decrease in \fone score for up to $N = 20$ neighbors for both the FastText and GloVe model.
-
-\textbf{Adversarially Learned Representation:}
+\subsection{De-Identification Performance}
 %
 Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models (\fone scores above $95\%$) when using up to $N=1\,000$ neighbors as an invariance requirement.
 %
@@ -461,33 +465,7 @@ Additionally, the representations are more general as they are invariant to word
 %
 The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
 
-\section{Privacy Properties}
-
-\textbf{Embeddings:}
-%
-When looking up embedding space neighbors for words, it is notable that many FastText neighbors include the original word or parts of it as a subword.
-%
-This is due to FastText's method of using the sum of subword embeddings in embedding calculation.
-%
-For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of their $N=100$ closest neighbors in the FastText embedding matrix contain the original token as a subword.
-%
-When looking up neighbors using GloVe embeddings, the value is $0.44$.
-%
-This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$) than GloVe to sufficiently obfuscate protected information.
-
-\textbf{Automatically Pseudonymized Data:}
-%
-The word-level pseudonymization may allow an adversary to piece together documents from the shuffled sentences.
-%
-If multiple sentences contain similar pseudonymized identifiers, they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
-%
-It may be possible to infer the original information using the overlapping neighbor spaces.
-%
-To counter this, we can re-introduce document-level pseudonymization, i.e.\ moving all occurrences of \iac{phi} token to the same neighbor.
-%
-However, we would then also need to detect misspelled names as well as other hints to the actual tokens and transform them similarly to the original, which would add back much of the complexity of manual pseudonymization that we try to avoid.
-
-\textbf{Adversarially Learned Representation:}
+\subsection{Privacy Properties}
 %
 Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
 %
@@ -499,6 +477,19 @@ Due to the additive noise, the adversary does not overfit on its training set bu
 In the case of $N = 1\,000$ neighbors, the representation never becomes stable in the alternating training phase.
 %
 The adversary is always able to beat the representation.
+
+\section{Embeddings?}
+%
+When looking up embedding space neighbors for words, it is notable that many FastText neighbors include the original word or parts of it as a subword.
+%
+This is due to FastText's method of using the sum of subword embeddings in embedding calculation.
+%
+For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of their $N=100$ closest neighbors in the FastText embedding matrix contain the original token as a subword.
+%
+When looking up neighbors using GloVe embeddings, the value is $0.44$.
+%
+This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$) than GloVe to sufficiently obfuscate protected information.
+
 
 \section{Conclusions \& Future Work}
 % TODO make clearer what the novel contribution is
