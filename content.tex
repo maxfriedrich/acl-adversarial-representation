@@ -329,9 +329,9 @@ To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
 
 \textbf{Preprocessing:}
 %
-We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting on all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
+We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting at all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
 %
-We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting on multiple lines on whitespace and bulleted list items.
+We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting at multiple blank lines as well as bulleted and numbered list items.
 
 \textbf{Deep Learning Models:}
 %
@@ -345,7 +345,7 @@ In order to compare our results to the state of the art, we use the token-based 
 %
 \citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
 %
-We perform evaluation with the official evaluation script\footnote{\url{https://github.com/kotfic/i2b2\_evaluation\_scripts}}.
+We perform the evaluation with the official evaluation script\footnote{\url{https://github.com/kotfic/i2b2\_evaluation\_scripts}}.
 
 \section{Results}
 %
@@ -554,7 +554,7 @@ This might allow using lower amounts of noise for certain inputs while still bei
 % Contextual word embeddings such as ELMo \citep{peters2018deep} ...
 
 %
-When more training data from multiple sources becomes available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
+When more training data from multiple sources become available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
 
 
 %%% Local Variables:
