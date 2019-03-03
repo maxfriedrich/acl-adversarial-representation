@@ -327,19 +327,19 @@ $\lambda$ is a weighting factor for the two losses; we select $\lambda=1$.
 %
 To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
 
-\textbf{Preprocessing:}
+\paragraph{Preprocessing:}
 %
 We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting at all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
 %
 We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting at multiple blank lines as well as bulleted and numbered list items.
 
-\textbf{Deep Learning Models:}
+\paragraph{Deep Learning Models:}
 %
 We use the Keras framework \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
 %
 %We use \iac{crf} layer implementation from the Keras community contributions repository\footnote{\url{https://github.com/keras-team/keras-contrib}}.
 
-\textbf{Evaluation:}
+\paragraph{Evaluation:}
 %
 In order to compare our results to the state of the art, we use the token-based binary \ac{hipaa} \fone score as our main metric for de-identification performance.
 %
@@ -430,7 +430,7 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
 
 \section{De-Identification Performance}
 
-\textbf{Baseline De-Identification:}
+\paragraph{Baseline De-Identification:}
 %
 We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
 %
@@ -445,13 +445,13 @@ In this task, the casing feature makes up for GloVe's inability to embed unknown
 %
 Our model's scores are similar to the previous state of the art, a bidirectional \ac{lstm}-\ac{crf} model with character features \citep{dernoncourt2017identification}.
 
-\textbf{Automatically Pseudonymized Data:}
+\paragraph{Automatically Pseudonymized Data:}
 %
 Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
 %
 There is almost no decrease in \fone score for up to $N = 20$ neighbors for both the FastText and GloVe model.
 
-\textbf{Adversarially Learned Representation:}
+\paragraph{Adversarially Learned Representation:}
 %
 Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models (\fone scores above $95\%$) when using up to $N=1\,000$ neighbors as an invariance requirement.
 %
@@ -540,7 +540,7 @@ Our adversarial representation approach allows cost-effective private sharing of
 Better de-identification classifiers could help enable large-scale medical studies that improve public health.
 
 %
-\textbf{Future Work:} The automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
+\paragraph{Future Work:} The automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
 %
 Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
 
