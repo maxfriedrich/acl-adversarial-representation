@@ -236,7 +236,12 @@ We use a bidirectional \ac{lstm} model to implement the representation.
 %
 It applies Gaussian noise $\bm{N}$ with zero mean and trainable standard deviations to the input embeddings $\bm{E}$ and the output sequence.
 %
-The model learns a standard deviation for each of the input and output dimensions.
+The model learns a standard deviation for each of the input and output dimensions.\footnote{
+    %
+    In a preliminary experiment, we confirmed that adding noise with a single, fixed standard deviation is not a viable approach for privacy-preserving representations.
+    %
+    To change the cosine similarity neighborhoods of embeddings at all, we need to add high amounts of noise (more than double of the respective embedding matrix's standard deviation), which in turn results in \emph{unrealistic} embeddings that do not allow training a de-identification model.
+}
 %
 \begin{align}
 \bm{R} = \bm{N}_{\text{out}} + \text{LSTM}(\bm{E} + \bm{N}_{\text{in}})
