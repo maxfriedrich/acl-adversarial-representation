@@ -475,7 +475,20 @@ This may indicate that FastText requires stronger perturbation (i.e.\ higher $N$
 
 \paragraph{Automatically Pseudonymized Data:}
 %
-The word-level pseudonymization may allow an adversary to piece together documents from the shuffled sentences.
+The word-level pseudonymization does not guarantee a minimum perturbation for every word, e.g.\ in a set of pseudonymized sentences using $N = 100$ FastText neighbors, we found the phrase
+%
+\begin{quote}
+    [Florida Hospital],
+\end{quote}
+%
+which was replaced with
+%
+\begin{quote}
+    [Miami-Florida Hosp].
+\end{quote}
+
+%
+Additionally, the approach may allow an adversary to piece together documents from the shuffled sentences.
 %
 If multiple sentences contain similar pseudonymized identifiers, they will likely come from the same original document, undoing the privacy gain from shuffling training sentences across documents.
 %
