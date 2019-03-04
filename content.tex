@@ -67,7 +67,7 @@ An \fone score of $95\%$ has been suggested as a target for reasonable de-identi
 %
 \citet{dernoncourt2017identification} first applied \iac{lstm} \citep{hochreiter1997long} model with \iac{crf} output component to de-identification.
 %
-Using transfer learning from a larger dataset slightly improves performance on the i2b2 2014 dataset \citep{lee2017transfer}.
+Using transfer learning from a larger dataset slightly improves performance on the i2b2 2014 dataset \citep{lee2018transfer}.
 %
 \citet{liu2017identification} achieve state-of-the-art performance in de-identification by combining a deep learning ensemble with a rule component.
 
@@ -113,7 +113,7 @@ We compare three different approaches: a non-private de-identifiation classifier
 %
 Our non-private system as well as the privacy-enabled extensions are based on a bidirectional \ac{lstm}-\ac{crf} architecture that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
-We only use pre-trained FastText \citep{bojanowski2016enriching} or GloVe \citep{pennington2014glove} word embeddings, not explicit character embeddings, as we suspect these may allow easy re-identification of private information if used in shared representations.
+We only use pre-trained FastText \citep{bojanowski2017enriching} or GloVe \citep{pennington2014glove} word embeddings, not explicit character embeddings, as we suspect these may allow easy re-identification of private information if used in shared representations.
 % TODO does this even make sense? In the baseline model, the data is public, and in the adversarial representation model, the representation should be able to obscure the character features
 %
 In place of learned character features, we provide the casing feature from \citet{reimers2017optimal} as an additional input.
