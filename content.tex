@@ -108,7 +108,7 @@ In addition to the \ac{hipaa} set of categories, it includes (sub-)categories su
 
 %\subsection{De-Identification Model}\label{sec:deidentification-model}
 %
-We compare three different approaches: a none-private de-identifiation classifier and two privacy-enabled extensions, automatic pseudonymization (\cref{sec:automatic-pseudonymization}) and adversarially learned representations (\cref{sec:adversarial-representation}).
+We compare three different approaches: a non-private de-identifiation classifier and two privacy-enabled extensions, automatic pseudonymization (\cref{sec:automatic-pseudonymization}) and adversarially learned representations (\cref{sec:adversarial-representation}).
 
 %
 Our non-private system as well as the privacy-enabled extensions are based on a bidirectional \ac{lstm}-\ac{crf} architecture that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
@@ -147,7 +147,7 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 
 \section{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
 %
-We introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our basic de-identification model work on the sentence level and do not rely on document coherency.
+To provide a baseline to compare against our model, we introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our non-private de-identification model work on the sentence level and do not rely on document coherency.
 %
 Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their closest neighbors in an embedding space (including the token itself), as determined by cosine distance in a pre-computed embedding matrix.
 
@@ -543,11 +543,11 @@ We extended existing adversarial representation learning approaches by using two
 The representation acts as a task-specific feature extractor.
 %
 For an invariance criterion of up to $N=500$ neighbors, training is stable and adversaries cannot beat the random guessing accuracy of $50\%$.
-
 %
-Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is closer to the raw data system than the automatic pseudonymization approach.
+Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is close to the raw data system (\(97.67\%\)).
+In contrast, the automatic pseudonymization approach only reaches an \fone score of \(95.0\%\) at \(N = 500\).
 %
-At $N = 500$, the adversarial approach achieves a $47.42\%$ relative error reduction to the automatic pseudonymization system.
+% At $N = 500$, the adversarial approach achieves a $47.42\%$ relative error reduction to the automatic pseudonymization system.
 % 
 % For N = 500:
 % (97.35 - 94.96)/(100-94.96)*100 = 47.42%!
