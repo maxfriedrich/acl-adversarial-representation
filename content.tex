@@ -28,7 +28,7 @@ This includes replacing e.g.\ every person or place name with a different name, 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
 % Why is sharing training data the best solution for a de-identification model?
 %
-Today, a pseudonymized dataset for de-identification from a single source, the i2b2 2014 dataset, is publicly available \citep{stubbs2015annotating}.
+Today, a pseudonymized dataset for de-identification from a single source, the \emph{i2b2~2014} dataset, is publicly available \citep{stubbs2015annotating}.
 %
 However, de-identification classifiers trained on this dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
@@ -58,7 +58,7 @@ information from the representations to be distributed.
 Analogously to many \ac{nlp} tasks, the state of the art in de-identification changed in recent years from rule-based systems and shallow machine learning approaches like \acp{crf} \citep{uzuner2007evaluating,meystre2010automatic} to deep learning methods \citep{stubbs2017identification, dernoncourt2017identification, liu2017identification}.
 
 %
-Three \emph{i2b2} shared tasks on de-identification were run in 2006 \citep{uzuner2007evaluating}, 2014 \citep{stubbs2015automated}, and 2016 \citep{stubbs2017identification}.
+Three i2b2 shared tasks on de-identification were run in 2006 \citep{uzuner2007evaluating}, 2014 \citep{stubbs2015automated}, and 2016 \citep{stubbs2017identification}.
 %
 The organizers performed manual pseudonymization on clinical records from a single source to create the datasets for each of the tasks.
 %
@@ -108,7 +108,7 @@ In addition to the \ac{hipaa} set of categories, it includes (sub-)categories su
 
 %\subsection{De-Identification Model}\label{sec:deidentification-model}
 %
-We compare three different approaches: a non-private de-identifiation classifier and two privacy-enabled extensions, automatic pseudonymization (\cref{sec:automatic-pseudonymization}) and adversarially learned representations (\cref{sec:adversarial-representation}).
+We compare three different approaches: a non-private de-identification classifier and two privacy-enabled extensions, automatic pseudonymization (\cref{sec:automatic-pseudonymization}) and adversarially learned representations (\cref{sec:adversarial-representation}).
 
 %
 Our non-private system as well as the privacy-enabled extensions are based on a bidirectional \ac{lstm}-\ac{crf} architecture that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
@@ -249,7 +249,7 @@ We evaluate the representation sizes $d \in \{50, 100, 300\}$.
 %
 We use two adversaries that are trained on tasks that directly follow from \ref{item:attack1} and \ref{item:attack2}:
 \begin{enumerate}[label=T\arabic*.,ref=T\arabic*]
-    \item Given a representation and an embedding sequence, decide if they were obtained from the same sentence.
+    \item Given a representation sequence and an embedding sequence, decide if they were obtained from the same sentence.
     \item Given two representation sequences (and their cosine similarities), decide if they were obtained from the same sentence.
 \end{enumerate}
 %
@@ -347,9 +347,9 @@ We perform the evaluation with the official evaluation script\footnote{\url{http
 
 \section{Results}
 %
-In this section, we present our experiment results.
+In this section, we present our experiment results for the non-private de-identification classifier as well as the two privacy-enabled extensions.
 
-\subsection{Basic De-Identification Model}
+\subsection{Non-private De-Identification Model}
 %
 When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results (see \cref{tab:baseline-results}).
 %
@@ -370,7 +370,7 @@ The casing feature improves GloVe by $0.4$ percentage points.
         \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
         \bottomrule
     \end{tabular}
-    \caption{Binary \ac{hipaa} \fone scores of our de-identification models on the i2b2 2014 test set in comparison to the state of the art.}\label{tab:baseline-results}
+    \caption{Binary \ac{hipaa} \fone scores of our non-private de-identification models on the i2b2 2014 test set in comparison to the state of the art.}\label{tab:baseline-results}
 \end{table}
 
 \subsection{Automatic Pseudonymization}
@@ -428,6 +428,8 @@ For $d=50$ and $N=100$, the FastText model reaches an \fone score of $97.4\%$ an
 
 \section{De-Identification Performance}
 
+In the following, we discuss the results of our models with regard to our goal of sharing sensitive training data for automatic de-identification.
+
 \paragraph{Raw Text De-Identification:}
 %
 We find that the choice of GloVe or FastText embeddings does not meaningfully influence de-identification performance.
@@ -460,6 +462,8 @@ Additionally, the representations are more general as they are invariant to word
 The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
 
 \section{Privacy Properties}
+
+In this section, we discuss our models with respect to their privacy-preserving properties.
 
 \paragraph{Embeddings:}
 %
@@ -524,13 +528,12 @@ Today's de-identification classifiers fail on unseen data.
 %
 A training set from multiple sources is required to train more general de-identification classifiers.
 %
-We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.
-\footnote{Implementations of our models and experiments can be found at: \url{https://github.com/anonymized}}
+We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.\footnote{Implementations of our models and experiments can be found at: \url{https://github.com/anonymized}}
 
 %
 As precursors to our adversarial representation approach, we developed a deep learning model for de-identification that does not rely on explicit character features as well as an automatic word-level pseudonymization approach.
 %
-A model trained on our automatically pseudonymized data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the raw data system, scoring $96.75\%$ on the i2b2 2014 test set.
+A model trained on our automatically pseudonymized data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the non-private system, scoring $96.75\%$ on the i2b2 2014 test set.
 
 %
 Further, we presented an adversarial learning based private representation of medical text that is invariant to any \ac{phi} word being replaced with any of its embedding space neighbors and contains a random element.
@@ -544,7 +547,7 @@ The representation acts as a task-specific feature extractor.
 %
 For an invariance criterion of up to $N=500$ neighbors, training is stable and adversaries cannot beat the random guessing accuracy of $50\%$.
 %
-Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is close to the raw data system (\(97.67\%\)).
+Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is close to the non-private system (\(97.67\%\)).
 In contrast, the automatic pseudonymization approach only reaches an \fone score of \(95.0\%\) at \(N = 500\).
 %
 % At $N = 500$, the adversarial approach achieves a $47.42\%$ relative error reduction to the automatic pseudonymization system.
@@ -553,9 +556,9 @@ In contrast, the automatic pseudonymization approach only reaches an \fone score
 % (97.35 - 94.96)/(100-94.96)*100 = 47.42%!
 
 %
-Our adversarial representation approach allows cost-effective private sharing of training data for de-identification.
+Our adversarial representation approach allows cost-effective private sharing of training data for sequence labeling. Pooling of training data for de-identification from multiple institutions would lead to much more robust classifiers.
 %
-Better de-identification classifiers could help enable large-scale medical studies that improve public health.
+Eventually, improved de-identification classifiers could help enable large-scale medical studies that improve public health.
 
 %
 \paragraph{Future Work:} The automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
