@@ -4,7 +4,7 @@
   - Was macht Mensch, was Maschine? -> Diagramm
   - Formulierungen: "Dieses System hat ein Modell", "crucial component"
   
-- [ ] "97.4%" muss in Tabelle 2
+- [x] "97.4%" muss in Tabelle 2
   - "x + Privacy"
   - @Reviewer 2: Wir vergleichen nur mit unserer Baseline, nicht mit SotA (wir benutzen auch diese Methoden nicht)
 

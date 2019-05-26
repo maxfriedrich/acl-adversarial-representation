@@ -351,7 +351,7 @@ In this section, we present our experiment results for the non-private de-identi
 
 \subsection{Non-private De-Identification Model}
 %
-When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results (see \cref{tab:baseline-results}).
+When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results (see \cref{tab:baseline-results} upper part).
 %
 The casing feature improves GloVe by $0.4$ percentage points.
 
@@ -359,18 +359,23 @@ The casing feature improves GloVe by $0.4$ percentage points.
     \centering
     \begin{tabular}{ll}
         \toprule
-        Model & \fone (\%)\\
-        \midrule
-        % \Ac{elmo} & $97.74$ \\
-        Our FastText & $97.67$ \\
-        Our GloVe & $97.24$ \\
-        Our GloVe + casing & $97.62$ \\
-        \addlinespace
-        \citeauthor{dernoncourt2017identification} (\ac{lstm}-\ac{crf}) & $97.85$\\
-        \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
-        \bottomrule
+         Model & \fone (\%)\\
+        \midrule 
+         Our non-private FastText & $97.67$ \\
+         Our non-private GloVe & $97.24$ \\
+         Our non-private GloVe + casing & $97.62$ \\
+         \addlinespace
+         \citeauthor{dernoncourt2017identification} (\ac{lstm}-\ac{crf}) & $97.85$\\
+         \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
+         \midrule
+         Our autom. pseudon. FastText & $96.75$\\
+         Our autom. pseudon. GloVe & $96.42$\\
+         \addlinespace
+         Our adv. repr. FastText & $\bm{97.40}$\\
+         Our adv. repr. GloVe & $96.89$\\
+         \bottomrule
     \end{tabular}
-    \caption{Binary \ac{hipaa} \fone scores of our non-private de-identification models on the i2b2 2014 test set in comparison to the state of the art.}\label{tab:baseline-results}
+    \caption{Binary \ac{hipaa} \fone scores of our non-private (top) and private (bottom) de-identification approaches on the i2b2 2014 test set in comparison to non-private the state of the art. Our private approaches use $N=100$ neighbors as a privacy criterion.}\label{tab:baseline-results}
 \end{table}
 
 \subsection{Automatic Pseudonymization}
