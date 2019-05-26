@@ -13,10 +13,12 @@ However, due to privacy and data protection laws, medical records can only be sh
 %
 The \ac{phi} to remove includes potentially identifying information such as names, geographic identifiers, dates, and account numbers; the American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
 %
-De-identification is the task of finding and labeling \ac{phi} in medical text for sanitization.
+De-identification is the task of finding and labeling \ac{phi} in medical text as a step toward sanitization.
+%
 Automatically finding these instances helps human annotators to then replace the \ac{phi} with
-non-identifying replacements.  As the information to be removed is very sensitive, the sanitization
-cannot be fully automated -- but automatic labeling serves to speed up the process significantly.
+non-identifying replacements.
+%
+As the information to be removed is very sensitive, the sanitization cannot be fully automated -- but automatic labeling serves to speed up the process significantly.
 
 %
 Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without such a classifier, it is difficult to share de-identified medical text for research (including for training the classifier itself).
@@ -258,11 +260,13 @@ We obtain the representation sequences for the second adversary from a copy of t
 We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:automatic-pseudonymization}, limiting the number of replaced \ac{phi} tokens to one per sentence.
 
 %
-The adversaries are implemented as bidirectional \ac{lstm} models.
+The adversaries are implemented as bidirectional \ac{lstm} models with single output units.
 %
-We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in a preliminary experiment.
+We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in preliminary experiments.
 %
 To use the two adversaries in our architecture, we average their outputs.
+
+\todo[inline]{System only works well if the adversaries can't learn their tasks even on a frozen representation!}
 
  \begin{figure}
     \centering
@@ -306,11 +310,9 @@ It is composed of three phases:
     \end{enumerate}
 \end{enumerate}
 %
-In each of the first two phases, we monitor the respective validation loss for early stopping to decide at which point the training should move on to the next phase.
+In each of the first two phases, the respective validation loss is monitored to decide at which point the training should move on to the next phase.
 %
-The alternating steps in the third phase each last one training epoch.
-%
-We determine the early stopping time for the third phase using only the combined validation loss from \ref{item:repr-training}.
+The alternating steps in the third phase each last one training epoch; the early stopping time for the third phase is determined using only the combined validation loss from \ref{item:repr-training}.
 
 %
 Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
@@ -348,6 +350,8 @@ We perform the evaluation with the official evaluation script\footnote{\url{http
 \section{Results}
 %
 In this section, we present our experiment results for the non-private de-identification classifier as well as the two privacy-enabled extensions.
+%
+The results are average values out of five experiment runs.
 
 \subsection{Non-private De-Identification Model}
 %
@@ -463,8 +467,6 @@ Our adversarially trained vector representation that is invariant to word change
 The adversarial representation results beat the automatic pseudonymization results because the representation model can act as a task-specific feature extractor.
 %
 Additionally, the representations are more general as they are invariant to word changes.
-%
-The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
 
 \section{Privacy Properties}
 
@@ -511,7 +513,7 @@ However, we would then also need to detect misspelled names as well as other hin
 %
 Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
 %
-When freezing the representation model from an experiment run using up to $N = 500$ neighbors and training the adversary for an additional $50$ epochs, it still does not achieve higher-than-chance accuracies.
+When freezing the representation model from an experiment run using up to $N = 500$ neighbors and training the adversary for an additional $50$ epochs, it still does not achieve higher-than-chance accuracies on the training data.
 %
 Due to the additive noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.
 
