@@ -21,6 +21,7 @@
   - "changing PHI in medical text…"
   - "Automatic classifiers that detect PHI…"
   - de-identification vs sanitization (Max soll Begriffe nachlesen)
+    - [Sanitization](https://en.wikipedia.org/wiki/Sanitization_(classified_information)) ist _entfernen_/schwärzen von sensitive information
   - Z 64: "manual sanitization?" sansitive data "has to be performed manually"
 
 - [ ] Adversary output muss single unit (binary) klarer machen?
@@ -40,5 +41,5 @@
 
 - [ ] Z 700: "on the training data"
   - Das ist die Definition von "overfit"
-  - Hilft die Figure mit den learning curves? 
+  - Hilft die Figure mit den learning curves?
     - Nein, weil sie ja das Training und nicht die frozen evaluation abbildet, wo Adversary Train/val loss konstant schlecht ist -- dafür braucht man auch keine Figure
