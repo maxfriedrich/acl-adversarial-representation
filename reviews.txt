@@ -1,0 +1,240 @@
+============================================================================ 
+ACL 2019 Reviews for Submission #1319
+============================================================================ 
+
+Title: Adversarial Learning of Privacy-Preserving Text Representations for De-Identification of Medical Records
+Authors: Max Friedrich, Arne Köhn, Gregor Wiedemann and Chris Biemann
+
+============================================================================
+                            META-REVIEW
+============================================================================ 
+
+Comments: This paper introduces a method to create privacy-preserving shareable representations of medical text (i.e. w/o PHI) that require no expensive manual pseudonymization. Such representations permit different organizations to share datasets for training de-identification models. Overall, all reviewers like the work and find it interesting and technically solid backed with strong empirical results. There are some constructive comments that the authors can incorporate in the camera-ready to make the paper even stronger.
+============================================================================
+                            REVIEWER #1
+============================================================================
+
+What is this paper about, what contributions does it make, what are the main strengths and weaknesses?
+---------------------------------------------------------------------------
+The paper addresses the issue of de-identification of EHRs. 
+An adversarial representation approach is proposed.
+---------------------------------------------------------------------------
+
+
+Reasons to accept
+---------------------------------------------------------------------------
+The approach appears to be innovative and is supported by an extensive set of experiments.
+---------------------------------------------------------------------------
+
+
+Reasons to reject
+---------------------------------------------------------------------------
+No specific risk.
+---------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+                  Overall Recommendation: 4
+
+Questions and Suggestions for the Author(s)
+---------------------------------------------------------------------------
+I suggest that the authors provide an explanation of the basic terminology, in particular the difference between de-identification and pseudonymization.
+---------------------------------------------------------------------------
+
+
+Typos, Grammar, and Style
+---------------------------------------------------------------------------
+References
+
+Francois Chollet et al. 2015. Keras: please, provide the URL
+
+The United States Congress. 1996. Health insurance portability and accountability act of 1996: please, provide the URL
+---------------------------------------------------------------------------
+
+
+
+============================================================================
+                            REVIEWER #2
+============================================================================
+
+What is this paper about, what contributions does it make, what are the main strengths and weaknesses?
+---------------------------------------------------------------------------
+This paper uses an 3 part adversarial model based on prior work by
+Ganin et al. (DANN) and Feutry et al.'s preprint in arXiv to apply to
+deidentify and construct a privacy preserving representation of
+sensitive medical data, specifically the i2b2 challenge task dataset.
+The work makes a contribution in applying the two models to i2b2 task
+data and adapting them to the task at hand.  In particular the authors
+claim to have added the optimization of two separate adversaries to
+address the two identified attack vectors on the identification task.
+
+Overall this paper read well and was well motivated.  Although the
+exact scientific contributions could be clearer, I felt that the work
+had sufficient novelty over the previous baselines to allow
+publication.
+
+A weakness is that those unfamiliar with the i2b2 tasks will not be
+familiar the formal definitions of the tasks at hand.  It would be
+good to flesh these out to the uninitiated and to construct a toy
+example of what is meant (as i2b2 and I guess similar datasets
+prohibit the reproduction of any part of those datasets).
+
+A further weakness is the necessary changes in the work to clearly
+delineate what contribution and novelty that their work embodies.
+Much of page 5 concerns Feutry et al.'s work and it is not very clear
+what subsequent modifications are due to the prior work or attributed
+to the authoring team.  For example, I take it that the creation of
+two adversaries (S 5.3) is the authors' contribution but that all of S
+5.4 is due to Feutry et al.'s prior work.  There are three claims a) a
+de-identification system, b) coupled with auto psuedonymization, c)
+coupled with adversarial representation.  Taken together it is
+significant but sometimes the work is not very clearly comparing
+different parts of the paper with the similar prior work.
+
+Table 2's results and the accompanying prose suggest that the work is
+comparable to SOTA.  However, the difference in .6% F corresponds to
+over 10% increase in error.  I'm not sure that this would constitute
+comparable performance.  It would be better to have a significance
+test (albeit with a grain of salt for interpretation) to validate this
+wording.  Similarly the casing rule increases performance .4% F which
+seems quite significant for the HIPAA NE fields needing to be labeled
+as PHI.  A discussion about these effects are warranted.
+
+Since DANN performance doesn't work well as mentioned in the text, it
+would be good to have empirical data to support this.  You just state
+that it doesn't work well rather than letting the readership make that
+conclusion on their own.
+
+WRT S7.2: It'd also be good to have some notion of the (cosine)
+similarity between the k NN at a particular threshold range.  This may
+serve better than the # of neighbors that are used as possible
+substitutes.
+
+I enjoyed S 9 on the analysis of privacy preserving properties.  These
+were more well motivated and discussed in depth.  Thanks for this.
+---------------------------------------------------------------------------
+
+
+Reasons to accept
+---------------------------------------------------------------------------
+An interesting application and good ties to prior work on RL and de-identification.
+---------------------------------------------------------------------------
+
+
+Reasons to reject
+---------------------------------------------------------------------------
+Unclear contribution and delineation of the work done from prior work.  Organization could be better.
+---------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+                  Overall Recommendation: 3.5
+
+Typos, Grammar, and Style
+---------------------------------------------------------------------------
+Detailed Comments:
+
+- 28 - I am still not sure (even after reading the paper) what exactly
+  is meant by de-identification; the binary classification of a token
+  into PHI or non-PHI.  Perhaps not here, but in the introduction
+  section, a formal definition of de-identification (if repeated from
+  i2b2 would be fine) should be given here.  Without knowing the exact
+  problem, it is hard to understand the level of performance in terms
+  of F_1.
+
+- 105 - this is tied to the former comment.  You still need PHI to be
+  labeled.  So it's not clear whether you are tackling the
+  pseudonymization or the de-identification task.
+
+- 217 - "today" should be replaced with a year so that the article
+  won't sound dated years from now.
+
+- 237 - would it be possible to use character embeddings trained from
+  another (perturbed) source instead?  Char embeddings do help and it
+  would be good (future) work to have a privacy preserving method for
+  adapting them.
+
+- 266 - not so much a critique of your method, but clarification on
+  the psuedonymization process.  Does the process preserve or attempt
+  to preserve contextual information such names' gender, age, or other
+  conditions?  Inserting a psuedonym that does not fit the context may
+  give rise to unexpected problems or inferences.
+
+
+- 301 - I wasn't clear why the adversarial output is just a single
+  unit (assumed vector).
+
+- 394 - footnote 1.  This seems to be an important detail that should
+  be part of the main text.  Suggest that you not use a footnote here.
+
+- 400 - Fig 2 - Would be good to label the three ovals with letters
+  D,R,A to help facilitate the explanation.
+
+- 467 - Was \lambda tuned?  It was not clear.  You should have two
+l_{adv} losses.
+
+- 482-485 - This is standard boilerplate.  Do you need this text or
+  can it be omitted or condensed to give more detail elsewhere?
+
+- 559 - "confirms the findings " ... which are what?
+
+- 602 - It'd be better to have more data points near the elbow in the
+  RHS graph.  The uptick is not verified as a genuine trend with only
+  one data point.  Could it be an outlier?
+
+- 641 - "Only one PHI token is moved ..." why is this so? I didn't
+  follow this.
+
+- 710 - "Due to the additive ... rather fails to identify" can you
+  show this empirically so that we can agree with your conclusion?
+
+- 719-733 & 767-774 - Seems repetitive.  Could condense or drop.
+---------------------------------------------------------------------------
+
+
+
+============================================================================
+                            REVIEWER #3
+============================================================================
+
+What is this paper about, what contributions does it make, what are the main strengths and weaknesses?
+---------------------------------------------------------------------------
+The manuscript presents a new strategy for sharing privacy-preserved text representations for de-identification of medical records.
+
+The core idea is to transform medical records into a vector space which is non-reversible, and share the vector representation instead of the original texts.
+
+The manuscript also suggests a protocol for involving hospitals to collect vector representations from various sources, and for sharing de-identification models among the hospitals.
+
+To protect the representation model from possible hacking, the architecture adopts adversarial learning strategy.
+
+The manuscript addresses a very timely and important problem which the community of clinical NLP is facing.
+
+The design of the model architecture is very apt, reasonably supporting the suggested data sharing protocol.
+
+I particularly liked the experiment which empirically proved that the representation is non-hackable, which I believe is important to convince hospital to participant in the data sharing plan.
+
+Overall, I think the paper will be a very good contribution, at least to the community of clinical NLP,.
+---------------------------------------------------------------------------
+
+
+Reasons to accept
+---------------------------------------------------------------------------
+It presents an apt solution to an important problem of clinical NLP.  The architecture is designed based on an application scenario, which I believe is quite realistic
+I think its impact would be quite big at least to the community of clinical NLP.
+---------------------------------------------------------------------------
+
+
+Reasons to reject
+---------------------------------------------------------------------------
+I do not see as reason to reject it.
+---------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------
+Reviewer's Scores
+---------------------------------------------------------------------------
+                  Overall Recommendation: 4.5
