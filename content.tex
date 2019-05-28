@@ -2,6 +2,19 @@
 % !TeX spellcheck=en_US
 
 \section{Introduction}\label{sec:introduction}
+
+\begin{figure*}
+    \centering
+    \todo[inline]{Draft diagram!}
+    \includegraphics[width=\textwidth]{images/graffle/sharing-both}
+    \caption{Sharing training data for de-identification.
+        %
+        Upper alternative: traditional process using manual pseudonymization.
+        %
+        Lower alternative: our approach of sharing perturbed embedding representations.
+    }\label{fig:process}
+\end{figure*}
+
 %
 \Acp{ehr} contain valuable data that could potentially be used in large-scale medical research \citep{botsis2010secondary, birkhead2015uses, cowie2017electronic}.
 %
@@ -39,12 +52,8 @@ by transforming text non-reversibly into a vector space and only sharing that re
 Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but the pseudonymization step (substituting \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
 %
 A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text.
-
-\begin{figure*}
-\centering
-%\input{images/tikz/process}
-\caption{De-identification process}\label{fig:process}
-\end{figure*}
+%
+The traditional approach to sharing training data is conceptually compared to our approach in \cref{fig:process}.
 
 \section{Related Work}\label{sec:related}
 %
@@ -156,7 +165,6 @@ Before training, we shuffle the training sentences and replace all \ac{phi} toke
 %
 Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
 %
-% TODO maybe find a better example sentence that totally changes meaning?
 \begin{quote}
     [James] was admitted to [St. Thomas]
 \end{quote}
@@ -579,9 +587,6 @@ In adversarial learning with the three-part training procedure, it might be poss
 A further possible extension is a dynamic noise level in the representation model that depends on the \ac{lstm} output instead of being a trained weight.
 %
 This might allow using lower amounts of noise for certain inputs while still being robust to the adversary.
-
-%TODO Mention other embedding schemes, e.g. elmo \citep{peters2018deep}
-% Contextual word embeddings such as ELMo \citep{peters2018deep} ...
 
 %
 When more training data from multiple sources become available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
