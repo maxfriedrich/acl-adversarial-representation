@@ -90,6 +90,7 @@ The 2016 shared task featured a sight-unseen track in which de-identification sy
 The best system achieved an \fone score of $79\%$, proving that systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
 
 \subsection{Adversarial Representation Learning}
+\label{sec:advers-repr-learn}
 %
 Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode features of raw data that allows it to be used in e.g.\ machine learning algorithms while obfuscating membership in a protected group or other sensitive attributes.
 %
@@ -417,7 +418,7 @@ We do not achieve satisfactory results with the conjoint \ac{dann} training proc
 %
 When training the adversary on the frozen representation for an additional $20$ epochs, it is able to distinguish real from fake input pairs on a test set with accuracies above $80\%$.
 %
-This confirms the findings by \citet{elazar2018adversarial}.
+This confirms the findings by \citet{elazar2018adversarial} mentioned in Section~\ref{sec:advers-repr-learn}.
 
 %
 In contrast, with the three-part training procedure, we are able to learn a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.

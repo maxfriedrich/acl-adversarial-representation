@@ -3,12 +3,12 @@
 - [ ] Am wichtigsten: "Wie sieht der allgemeine Ablauf aus?"
   - Was macht Mensch, was Maschine? -> Diagramm
   - Formulierungen: "Dieses System hat ein Modell", "crucial component"
-  
+
 - [x] "97.4%" muss in Tabelle 2
   - "x + Privacy"
   - @Reviewer 2: Wir vergleichen nur mit unserer Baseline, nicht mit SotA (wir benutzen auch diese Methoden nicht)
 
-- [ ] "DANN doesn't work": wir sagen "adversary schafft 80% -> discard"
+- [x] "DANN doesn't work": wir sagen "adversary schafft 80% -> discard"
   - vorher Elazar et al erklären, dass Adversary allein trainieren ein Problem ist -- das steht schon in 2.2
   - "Das System funktioniert nur gut, wenn auch Adversary allein trainieren nicht möglich ist" bei Adversaries 5.3
 
@@ -22,14 +22,17 @@
   - "Automatic classifiers that detect PHI…"
   - de-identification vs sanitization (Max soll Begriffe nachlesen)
     - [Sanitization](https://en.wikipedia.org/wiki/Sanitization_(classified_information)) ist _entfernen_/schwärzen von sensitive information
-  - Z 64: "manual sanitization?" sansitive data "has to be performed manually" -- steht da eigentlisch schon (""sanitization cannot be fully automated…")
+  - Z 64: "manual sanitization?" sansitive data "has to be performed manually" -- steht da eigentlisch schon (""sanitization cannot be fully automated…") 
+     Arne: "cannot be fully automated" ist aber etwas anderes als "has to be performed manually" -- das erste könnte auch einfach
+	       heißen, dass es aktuell technisch nicht geht.  Der Punkt ist aber, dass es von Menschen gemacht werden *muss*, da
+		   es rechtlich notwendig ist.
 
 - [x] Adversary output muss single unit (binary) klarer machen?
 
 - [ ] Footnote 1 ist wichtig, lieber in Klammern?
   - Max: die Footnote ist ja direkt unten und was sollte sonst in [] markiert sein…
 
-- [ ] 7.3 "confirms the findings by" -- was sind die Findings? -- sie stehen in 2.2 aber sind bis hier wieder vergessen?
+- [x] 7.3 "confirms the findings by" -- was sind die Findings? -- sie stehen in 2.2 aber sind bis hier wieder vergessen?
 
 - [x] Bei den Diagrammen: error bars oder sagen, dass es 5 Durchläufe waren
   - erstmal nur gesagt, dass es 5 Durchläufe waren (Results oben)
