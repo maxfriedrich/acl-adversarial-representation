@@ -30,7 +30,7 @@ De-identification is the task of finding and labeling \ac{phi} in medical text a
 As the information to be removed is very sensitive, the sanitization cannot be fully automated -- but automatic de-identification labeling serves to speed up the process significantly.
 
 %
-Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without such a classifier, it is difficult to share de-identified medical text for research (including for training the classifier itself).
+Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without access to automatic de-identification, it is difficult to share large corpora of medical text in a privacy-preserving way for research (including for training the classifier itself).
 %
 The standard method of data protection compliant sharing of training data for a de-identification classifier requires humans to pseudonymize protected information with substitutes in a document-coherent way.
 %
