@@ -265,8 +265,7 @@ We use two adversaries that are trained on tasks that directly follow from \ref{
     \item Given two representation sequences (and their cosine similarities), decide if they were obtained from the same sentence.
 \end{enumerate}
 %
-We obtain the representation sequences for the second adversary from a copy of the representation model with shared weights.
-% TODO wording: ``obtain'' 3 times
+We generate the representation sequences for the second adversary from a copy of the representation model with shared weights.
 %
 We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:automatic-pseudonymization}, limiting the number of replaced \ac{phi} tokens to one per sentence.
 
