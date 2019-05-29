@@ -1,22 +1,33 @@
 % !TeX root=main
 % !TeX spellcheck=en_US
 
-% TODO general: is it ``medical'' or ``clinical'' text?
-
 \section{Introduction}\label{sec:introduction}
+
+\begin{figure*}
+    \centering
+    \todo[inline]{Draft diagram!}
+    \includegraphics[width=\textwidth]{images/graffle/sharing-both}
+    \caption{Sharing training data for de-identification.
+        %
+        Upper alternative: traditional process using manual pseudonymization.
+        %
+        Lower alternative: our approach of sharing perturbed embedding representations.
+    }\label{fig:process}
+\end{figure*}
+
 %
-\Acp{ehr} are a rich source of information that could potentially be used in large-scale medical research \citep{botsis2010secondary, birkhead2015uses, cowie2017electronic}.
+\Acp{ehr} contain valuable data that could potentially be used in large-scale medical research \citep{botsis2010secondary, birkhead2015uses, cowie2017electronic}.
 %
 In addition to structured medical data, \acp{ehr} contain free-text patient notes that are a rich source of information \citep{jensen2012mining}.
 %
+% TODO rephrase: ``contain'' + ``data'' twice in the first two sentences
 However, due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized to not include information potentially identifying patients.
 %
 The \ac{phi} to remove includes potentially identifying information such as names, geographic identifiers, dates, and account numbers; the American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
 %
-De-identification is the task of finding and labeling \ac{phi} in medical text for sanitization.
-Automatically finding these instances helps human annotators to then replace the \ac{phi} with
-non-identifying replacements.  As the information to be removed is very sensitive, the sanitization
-cannot be fully automated -- but automatic labeling serves to speed up the process significantly.
+De-identification is the task of finding and labeling \ac{phi} in medical text as a step toward sanitization.
+%
+As the information to be removed is very sensitive, the sanitization cannot be fully automated -- but automatic de-identification labeling serves to speed up the process significantly.
 
 %
 Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without such a classifier, it is difficult to share de-identified medical text for research (including for training the classifier itself).
@@ -32,17 +43,17 @@ Today, a pseudonymized dataset for de-identification from a single source, the \
 %
 However, de-identification classifiers trained on this dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
-To achieve a universal de-identification classifier, many medical institutions would have to pool their data, but
-%
-preparing this data for sharing by using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
+To achieve a universal de-identification classifier, many medical institutions would have to pool their data but preparing this data for sharing by using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
 To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier
 by transforming text non-reversibly into a vector space and only sharing that representation.
 %
-Our approach still requires humans to annotate \ac{phi} (as this is the training data to be shared for the actual de-identification task) but the pseudonymization step (replacing \ac{phi} with coherent substitutes) is performed by the transformation to the vector representation.
+Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but the pseudonymization step (substituting \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
 %
 A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text.
+%
+The traditional approach to sharing training data is conceptually compared to our approach in \cref{fig:process}.
 
 \section{Related Work}\label{sec:related}
 %
@@ -67,30 +78,32 @@ An \fone score of $95\%$ has been suggested as a target for reasonable de-identi
 %
 \citet{dernoncourt2017identification} first applied \iac{lstm} \citep{hochreiter1997long} model with \iac{crf} output component to de-identification.
 %
-Using transfer learning from a larger dataset slightly improves performance on the i2b2 2014 dataset \citep{lee2018transfer}.
+Transfer learning from a larger dataset slightly improves performance on the i2b2 2014 dataset \citep{lee2018transfer}.
 %
 \citet{liu2017identification} achieve state-of-the-art performance in de-identification by combining a deep learning ensemble with a rule component.
 
 %
-Up to the 2014 shared task, the organizers emphasized that it is unclear if a system trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
+Up to and including the 2014 shared task, the organizers emphasized that it is unclear if a system trained on the provided datasets will generalize to medical records from other sources \citep{uzuner2007evaluating,stubbs2015automated}.
 %
 The 2016 shared task featured a sight-unseen track in which de-identification systems were evaluated on records from a new data source.
 %
 The best system achieved an \fone score of $79\%$, proving that systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
 
 \subsection{Adversarial Representation Learning}
+\label{sec:advers-repr-learn}
 %
 Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode features of raw data that allows it to be used in e.g.\ machine learning algorithms while obfuscating membership in a protected group or other sensitive attributes.
 %
 The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementation of a three-party game between a representer, classifier, and adversary component.
 %
-The adversary and the classifier are neural networks which share the first layers.
+The classifier and adversary are deep learning models with shared initial layers.
 %
-A gradient reversal layer is used to worsen the representation for the adversary during back-propagation, i.e.\ when training the adversary, the adversary-specific part of the network is optimized for the adversarial task but the shared part is updated against the gradient to make the shared representation less suitable for the adversary.
+A gradient reversal layer is used to worsen the representation for the adversary during back-propagation: when training the adversary, the adversary-specific part of the network is optimized for the adversarial task but the shared part is updated against the gradient to make the shared representation less suitable for the adversary.
 
 %
 Although initially conceived for use in domain adaptation, \acp{dann} and similar adversarial deep learning models have recently been used to obfuscate demographic attributes from text \citep{elazar2018adversarial,li2018towards} and subject identity \citep{feutry2018learning} from images.
 %
+% TODO this is super important but it was not clear to reviewer 2
 \citet{elazar2018adversarial} warn that continued adversary training with a frozen representation may allow adversaries to break representation privacy. Therefore, to test whether the unwanted information is not extractable from the generated information anymore, adversary training needs to continue after finishing training the system and only if after that the information cannot be recovered, we have evidence that it really is not contained in the representation anymore.
 
 \section{Dataset and De-Identification Model}\label{sec:deidentification-model}
@@ -114,7 +127,6 @@ We compare three different approaches: a non-private de-identification classifie
 Our non-private system as well as the privacy-enabled extensions are based on a bidirectional \ac{lstm}-\ac{crf} architecture that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
 We only use pre-trained FastText \citep{bojanowski2017enriching} or GloVe \citep{pennington2014glove} word embeddings, not explicit character embeddings, as we suspect these may allow easy re-identification of private information if used in shared representations.
-% TODO does this even make sense? In the baseline model, the data is public, and in the adversarial representation model, the representation should be able to obscure the character features
 %
 In place of learned character features, we provide the casing feature from \citet{reimers2017optimal} as an additional input.
 %
@@ -147,14 +159,13 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 
 \section{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
 %
-To provide a baseline to compare against our model, we introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our non-private de-identification model work on the sentence level and do not rely on document coherency.
+To provide a baseline to compare our primary approach against, we introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our non-private de-identification model work on the sentence level and do not rely on document coherency.
 %
 Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their closest neighbors in an embedding space (including the token itself), as determined by cosine distance in a pre-computed embedding matrix.
 
 %
 Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
 %
-% TODO maybe find a better example sentence that totally changes meaning?
 \begin{quote}
     [James] was admitted to [St. Thomas]
 \end{quote}
@@ -213,7 +224,7 @@ The de-identification model receives this representation sequence as an input in
 %
 It retains the casing feature as an auxiliary input.
 %
-The adversary has two inputs: the representation sequence and an additional embedding or representation sequence.
+The adversary has two inputs, the representation sequence and an additional embedding or representation sequence, and a output unit.
 
 \subsection{Representation}
 %
@@ -254,15 +265,18 @@ We use two adversaries that are trained on tasks that directly follow from \ref{
 \end{enumerate}
 %
 We obtain the representation sequences for the second adversary from a copy of the representation model with shared weights.
+% TODO wording: ``obtain'' 3 times
 %
 We generate real and fake pairs for adversarial training using the automatic pseudonymization approach presented in \cref{sec:automatic-pseudonymization}, limiting the number of replaced \ac{phi} tokens to one per sentence.
 
 %
-The adversaries are implemented as bidirectional \ac{lstm} models.
+The adversaries are implemented as bidirectional \ac{lstm} models with single output units.
 %
-We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in a preliminary experiment.
+We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in preliminary experiments.
 %
 To use the two adversaries in our architecture, we average their outputs.
+
+% TODO make again clear that adversaries should continue training on frozen representation?
 
  \begin{figure}
     \centering
@@ -306,11 +320,9 @@ It is composed of three phases:
     \end{enumerate}
 \end{enumerate}
 %
-In each of the first two phases, we monitor the respective validation loss for early stopping to decide at which point the training should move on to the next phase.
+In each of the first two phases, the respective validation loss is monitored to decide at which point the training should move on to the next phase.
 %
-The alternating steps in the third phase each last one training epoch.
-%
-We determine the early stopping time for the third phase using only the combined validation loss from \ref{item:repr-training}.
+The alternating steps in the third phase each last one training epoch; the early stopping time for the third phase is determined using only the combined validation loss from \ref{item:repr-training}.
 
 %
 Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
@@ -343,15 +355,19 @@ In order to compare our results to the state of the art, we use the token-based 
 %
 \citet{dernoncourt2017identification} deem it the most important metric: deciding if an entity is \ac{phi} or not is generally more important than assigning the correct category of \ac{phi}, and only \ac{hipaa} categories of \ac{phi} are required to be removed by American law.
 %
-We perform the evaluation with the official evaluation script\footnote{\url{https://github.com/kotfic/i2b2\_evaluation\_scripts}}.
+Non-\ac{phi} tokens are not incorporated in the \fone score.
+%
+We perform the evaluation with the official i2b2 evaluation script\footnote{\url{https://github.com/kotfic/i2b2\_evaluation\_scripts}}.
 
 \section{Results}
 %
-In this section, we present our experiment results for the non-private de-identification classifier as well as the two privacy-enabled extensions.
+\Cref{tab:baseline-results} shows de-identification performance results for the non-private de-identification classifier (upper part, in comparison to the state of the art) as well as the two privacy-enabled extensions (lower part).
+%
+The results are average values out of five experiment runs.
 
 \subsection{Non-private De-Identification Model}
 %
-When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results (see \cref{tab:baseline-results}).
+When trained on the raw i2b2 2014 data, our models achieve \fone scores that are comparable to \citeauthor{dernoncourt2017identification}'s results.
 %
 The casing feature improves GloVe by $0.4$ percentage points.
 
@@ -359,18 +375,23 @@ The casing feature improves GloVe by $0.4$ percentage points.
     \centering
     \begin{tabular}{ll}
         \toprule
-        Model & \fone (\%)\\
-        \midrule
-        % \Ac{elmo} & $97.74$ \\
-        Our FastText & $97.67$ \\
-        Our GloVe & $97.24$ \\
-        Our GloVe + casing & $97.62$ \\
-        \addlinespace
-        \citeauthor{dernoncourt2017identification} (\ac{lstm}-\ac{crf}) & $97.85$\\
-        \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
-        \bottomrule
+         Model & \fone (\%)\\
+        \midrule 
+         Our non-private FastText & $97.67$ \\
+         Our non-private GloVe & $97.24$ \\
+         Our non-private GloVe + casing & $97.62$ \\
+         \addlinespace
+         \citeauthor{dernoncourt2017identification} (\ac{lstm}-\ac{crf}) & $97.85$\\
+         \citeauthor{liu2017identification} (ensemble + rules) & $\bm{98.27}$\\
+         \midrule
+         Our autom. pseudon. FastText & $96.75$\\
+         Our autom. pseudon. GloVe & $96.42$\\
+         \addlinespace
+         Our adv. repr. FastText & $\bm{97.40}$\\
+         Our adv. repr. GloVe & $96.89$\\
+         \bottomrule
     \end{tabular}
-    \caption{Binary \ac{hipaa} \fone scores of our non-private de-identification models on the i2b2 2014 test set in comparison to the state of the art.}\label{tab:baseline-results}
+    \caption{Binary \ac{hipaa} \fone scores of our non-private (top) and private (bottom) de-identification approaches on the i2b2 2014 test set in comparison to non-private the state of the art. Our private approaches use $N=100$ neighbors as a privacy criterion.}\label{tab:baseline-results}
 \end{table}
 
 \subsection{Automatic Pseudonymization}
@@ -397,7 +418,7 @@ We do not achieve satisfactory results with the conjoint \ac{dann} training proc
 %
 When training the adversary on the frozen representation for an additional $20$ epochs, it is able to distinguish real from fake input pairs on a test set with accuracies above $80\%$.
 %
-This confirms the findings by \citet{elazar2018adversarial}.
+This confirms the findings by \citet{elazar2018adversarial} mentioned in Section~\ref{sec:advers-repr-learn}.
 
 %
 In contrast, with the three-part training procedure, we are able to learn a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.
@@ -453,13 +474,11 @@ There is almost no decrease in \fone score for up to $N = 20$ neighbors for both
 
 \paragraph{Adversarially Learned Representation:}
 %
-Our adversarially trained vector representation that is invariant to word changes allows training reasonable de-identification models (\fone scores above $95\%$) when using up to $N=1\,000$ neighbors as an invariance requirement.
+Our adversarially trained vector representation allows training reasonable de-identification models (\fone scores above $95\%$) when using up to $N=1\,000$ neighbors as an invariance requirement.
 %
 The adversarial representation results beat the automatic pseudonymization results because the representation model can act as a task-specific feature extractor.
 %
 Additionally, the representations are more general as they are invariant to word changes.
-%
-The de-identification model is trained on sentences that are augmented to a smaller degree than in our automatic pseudonymization experiment (only one \ac{phi} token is moved to a neighbor in adversarial training instead of all \ac{phi} tokens).
 
 \section{Privacy Properties}
 
@@ -468,8 +487,6 @@ In this section, we discuss our models with respect to their privacy-preserving 
 \paragraph{Embeddings:}
 %
 When looking up embedding space neighbors for words, it is notable that many FastText neighbors include the original word or parts of it as a subword.
-%
-This is due to FastText's method of using the sum of subword embeddings in embedding calculation.
 %
 For tokens that occur as \ac{phi} in the i2b2 training set, on average $7.37$ of their $N=100$ closest neighbors in the FastText embedding matrix contain the original token as a subword.
 %
@@ -506,7 +523,7 @@ However, we would then also need to detect misspelled names as well as other hin
 %
 Our adversarial representation empirically satisfies a strong privacy criterion: representations are invariant to \textit{any} protected information token being replaced with \textit{any} of its $N$ neighbors in an embedding space.
 %
-When freezing the representation model from an experiment run using up to $N = 500$ neighbors and training the adversary for an additional $50$ epochs, it still does not achieve higher-than-chance accuracies.
+When freezing the representation model from an experiment run using up to $N = 500$ neighbors and training the adversary for an additional $50$ epochs, it still does not achieve higher-than-chance accuracies on the training data.
 %
 Due to the additive noise, the adversary does not overfit on its training set but rather fails to identify any structure in the data.
 
@@ -528,9 +545,9 @@ Today's de-identification classifiers fail on unseen data.
 %
 A training set from multiple sources is required to train more general de-identification classifiers.
 %
-We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.\footnote{Implementations of our models and experiments can be found at: \url{https://github.com/anonymized}}
+We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.\footnote{Implementations of our models and experiments can be found at: \url{https://github.com/maxfriedrich/deid-training-data}}
 
-%
+% TODO this is mostly repetition
 As precursors to our adversarial representation approach, we developed a deep learning model for de-identification that does not rely on explicit character features as well as an automatic word-level pseudonymization approach.
 %
 A model trained on our automatically pseudonymized data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the non-private system, scoring $96.75\%$ on the i2b2 2014 test set.
@@ -571,9 +588,6 @@ In adversarial learning with the three-part training procedure, it might be poss
 A further possible extension is a dynamic noise level in the representation model that depends on the \ac{lstm} output instead of being a trained weight.
 %
 This might allow using lower amounts of noise for certain inputs while still being robust to the adversary.
-
-%TODO Mention other embedding schemes, e.g. elmo \citep{peters2018deep}
-% Contextual word embeddings such as ELMo \citep{peters2018deep} ...
 
 %
 When more training data from multiple sources become available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
