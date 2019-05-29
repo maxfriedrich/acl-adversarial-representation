@@ -49,7 +49,7 @@ To achieve a universal de-identification classifier, many medical institutions w
 To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier
 by transforming text non-reversibly into a vector space and only sharing that representation.
 %
-Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but the pseudonymization step (substituting \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
+Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but instead of the pseudonymization step (replacing \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
 %
 A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text.
 %
@@ -103,8 +103,9 @@ A gradient reversal layer is used to worsen the representation for the adversary
 %
 Although initially conceived for use in domain adaptation, \acp{dann} and similar adversarial deep learning models have recently been used to obfuscate demographic attributes from text \citep{elazar2018adversarial,li2018towards} and subject identity \citep{feutry2018learning} from images.
 %
-% TODO this is super important but it was not clear to reviewer 2
-\citet{elazar2018adversarial} warn that continued adversary training with a frozen representation may allow adversaries to break representation privacy. Therefore, to test whether the unwanted information is not extractable from the generated information anymore, adversary training needs to continue after finishing training the system and only if after that the information cannot be recovered, we have evidence that it really is not contained in the representation anymore.
+\citet{elazar2018adversarial} warn that when a representation is learned using gradient reversal methods, continued adversary training on the frozen representation may allow adversaries to break representation privacy.
+%
+To test whether the unwanted information is not extractable from the generated information anymore, adversary training needs to continue on the frozen representation after finishing training the system and only if after that the information cannot be recovered, we have evidence that it really is not contained in the representation anymore.
 
 \section{Dataset and De-Identification Model}\label{sec:deidentification-model}
 
