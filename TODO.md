@@ -46,3 +46,11 @@
   - Das ist die Definition von "overfit"
   - Hilft die Figure mit den learning curves?
     - Nein, weil sie ja das Training und nicht die frozen evaluation abbildet, wo Adversary Train/val loss konstant schlecht ist -- dafür braucht man auch keine Figure
+
+## Max zusammenfassende Todos
+
+- [ ] Die "draft figure" will ich noch mal überdenken und dann vernünftig in Tikz zeichnen
+- [ ] Klarer machen, was unsere Contribution genau ist
+- [ ] Vielleicht bei der Conclusion alles löschen, was 1:1 Wiederholung von davor ist?
+- [ ] Noch ein paar Wording-Sachen
+  - [x] z.B. direkt am Anfang der Einleitung, wo in zwei Sätzen 2x "contain" und "data" steht
