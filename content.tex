@@ -26,7 +26,9 @@ The \ac{phi} to remove includes potentially identifying information such as name
 %
 De-identification is the task of finding and labeling \ac{phi} in medical text as a step toward sanitization.
 %
-As the information to be removed is very sensitive, the sanitization cannot be fully automated -- but automatic de-identification labeling serves to speed up the process significantly.
+As the information to be removed is very sensitive, sanitization always requires final human verification.
+%
+Automatic de-identification labeling can however significantly speed up the process.
 
 %
 Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without access to automatic de-identification, it is difficult to share large corpora of medical text in a privacy-preserving way for research (including for training the classifier itself).

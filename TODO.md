@@ -22,10 +22,8 @@
   - "Automatic classifiers that detect PHI…"
   - de-identification vs sanitization (Max soll Begriffe nachlesen)
     - [Sanitization](https://en.wikipedia.org/wiki/Sanitization_(classified_information)) ist _entfernen_/schwärzen von sensitive information
-  - Z 64: "manual sanitization?" sansitive data "has to be performed manually" -- steht da eigentlisch schon (""sanitization cannot be fully automated…") 
-     Arne: "cannot be fully automated" ist aber etwas anderes als "has to be performed manually" -- das erste könnte auch einfach
-	       heißen, dass es aktuell technisch nicht geht.  Der Punkt ist aber, dass es von Menschen gemacht werden *muss*, da
-		   es rechtlich notwendig ist.
+  - Z 64: "manual sanitization?" sansitive data "has to be performed manually" -- steht da eigentlisch schon (""sanitization cannot be fully automated…")
+    - [x] Arne: "cannot be fully automated" ist aber etwas anderes als "has to be performed manually" -- das erste könnte auch einfach heißen,dass es aktuell technisch nicht geht.  Der Punkt ist aber, dass es von Menschen gemacht werden *muss*, da es rechtlich notwendig ist. -- noch mal klargestellt
 
 - [x] Adversary output muss single unit (binary) klarer machen?
 
