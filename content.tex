@@ -28,14 +28,14 @@ De-identification is the task of finding and labeling \ac{phi} in medical text a
 %
 As the information to be removed is very sensitive, sanitization always requires final human verification.
 %
-Automatic de-identification labeling can however significantly speed up the process.
+Automatic de-identification labeling can however significantly speed up the process, as shown for other annotation tasks in e.g. \citet{yimam2015todo}\todo{Yimam}.
 
 %
 Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without access to automatic de-identification, it is difficult to share large corpora of medical text in a privacy-preserving way for research (including for training the classifier itself).
 %
 The standard method of data protection compliant sharing of training data for a de-identification classifier requires humans to pseudonymize protected information with substitutes in a document-coherent way.
 %
-This includes replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings on the pseudonym \cite{uzuner2007evaluating}.
+This includes replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings of the pseudonym \cite{uzuner2007evaluating}.
 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
 % Why is sharing training data the best solution for a de-identification model?
@@ -47,12 +47,11 @@ However, de-identification classifiers trained on this dataset do not generalize
 To achieve a universal de-identification classifier, many medical institutions would have to pool their data but preparing this data for sharing by using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
-To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier
-by transforming text non-reversibly into a vector space and only sharing that representation.
+To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier by transforming text non-reversibly into a vector space and only sharing that representation.
 %
 Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but instead of the pseudonymization step (replacing \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
 %
-A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text.
+A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text, as long as the representation does not allow for the reconstruction of sensitive information.
 %
 The traditional approach to sharing training data is conceptually compared to our approach in \cref{fig:process}.
 
@@ -88,7 +87,7 @@ Up to and including the 2014 shared task, the organizers emphasized that it is u
 %
 The 2016 shared task featured a sight-unseen track in which de-identification systems were evaluated on records from a new data source.
 %
-The best system achieved an \fone score of $79\%$, proving that systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
+The best system achieved an \fone score of $79\%$, suggesting that systems at the time were not able to deliver sufficient performance on completely new data \citep{stubbs2017identification}.
 
 \subsection{Adversarial Representation Learning}
 \label{sec:advers-repr-learn}
@@ -128,7 +127,7 @@ We compare three different approaches: a non-private de-identification classifie
 %
 Our non-private system as well as the privacy-enabled extensions are based on a bidirectional \ac{lstm}-\ac{crf} architecture that has been proven to work well in sequence tagging \citep{huang2015bidirectional,lample2016neural} and de-identification \citep{dernoncourt2017identification,liu2017identification}.
 %
-We only use pre-trained FastText \citep{bojanowski2017enriching} or GloVe \citep{pennington2014glove} word embeddings, not explicit character embeddings, as we suspect these may allow easy re-identification of private information if used in shared representations.
+We only use pre-trained FastText \citep{bojanowski2017enriching} or GloVe \citep{pennington2014glove} word embeddings, not explicit character embeddings, as we suspect that these may allow easy re-identification of private information if used in shared representations.
 %
 In place of learned character features, we provide the casing feature from \citet{reimers2017optimal} as an additional input.
 %
@@ -161,7 +160,7 @@ The feature maps words to a one-hot representation of their casing (\textit{nume
 
 \section{Automatic Pseudonymization}\label{sec:automatic-pseudonymization}
 %
-To provide a baseline to compare our primary approach against, we introduce a naive word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our non-private de-identification model work on the sentence level and do not rely on document coherency.
+To provide a baseline to compare our primary approach against, we introduce a naïve word-level automatic pseudonymization approach that exploits the fact that state-of-the-art de-identification models \citep{liu2017identification,dernoncourt2017identification} as well as our non-private de-identification model work on the sentence level and do not rely on document coherency.
 %
 Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their closest neighbors in an embedding space (including the token itself), as determined by cosine distance in a pre-computed embedding matrix.
 
@@ -246,7 +245,7 @@ The model learns a standard deviation for each of the input and output dimension
     %
     In a preliminary experiment, we confirmed that adding noise with a single, fixed standard deviation is not a viable approach for privacy-preserving representations.
     %
-    To change the cosine similarity neighborhoods of embeddings at all, we need to add high amounts of noise (more than double of the respective embedding matrix's standard deviation), which in turn results in \emph{unrealistic} embeddings that do not allow training a de-identification model.
+    To change the cosine similarity neighborhoods of embeddings at all, we need to add high amounts of noise (more than double of the respective embedding matrix's standard deviation), which in turn results in \emph{unrealistic} embeddings that do not allow training a de-identification model of sufficient quality.
 }
 %
 \begin{align}
@@ -340,7 +339,7 @@ To evaluate our approaches, we perform experiments using the i2b2 2014 dataset.
 
 \paragraph{Preprocessing:}
 %
-We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting at all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize in GloVe out-of-vocabulary tokens.
+We apply aggressive tokenization similarly to \citet{liu2017identification}, including splitting at all punctuation marks and mid-word e.g.\ if a number is followed by a word (``25yo'' is split into ``25'', ``yo'') in order to minimize the amount of GloVe out-of-vocabulary tokens.
 %
 We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics with additional rules for splitting at multiple blank lines as well as bulleted and numbered list items.
 
@@ -429,9 +428,9 @@ In contrast, with the three-part training procedure, we are able to learn a repr
 %
 A higher number of neighbors $N$ means a stronger invariance requirement for the representation.
 %
-For values of $N$ up to $1\,000$, our FastText and GloVe models are able to learn representations that allow training de-identification models that reach the target \fone score of $95\%$.
+For values of $N$ up to $1\,000$, our FastText and GloVe models are able to learn representations that allow training de-identification models that reach or exceed the target \fone score of $95\%$.
 %
-However, training becomes unstable for $N>500$: at this point, the adversary is able to beat the representation when trained for an additional $50$ epochs (\cref{fig:adversarial-deid} right).
+However, training becomes unstable for $N>500$: at this point, the adversary is able to break the representation privacy when trained for an additional $50$ epochs (\cref{fig:adversarial-deid} right).
 
 %
 Our choice of representation size $d \in \{50, 100, 300\}$ does not influence de-identifi\-ca\-tion or adversary performance, so we select $d=50$ for further evaluation.
@@ -469,7 +468,7 @@ Our model's scores are similar to the previous state of the art, a bidirectional
 
 \paragraph{Automatically Pseudonymized Data:}
 %
-Our naive automatic word-level pseudonymization approach allows training reasonable de-identification models when selecting from up to $N=500$ neighbors.
+Our naïve automatic word-level pseudonymization approach allows training reasonable de-iden\-tification models when selecting from up to $N=500$ neighbors.
 %
 There is almost no decrease in \fone score for up to $N = 20$ neighbors for both the FastText and GloVe model.
 
@@ -531,20 +530,18 @@ Due to the additive noise, the adversary does not overfit on its training set bu
 %
 In the case of $N = 1\,000$ neighbors, the representation never becomes stable in the alternating training phase.
 %
-The adversary is always able to beat the representation.
+The adversary is always able to break the representation privacy.
 
 \section{Conclusions \& Future Work}
 % TODO make clearer what the novel contribution is
 %
-Privacy laws require medical text to be de-identified before it is shared for research.
+Privacy laws require medical text to be de-identified before it can be shared for research.
 %
 De-identifi\-ca\-tion is time-consuming and costly when performed by humans, which motivates the creation of automatic de-identification classifiers.
 %
 Automatic de-identification requires training data, which is typically created by substituting all protected information from raw medical records.
 %
-Today's de-identification classifiers fail on unseen data.
-%
-A training set from multiple sources is required to train more general de-identification classifiers.
+Today's de-identification classifiers fail on data from sources unseen during training, thus a training set from multiple sources is required to train more general de-identification classifiers.
 %
 We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.\footnote{Implementations of our models and experiments can be found at: \url{https://github.com/maxfriedrich/deid-training-data}}
 
@@ -574,7 +571,7 @@ In contrast, the automatic pseudonymization approach only reaches an \fone score
 % (97.35 - 94.96)/(100-94.96)*100 = 47.42%!
 
 %
-Our adversarial representation approach allows cost-effective private sharing of training data for sequence labeling. Pooling of training data for de-identification from multiple institutions would lead to much more robust classifiers.
+Our adversarial representation approach enables cost-effective private sharing of training data for sequence labeling. Pooling of training data for de-identification from multiple institutions would lead to much more robust classifiers.
 %
 Eventually, improved de-identification classifiers could help enable large-scale medical studies that improve public health.
 
