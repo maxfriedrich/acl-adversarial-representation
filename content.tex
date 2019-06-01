@@ -8,9 +8,11 @@
     \input{images/tikz/process}
     \caption{Sharing training data for de-identification.
         %
+        \ac{phi} annotations are marked with [brackets].
+        %
         Upper alternative: traditional process using manual pseudonymization.
         %
-        Lower alternative: our approach of sharing perturbed embedding representations.
+        Lower alternative: our approach of sharing private vector representations.
         %
         The people icon represents tasks done by humans; the gears icon represents tasks done by machines; the lock icon represents privacy-preserving artifacts.
         %
@@ -25,7 +27,7 @@ In addition to structured medical data, \acp{ehr} contain free-text patient note
 %
 However, due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized to not include information potentially identifying patients.
 %
-The \ac{phi} to remove includes potentially identifying information such as names, geographic identifiers, dates, and account numbers; the American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
+The \ac{phi} that may not be shared includes potentially identifying information such as names, geographic identifiers, dates, and account numbers; the American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
 %
 De-identification is the task of finding and labeling \ac{phi} in medical text as a step toward sanitization.
 %
@@ -53,9 +55,9 @@ preparing this data for sharing using the document-coherent pseudonymization app
 %
 To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier by transforming text non-reversibly into a vector space and only sharing that representation.
 %
-Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but instead of the pseudonymization step (replacing \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
+Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but the pseudonymization step (replacing \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
 %
-A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text, as long as the representation does not allow for the reconstruction of sensitive information.
+A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text (as long as the representation does not allow for the reconstruction of sensitive information).
 %
 The traditional approach to sharing training data is conceptually compared to our approach in \cref{fig:process}.
 
@@ -169,7 +171,7 @@ To provide a baseline to compare our primary approach against, we introduce a na
 Before training, we shuffle the training sentences and replace all \ac{phi} tokens with a random choice of a fixed number $N$ of their closest neighbors in an embedding space (including the token itself), as determined by cosine distance in a pre-computed embedding matrix.
 
 %
-Using this approach, the sentence\footnote{\ac{phi} annotations are marked with [brackets]}
+Using this approach, the sentence
 %
 \begin{quote}
     [James] was admitted to [St. Thomas]
@@ -229,7 +231,7 @@ The de-identification model receives this representation sequence as an input in
 %
 It retains the casing feature as an auxiliary input.
 %
-The adversary has two inputs, the representation sequence and an additional embedding or representation sequence, and a output unit.
+The adversary has two inputs, the representation sequence and an additional embedding or representation sequence, and a single output unit.
 
 \subsection{Representation}
 %
