@@ -1,6 +1,6 @@
 # Todos 21. 6. 2019
 
-- [ ] Am wichtigsten: "Wie sieht der allgemeine Ablauf aus?"
+- [x] Am wichtigsten: "Wie sieht der allgemeine Ablauf aus?"
   - Was macht Mensch, was Maschine? -> Diagramm
   - Formulierungen: "Dieses System hat ein Modell", "crucial component"
 
@@ -49,14 +49,14 @@
 
 ## Max zusammenfassende Todos
 
-- [ ] Die "draft figure" will ich noch mal überdenken und dann vernünftig in Tikz zeichnen
+- [x] Die "draft figure" will ich noch mal überdenken und dann vernünftig in Tikz zeichnen
 - [ ] Klarer machen, was unsere Contribution genau ist
 - [ ] Vielleicht bei der Conclusion alles löschen, was 1:1 Wiederholung von davor ist?
-- [ ] Noch ein paar Wording-Sachen
+- [x] Noch ein paar Wording-Sachen -- danke Chris!
   - [x] z.B. direkt am Anfang der Einleitung, wo in zwei Sätzen 2x "contain" und "data" steht
 - [ ] Author information, will Arne Hamburg oder Saarland sein?
 - [ ] Welches Yimam Paper ist genau gemeint:
   - Automatic Annotation Suggestions and Custom Annotation Layers in WebAnno https://aclweb.org/anthology/papers/P/P14/P14-5016/
   - Interactive and Iterative Annotation for Biomedical Entity Recognition https://link.springer.com/chapter/10.1007/978-3-319-23344-4_34
 - [x] Strich bei 0.5 adversary accuracy (yticks angepasst, sollte auch reichen)
-- [ ] Arxiv papers checken
+- [x] Arxiv papers checken -- habe keine akzeptierten Versionen mehr gefunden

@@ -5,13 +5,16 @@
 
 \begin{figure*}
     \centering
-    \todo[inline]{Draft diagram!}
-    \includegraphics[width=\textwidth]{images/graffle/sharing-both}
+    \input{images/tikz/process}
     \caption{Sharing training data for de-identification.
         %
         Upper alternative: traditional process using manual pseudonymization.
         %
         Lower alternative: our approach of sharing perturbed embedding representations.
+        %
+        The people icon represents tasks done by humans; the gears icon represents tasks done by machines; the lock icon represents privacy-preserving artifacts.
+        %
+        Manual pseudonymization is additionally marked with a dollar icon to emphasize its high costs.
     }\label{fig:process}
 \end{figure*}
 
@@ -44,7 +47,8 @@ Today, a pseudonymized dataset for de-identification from a single source, the \
 %
 However, de-identification classifiers trained on this dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
-To achieve a universal de-identification classifier, many medical institutions would have to pool their data but preparing this data for sharing by using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
+To achieve a universal de-identification classifier, many medical institutions would have to pool their data -- but
+preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
 To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier by transforming text non-reversibly into a vector space and only sharing that representation.
