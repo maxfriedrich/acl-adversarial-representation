@@ -27,7 +27,7 @@
 
 - [x] Adversary output muss single unit (binary) klarer machen?
 
-- [ ] Footnote 1 ist wichtig, lieber in Klammern?
+- [x] Footnote 1 ist wichtig, lieber in Klammern?
   - Max: die Footnote ist ja direkt unten und was sollte sonst in [] markiert sein…
 
 - [x] 7.3 "confirms the findings by" -- was sind die Findings? -- sie stehen in 2.2 aber sind bis hier wieder vergessen?
