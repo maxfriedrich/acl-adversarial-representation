@@ -37,9 +37,9 @@
 %\path[post] (deid.east) edge node [below,align=center] (repr.west);
 
 \path[post,every node/.style={sloped,anchor=north,auto=false,align=center}]
-(raw) edge node {\scriptsize \itshape PHI labeling / \\ \itshape \scriptsize de-identification} (deid)            
+(raw) edge node {\scriptsize \itshape PHI labeling / \\[-1mm] \itshape \scriptsize de-identification} (deid)            
 (deid.east) edge node {\scriptsize \itshape Pseudonymization} (pseudo.west)
-(deid.east) edge node {\scriptsize \itshape Embedding \& \\ \itshape \scriptsize perturbation} (repr.west);
+(deid.east) edge node {\scriptsize \itshape Embedding \& \\[-1mm] \itshape \scriptsize perturbation} (repr.west);
 
 \path[every node/.style={sloped,anchor=south,auto=false,align=center}]
 (raw) edge node {\faUsers} (deid)            

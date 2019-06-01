@@ -15,7 +15,7 @@
 - [x] S 5: es ist unklar, was unseres ist
   - Formulierung mit Passiv sollte ausreichen
 
-- [ ] "Term de-identification unklar"
+- [x] "Term de-identification unklar"
   - könnte mit Diagramm gelöst werden
   - [x] "Automatic classifiers…" Satz im Abstract ist verwirrend: Teilprozess kann nicht so heißen wie der ganze Prozess
   - "changing PHI in medical text…"
