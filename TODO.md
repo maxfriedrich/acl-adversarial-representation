@@ -50,8 +50,8 @@
 ## Max zusammenfassende Todos
 
 - [x] Die "draft figure" will ich noch mal überdenken und dann vernünftig in Tikz zeichnen
-- [ ] Klarer machen, was unsere Contribution genau ist
-- [ ] Vielleicht bei der Conclusion alles löschen, was 1:1 Wiederholung von davor ist?
+- [x] Klarer machen, was unsere Contribution genau ist
+- [x] Vielleicht bei der Conclusion alles löschen, was 1:1 Wiederholung von davor ist?
 - [x] Noch ein paar Wording-Sachen -- danke Chris!
   - [x] z.B. direkt am Anfang der Einleitung, wo in zwei Sätzen 2x "contain" und "data" steht
 - [ ] Author information, will Arne Hamburg oder Saarland sein?

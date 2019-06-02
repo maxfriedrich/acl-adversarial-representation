@@ -42,8 +42,6 @@ The standard method of data protection compliant sharing of training data for a 
 %
 This includes replacing e.g.\ every person or place name with a different name, offsetting dates by a random amount while retaining date intervals, and replacing misspellings with similar misspellings of the pseudonym \cite{uzuner2007evaluating}.
 
-% Why is manual pseudonymization not so great? (time-consuming, coherency)
-% Why is sharing training data the best solution for a de-identification model?
 %
 In 2019, a pseudonymized dataset for de-identification from a single source, the \emph{i2b2~2014} dataset, is publicly available \citep{stubbs2015annotating}.
 %
@@ -63,12 +61,7 @@ The traditional approach to sharing training data is conceptually compared to ou
 
 \section{Related Work}\label{sec:related}
 %
-Our work builds upon two lines of research: firstly de-identification,
-as the system has to provide good de-identification performance, and
-secondly adversarial representation learning, to remove all identifying
-information from the representations to be distributed.
-
-% In this section, we present related work regarding de-identification and adversarial representation learning.
+Our work builds upon two lines of research: firstly de-identification, as the system has to provide good de-identification performance, and secondly adversarial representation learning, to remove all identifying information from the representations to be distributed.
 
 \subsection{Automatic De-Identification}
 %
@@ -282,8 +275,6 @@ The adversaries are implemented as bidirectional \ac{lstm} models with single ou
 We confirmed that this type of model is able to learn the adversarial tasks on random data and raw word embeddings in preliminary experiments.
 %
 To use the two adversaries in our architecture, we average their outputs.
-
-% TODO make again clear that adversaries should continue training on frozen representation?
 
  \begin{figure}
     \centering
