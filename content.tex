@@ -45,7 +45,7 @@ This includes replacing e.g.\ every person or place name with a different name, 
 % Why is manual pseudonymization not so great? (time-consuming, coherency)
 % Why is sharing training data the best solution for a de-identification model?
 %
-Today, a pseudonymized dataset for de-identification from a single source, the \emph{i2b2~2014} dataset, is publicly available \citep{stubbs2015annotating}.
+In 2019, a pseudonymized dataset for de-identification from a single source, the \emph{i2b2~2014} dataset, is publicly available \citep{stubbs2015annotating}.
 %
 However, de-identification classifiers trained on this dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
@@ -543,24 +543,15 @@ In the case of $N = 1\,000$ neighbors, the representation never becomes stable i
 The adversary is always able to break the representation privacy.
 
 \section{Conclusions \& Future Work}
-
-%We introduced a new approach to sharing training data for de-identification that requireslower human effort than the existing approach of document-coherent pseudonymization. Our approach is based on advesarial learning, which yields representations that can be distributed since they do not contain private health information. The setup is motivated by the need of de-identification of medical text before sharing; our approach provides a lower-cost alternative than manual pseudonymization and gives rise to the pooling of de-identification datasets from heterogeneous sources in order to train more robust classifiers. Our implementation and experimental data are publicly available\footnote{https://github.com/maxfriedrich/deid-training-data}.
-
-
-
-% TODO make clearer what the novel contribution is
 %
-Privacy laws require medical text to be de-identified before it can be shared for research.
+We introduced a new approach to sharing training data for de-identification that requireslower human effort than the existing approach of document-coherent pseudonymization.
 %
-De-identifi\-ca\-tion is time-consuming and costly when performed by humans, which motivates the creation of automatic de-identification classifiers.
+Our approach is based on adversarial learning, which yields representations that can be distributed since they do not contain private health information.
 %
-Automatic de-identification requires training data, which is typically created by substituting all protected information from raw medical records.
+The setup is motivated by the need of de-identification of medical text before sharing; our approach provides a lower-cost alternative than manual pseudonymization and gives rise to the pooling of de-identification datasets from heterogeneous sources in order to train more robust classifiers.
 %
-Today's de-identification classifiers fail on data from sources unseen during training, thus a training set from multiple sources is required to train more general de-identification classifiers.
-%
-We introduced a new approach to sharing training data for de-identification that requires lower human effort than the existing approach of document-coherent pseudonymization.\footnote{Implementations of our models and experiments can be found at: \url{https://github.com/maxfriedrich/deid-training-data}}
+Our implementation and experimental data are publicly available\footnote{\url{https://github.com/maxfriedrich/deid-training-data}}.
 
-% TODO this is mostly repetition
 As precursors to our adversarial representation approach, we developed a deep learning model for de-identification that does not rely on explicit character features as well as an automatic word-level pseudonymization approach.
 %
 A model trained on our automatically pseudonymized data with $N=100$ neighbors loses around one percentage point in \fone score when compared to the non-private system, scoring $96.75\%$ on the i2b2 2014 test set.
@@ -579,11 +570,6 @@ For an invariance criterion of up to $N=500$ neighbors, training is stable and a
 %
 Using the adversarially learned representation, de-identification models reach an \fone score of $97.4\%$, which is close to the non-private system (\(97.67\%\)).
 In contrast, the automatic pseudonymization approach only reaches an \fone score of \(95.0\%\) at \(N = 500\).
-%
-% At $N = 500$, the adversarial approach achieves a $47.42\%$ relative error reduction to the automatic pseudonymization system.
-% 
-% For N = 500:
-% (97.35 - 94.96)/(100-94.96)*100 = 47.42%!
 
 %
 Our adversarial representation approach enables cost-effective private sharing of training data for sequence labeling. Pooling of training data for de-identification from multiple institutions would lead to much more robust classifiers.
@@ -595,6 +581,8 @@ Eventually, improved de-identification classifiers could help enable large-scale
 %
 Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly improving the state of the art.
 
+% TODO Private character embeddings from a perturbed source...
+
 %
 In adversarial learning with the three-part training procedure, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
 %
@@ -605,8 +593,3 @@ This might allow using lower amounts of noise for certain inputs while still bei
 %
 When more training data from multiple sources become available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
 
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "main"
-%%% End:
