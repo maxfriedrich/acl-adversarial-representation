@@ -55,7 +55,7 @@
 - [x] Noch ein paar Wording-Sachen -- danke Chris!
   - [x] z.B. direkt am Anfang der Einleitung, wo in zwei Sätzen 2x "contain" und "data" steht
 - [ ] Author information, will Arne Hamburg oder Saarland sein?
-- [ ] Welches Yimam Paper ist genau gemeint:
+- [x] Welches Yimam Paper ist genau gemeint:
   - Automatic Annotation Suggestions and Custom Annotation Layers in WebAnno https://aclweb.org/anthology/papers/P/P14/P14-5016/
   - Interactive and Iterative Annotation for Biomedical Entity Recognition https://link.springer.com/chapter/10.1007/978-3-319-23344-4_34
 - [x] Strich bei 0.5 adversary accuracy (yticks angepasst, sollte auch reichen)
