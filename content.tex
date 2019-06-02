@@ -27,13 +27,13 @@ In addition to structured medical data, \acp{ehr} contain free-text patient note
 %
 However, due to privacy and data protection laws, medical records can only be shared and used for research if they are sanitized to not include information potentially identifying patients.
 %
-The \ac{phi} that may not be shared includes potentially identifying information such as names, geographic identifiers, dates, and account numbers; the American \acl{hipaa} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
+The \ac{phi} that may not be shared includes potentially identifying information such as names, geographic identifiers, dates, and account numbers; the American \acl{hipaa}\footnote{\url{https://legislink.org/us/pl-104-191}} (\acs{hipaa}, \citeyear{usa1996hipaa}) defines 18 categories of \ac{phi}.
 %
 De-identification is the task of finding and labeling \ac{phi} in medical text as a step toward sanitization.
 %
 As the information to be removed is very sensitive, sanitization always requires final human verification.
 %
-Automatic de-identification labeling can however significantly speed up the process, as shown for other annotation tasks in e.g. \citet{yimam2014automatic}.
+Automatic de-identification labeling can however significantly speed up the process, as shown for other annotation tasks in e.g. \citet{yimam2015narrowing}.
 
 %
 Trying to create an automatic classifier for de-identification leads to a ``chicken and egg problem''~\citep{uzuner2007evaluating}: without a comprehensive training set, an automatic de-identification classifier cannot be developed, but without access to automatic de-identification, it is difficult to share large corpora of medical text in a privacy-preserving way for research (including for training the classifier itself).
@@ -53,7 +53,7 @@ To achieve a universal de-identification classifier, many medical institutions w
 preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
-To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier by transforming text non-reversibly into a vector space and only sharing that representation.
+To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier by transforming text non-reversibly into a vector space and only sharing this representation.
 %
 Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but the pseudonymization step (replacing \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
 %
@@ -116,7 +116,7 @@ To test whether the unwanted information is not extractable from the generated i
 \section{Dataset and De-Identification Model}\label{sec:deidentification-model}
 
 We evaluate our approaches using the i2b2 2014
-dataset~\citep{stubbs2015annotating} which was released as part of
+dataset~\citep{stubbs2015annotating}, which was released as part of
 the 2014 i2b2/UTHealth shared task track 1 and is the largest publicly
 available dataset for de-identification today.
 %
@@ -247,16 +247,17 @@ We use a bidirectional \ac{lstm} model to implement the representation.
 %
 It applies Gaussian noise $\bm{N}$ with zero mean and trainable standard deviations to the input embeddings $\bm{E}$ and the output sequence.
 %
-The model learns a standard deviation for each of the input and output dimensions.\footnote{
-    %
-    In a preliminary experiment, we confirmed that adding noise with a single, fixed standard deviation is not a viable approach for privacy-preserving representations.
-    %
-    To change the cosine similarity neighborhoods of embeddings at all, we need to add high amounts of noise (more than double of the respective embedding matrix's standard deviation), which in turn results in \emph{unrealistic} embeddings that do not allow training a de-identification model of sufficient quality.
-}
-%
+The model learns a standard deviation for each of the input and output dimensions.
+
 \begin{align}
 \bm{R} = \bm{N}_{\text{out}} + \text{LSTM}(\bm{E} + \bm{N}_{\text{in}})
 \end{align}
+
+%
+In a preliminary experiment, we confirmed that adding noise with a single, fixed standard deviation is not a viable approach for privacy-preserving representations.
+%
+To change the cosine similarity neighborhoods of embeddings at all, we need to add high amounts of noise (more than double of the respective embedding matrix's standard deviation), which in turn results in \emph{unrealistic} embeddings that do not allow training a de-identification model of sufficient quality.
+%
 
 %
 In contrast to the automatic pseudonymization approach from \cref{sec:automatic-pseudonymization} that only perturbs \ac{phi} tokens, the representation models in this approach processes all tokens to represent them in a new embedding space.
@@ -351,7 +352,7 @@ We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics
 
 \paragraph{Deep Learning Models:}
 %
-We use the Keras framework \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
+We use the Keras framework\footnote{\url{https://keras.io}} \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
 %
 %We use \iac{crf} layer implementation from the Keras community contributions repository\footnote{\url{https://github.com/keras-team/keras-contrib}}.
 
@@ -370,6 +371,9 @@ We perform the evaluation with the official i2b2 evaluation script\footnote{\url
 \Cref{tab:baseline-results} shows de-identification performance results for the non-private de-identification classifier (upper part, in comparison to the state of the art) as well as the two privacy-enabled extensions (lower part).
 %
 The results are average values out of five experiment runs.
+
+%Overall, privacy-preserving representations come at a cost, as our best privacy-preserving model scores $0.27$ points \fone score lower than our best non-private model; we consider this relative increase of errors of about $10\%$ as tolerable. 
+
 
 \subsection{Non-private De-Identification Model}
 %
@@ -539,6 +543,11 @@ In the case of $N = 1\,000$ neighbors, the representation never becomes stable i
 The adversary is always able to break the representation privacy.
 
 \section{Conclusions \& Future Work}
+
+%We introduced a new approach to sharing training data for de-identification that requireslower human effort than the existing approach of document-coherent pseudonymization. Our approach is based on advesarial learning, which yields representations that can be distributed since they do not contain private health information. The setup is motivated by the need of de-identification of medical text before sharing; our approach provides a lower-cost alternative than manual pseudonymization and gives rise to the pooling of de-identification datasets from heterogeneous sources in order to train more robust classifiers. Our implementation and experimental data are publicly available\footnote{https://github.com/maxfriedrich/deid-training-data}.
+
+
+
 % TODO make clearer what the novel contribution is
 %
 Privacy laws require medical text to be de-identified before it can be shared for research.
@@ -579,12 +588,12 @@ In contrast, the automatic pseudonymization approach only reaches an \fone score
 %
 Our adversarial representation approach enables cost-effective private sharing of training data for sequence labeling. Pooling of training data for de-identification from multiple institutions would lead to much more robust classifiers.
 %
-Eventually, improved de-identification classifiers could help enable large-scale medical studies that improve public health.
+Eventually, improved de-identification classifiers could help enable large-scale medical studies that eventually improve public health.
 
 %
 \paragraph{Future Work:} The automatic pseudonymization approach could serve as a data augmentation scheme to be used as a regularizer for de-identification models.
 %
-Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly beating the state of the art.
+Training a model on a combination of raw and pseudonymized data may result in better test scores on the i2b2 test set, possibly improving the state of the art.
 
 %
 In adversarial learning with the three-part training procedure, it might be possible to tune the $\lambda$ parameter and define a better stopping condition that avoids the unstable characteristics with high values for $N$ in the invariance criterion.
