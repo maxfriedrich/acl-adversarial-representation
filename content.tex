@@ -119,7 +119,6 @@ The i2b2 dataset uses the 18 categories of \ac{phi} defined by \ac{hipaa} as a s
 %
 In addition to the \ac{hipaa} set of categories, it includes (sub-)categories such as doctor names, professions, states, countries, and ages under 90.
 
-%\subsection{De-Identification Model}\label{sec:deidentification-model}
 %
 We compare three different approaches: a non-private de-identification classifier and two privacy-enabled extensions, automatic pseudonymization (\cref{sec:automatic-pseudonymization}) and adversarially learned representations (\cref{sec:adversarial-representation}).
 
@@ -344,8 +343,6 @@ We extend spaCy's\footnote{\url{https://spacy.io}} sentence splitting heuristics
 \paragraph{Deep Learning Models:}
 %
 We use the Keras framework\footnote{\url{https://keras.io}} \citep{chollet2015keras} with the TensorFlow backend \citep{abadi2015tensorflow} to implement our deep learning models.
-%
-%We use \iac{crf} layer implementation from the Keras community contributions repository\footnote{\url{https://github.com/keras-team/keras-contrib}}.
 
 \paragraph{Evaluation:}
 %
