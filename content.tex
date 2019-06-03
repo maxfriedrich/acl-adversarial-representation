@@ -47,7 +47,7 @@ In 2019, a pseudonymized dataset for de-identification from a single source, the
 %
 However, de-identification classifiers trained on this dataset do not generalize well to data from other sources~\citep{stubbs2017identification}.
 %
-To achieve a universal de-identification classifier, many medical institutions would have to pool their data -- but
+To obtain a universal de-identification classifier, many medical institutions would have to pool their data. But,
 preparing this data for sharing using the document-coherent pseudonymization approach requires large human effort \citep{dernoncourt2017identification}.
 
 %
@@ -93,9 +93,9 @@ The best system achieved an \fone score of $79\%$, suggesting that systems at th
 %
 Fair representations \citep{zemel2013learning,hamm2015preserving} aim to encode features of raw data that allows it to be used in e.g.\ machine learning algorithms while obfuscating membership in a protected group or other sensitive attributes.
 %
-The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementation of a three-party game between a representer, classifier, and adversary component.
+The \ac{dann} architecture \citep{ganin2016domain} is a deep learning implementation of a three-party game between a representer, a classifier, and an adversary component.
 %
-The classifier and adversary are deep learning models with shared initial layers.
+The classifier and the adversary are deep learning models with shared initial layers.
 %
 A gradient reversal layer is used to worsen the representation for the adversary during back-propagation: when training the adversary, the adversary-specific part of the network is optimized for the adversarial task but the shared part is updated against the gradient to make the shared representation less suitable for the adversary.
 
@@ -104,7 +104,7 @@ Although initially conceived for use in domain adaptation, \acp{dann} and simila
 %
 \citet{elazar2018adversarial} warn that when a representation is learned using gradient reversal methods, continued adversary training on the frozen representation may allow adversaries to break representation privacy.
 %
-To test whether the unwanted information is not extractable from the generated information anymore, adversary training needs to continue on the frozen representation after finishing training the system and only if after that the information cannot be recovered, we have evidence that it really is not contained in the representation anymore.
+To test whether the unwanted information is not extractable from the generated information anymore, adversary training needs to continue on the frozen representation after finishing training the system. Only if after continued adversary training the information cannot be recovered, we have evidence that it really is not contained in the representation anymore.
 
 \section{Dataset and De-Identification Model}\label{sec:deidentification-model}
 
@@ -414,7 +414,7 @@ We do not achieve satisfactory results with the conjoint \ac{dann} training proc
 %
 When training the adversary on the frozen representation for an additional $20$ epochs, it is able to distinguish real from fake input pairs on a test set with accuracies above $80\%$.
 %
-This confirms the findings by \citet{elazar2018adversarial} mentioned in Section~\ref{sec:advers-repr-learn}.
+This confirms the difficulties of \ac{dann} training as described by \citet{elazar2018adversarial} (see Section~\ref{sec:advers-repr-learn}).
 
 %
 In contrast, with the three-part training procedure, we are able to learn a representation that allows training a de-identification model while preventing an adversary from learning the adversarial tasks, even with continued training on a frozen representation.
