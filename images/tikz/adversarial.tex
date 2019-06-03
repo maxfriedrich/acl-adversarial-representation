@@ -1,19 +1,19 @@
 \begin{tikzpicture}[node distance=1.4cm,font=\small]
 \tikzset{every node/.style={inner sep=1mm, outer sep=0mm, line width=0mm}}
 
-\tikzstyle{token}=[rectangle,draw=black,fill=white,semithick,text width=1cm, minimum width=1.2cm, minimum height=5mm, text height=1.5ex,text depth=.25ex]
+\tikzstyle{token}=[rectangle,draw=black,fill=white,semithick,text width=1.1cm, minimum width=1.3cm, minimum height=5mm, text height=1.5ex,text depth=.25ex]
 \tikzstyle{model}=[rounded rectangle,draw=black,fill=white,semithick, minimum width=3cm, minimum height=8mm, text height=1.5ex,text depth=.25ex, inner sep=1.5mm]
 \tikzstyle{dots} = []
-\tikzstyle{vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=1.2cm, minimum height=3mm]
-\tikzstyle{half vector} = [shape=rectangle, semithick, minimum width=1.2cm, minimum height=3mm] % without drawn border
-\tikzstyle{two thirds vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=0.9cm, minimum height=3mm]
-\tikzstyle{quarter vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=3mm, minimum height=3mm]
+\tikzstyle{vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=1.3cm, minimum height=3.25mm]
+\tikzstyle{half vector} = [shape=rectangle, semithick, minimum width=1.3cm, minimum height=3.25mm] % without drawn border
+\tikzstyle{two thirds vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=0.975cm, minimum height=3.25mm]
+\tikzstyle{quarter vector} = [draw, shape=rectangle, fill=white, semithick, minimum width=3.25mm, minimum height=3.25mm]
 \tikzstyle{pre}=[<-,semithick, >=latex]
 \tikzstyle{post}=[->, semithick, >=latex]
 
-\node[token] (mr input){Mr.};
-\node[token, right of=mr input] (smith input) {Smith};
-\node[token, right of=smith input] (was input) {was};
+\node[token] (mr input){James};
+\node[token, right of=mr input] (smith input) {was};
+\node[token, right of=smith input] (was input) {admitted};
 \node[dots, right=1mm of was input] (input dots) {$\cdots$};
     
 \node[vector, above=8mm of mr input] (mr embedding) {};
@@ -59,14 +59,14 @@
 
 % vector squares
 \foreach \i in {mr embedding, smith embedding, was embedding, mr representation, smith representation, was representation} {
-    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (3mm, -3mm)$);
-    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (6mm, -3mm)$);
-    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (9mm, -3mm)$);    
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (3.25mm, -3.25mm)$);
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (6.5mm, -3.25mm)$);
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (9.75mm, -3.25mm)$);    
 };
 
 \foreach \i in {mr output, smith output, was output} {
-    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (3mm, -3mm)$);
-    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (6mm, -3mm)$);
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (3.25mm, -3.25mm)$);
+    \draw[semithick] (\i.north west) rectangle ($(\i.north west) + (6.5mm, -3.25mm)$);
 };
 
 \path[post] (input box) edge (feature box);

@@ -14,7 +14,7 @@
 \input{acronyms}
 
 % Math
-\usepackage{amsmath}
+\usepackage{amsmath, amssymb}
 \usepackage{bm}
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
@@ -28,7 +28,8 @@
 
 % TikZ
 \usepackage{tikz}
-\usetikzlibrary{arrows, backgrounds, calc, scopes, fit, intersections, matrix, positioning, shapes, shapes.misc}
+\usetikzlibrary{arrows, backgrounds, calc, scopes, fit, intersections, matrix, positioning, shapes, shapes.misc, shadows}
+\usepackage{fontawesome}
 
 % Frames
 \usepackage{framed}
@@ -42,15 +43,13 @@
 % Tables
 \usepackage{booktabs}
 
-% Todos
-\usepackage{todonotes}
-
-\hyphenation{pseu-do-nym-iza-tion pseu-do-nym-ize pseu-do-nym-ized}
-\hyphenation{a-no-nym-iza-tion a-no-nym-ize a-no-nym-ized}
+\hyphenation{pseu-do-ny-mi-za-tion pseu-do-ny-mize pseu-do-ny-mized}
+\hyphenation{a-no-ny-mi-za-tion a-no-ny-mize a-no-ny-mized}
 \hyphenation{drop-out}
 
-%\aclfinalcopy % Uncomment this line for the final submission
-%\def\aclpaperid{***} %  Enter the acl Paper ID here
+\aclfinalcopy % Uncomment this line for the final submission
+%todo what is the paper id?
+%\def\aclpaperid{***} %  Enter the acl Paper ID here 
 
 %\setlength\titlebox{5cm}
 % You can expand the titlebox if you need extra space
@@ -60,18 +59,11 @@
 
 \title{Adversarial Learning of Privacy-Preserving Text Representations \\ for De-Identification of Medical Records}
 
-\author{First Author \\
-    Affiliation / Address line 1 \\
-    Affiliation / Address line 2 \\
-    Affiliation / Address line 3 \\
-    {\tt email@domain} \\\And
-    Second Author \\
-    Affiliation / Address line 1 \\
-    Affiliation / Address line 2 \\
-    Affiliation / Address line 3 \\
-    {\tt email@domain} \\}
-
-\date{}
+\author{Max Friedrich\textsuperscript{1}, Arne Köhn\textsuperscript{2}, Gregor Wiedemann\textsuperscript{1}, Chris Biemann\textsuperscript{1}\\[3mm] 
+\textsuperscript{1}Language Technology Group, Universität Hamburg\\
+\texttt{\{\href{2mfriedr@informatik.uni-hamburg.de}{2mfriedr},\href{gwiedemann@informatik.uni-hamburg.de}{gwiedemann},\href{biemann@informatik.uni-hamburg.de}{biemann}\}@informatik.uni-hamburg.de}\\[3mm]
+\textsuperscript{2}Department of Language Science and Technology, Saarland University\\
+\texttt{\url{koehn@coli.uni-saarland.de}}}
 
 \begin{document}
 \maketitle
@@ -79,9 +71,6 @@
 \input{abstract}
 \acresetall
 \input{content}
-
-%\section*{Acknowledgments}
-%Deidentified clinical records used in this research were provided by the i2b2 National Center for Biomedical Computing funded by U54LM008748 and were originally prepared for the Shared Tasks for Challenges in NLP for Clinical Data organized by Dr.\ Özlem Uzuner, i2b2 and SUNY.
 
 \bibliography{deidentification-clean}
 \bibliographystyle{acl_natbib}

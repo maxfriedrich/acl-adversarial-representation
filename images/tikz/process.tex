@@ -1,0 +1,48 @@
+\begin{tikzpicture}[node distance=1.4cm,font=\small]
+\tikzset{every node/.style={inner sep=1mm, outer sep=0mm, line width=0mm}}
+\tikzstyle{pre}=[<-,semithick, >=latex]
+\tikzstyle{post}=[->, semithick, >=latex]
+
+% https://tex.stackexchange.com/a/40771
+\tikzset{%
+    cascaded/.style = {%
+        general shadow = {%
+            shadow scale = 1,
+            shadow xshift = 1ex,
+            shadow yshift = 1ex,
+            draw,
+            thick,
+            fill = white},
+        general shadow = {%
+            shadow scale = 1,
+            shadow xshift = .5ex,
+            shadow yshift = .5ex,
+            draw,
+            thick,
+            fill = white},
+        fill = white, 
+        draw,
+        semithick,
+        minimum height = 1cm
+}}
+
+\node (raw) [cascaded,label=below:Raw patient notes, text width=3cm] {James was admitted to St.\ Thomas\dots};
+\node (deid) [cascaded,label=below:{PHI-labeled patient notes}, right=2.2cm of raw, text width=3.5cm] {[James]\textsubscript{Patient} was admitted to [St.\ Thomas]\textsubscript{Hosp}\dots};
+
+\node (pseudo) [cascaded,label=below:Pseudonymized patient notes \faLock, above right=0.3cm and 2.5cm of deid, text width=3.5cm] {[Henry]\textsubscript{Patient} was admitted to [River Clinic]\textsubscript{Hosp}\dots};
+
+\node (repr) [cascaded,label={[align=center]below:Private vector representation\\ of patient notes \faLock}, below right=0.3cm and 2.5cm of deid, text width=3.5cm] {[$\square\square\square$]\textsubscript{Patient} $\square\square\square$ $\square\square\square$ $\square\square\square$ [$\square\square\square$ $\square\square\square$]\textsubscript{Hosp}\dots};
+
+\path[post,every node/.style={sloped,anchor=north,auto=false,align=center}]
+(raw) edge node {\scriptsize \itshape PHI labeling / \\[-1mm] \itshape \scriptsize de-identification} (deid)            
+(deid.east) edge node {\scriptsize \itshape Pseudonymization} (pseudo.west)
+(deid.east) edge node {\scriptsize \itshape Non-reversible \\[-1mm] \itshape \scriptsize transformation} (repr.west);
+
+\path[every node/.style={sloped,anchor=south,auto=false,align=center}]
+(raw) edge node {\faUsers} (deid)            
+(deid.east) edge node {\faUsers\; \faDollar} (pseudo.west)
+(deid.east) edge node {\faCogs} (repr.west);
+
+\node [fit={(raw)([shift={(2mm,2mm)}]pseudo.north east)}, rectangle] {}; % dummy node to include upper pseudonymized shadow
+
+\end{tikzpicture}
