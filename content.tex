@@ -53,7 +53,7 @@ preparing this data for sharing using the document-coherent pseudonymization app
 %
 To address this problem, we introduce an adversarially learned representation of medical text that allows privacy-preserving sharing of training data for a de-identification classifier by transforming text non-reversibly into a vector space and only sharing this representation.
 %
-Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but the pseudonymization step (replacing \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation.
+Our approach still requires humans to annotate \ac{phi} (as this is the training data for the actual de-identification task) but the pseudonymization step (replacing \ac{phi} with coherent substitutes) is replaced by the automatic transformation to the vector representation instead.
 %
 A classifier then trained on our representation cannot contain any protected data, as it is never trained on raw text (as long as the representation does not allow for the reconstruction of sensitive information).
 %
@@ -320,7 +320,7 @@ It is composed of three phases:
 %
 In each of the first two phases, the respective validation loss is monitored to decide at which point the training should move on to the next phase.
 %
-The alternating steps in the third phase each last one training epoch; the early stopping time for the third phase is determined using only the combined validation loss from \ref{item:repr-training}.
+The alternating steps in the third phase each last one training epoch; the early stopping time for the third phase is determined using only the combined validation loss from Phase \ref{item:repr-training}.
 
 %
 Gradient reversal is achieved by optimizing the combined representation loss while the adversary weights are frozen.
@@ -538,7 +538,8 @@ The adversary is always able to break the representation privacy.
 
 \section{Conclusions \& Future Work}
 %
-We introduced a new approach to sharing training data for de-identification that requireslower human effort than the existing approach of document-coherent pseudonymization.
+We introduced a new approach to sharing training data for de-identification that requires
+lower human effort than the existing approach of document-coherent pseudonymization.
 %
 Our approach is based on adversarial learning, which yields representations that can be distributed since they do not contain private health information.
 %
@@ -588,3 +589,7 @@ This might allow using lower amounts of noise for certain inputs while still bei
 %
 When more training data from multiple sources become available in the future, it will be possible to evaluate our adversarially learned representation against unseen data.
 
+\section*{Acknowledgments}
+This work was partially supported by BWFG Hamburg within the ``Forum 4.0'' project as part of the ahoi.digital funding line.
+
+De-identified clinical records used in this research were provided by the i2b2 National Center for Biomedical Computing funded by U54LM008748 and were originally prepared for the Shared Tasks for Challenges in NLP for Clinical Data organized by Özlem Uzuner, i2b2 and SUNY.
